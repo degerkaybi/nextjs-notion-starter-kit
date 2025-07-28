@@ -119,7 +119,7 @@ pageUrlOverrides: {
   '/son-adres': '1b0392488fe581a2b6d1c45170bcebb0',
   '/gercegin-olu': '1b0392488fe58195a8f4efa4519c4861',
   '/dokunamayanlar': '1b0392488fe5811b8fd8f3c2c6e98b75',
-  '/ivre-mort': '1b0392488fe581728173f7e5eacd1471',
+  '/ivre-mort': '1b0392488fe581728173f7e5eacd1471'
 }
 
 
