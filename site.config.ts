@@ -119,7 +119,7 @@ pageUrlOverrides: {
   '/gercegin-olu': '1b0392488fe58195a8f4efa4519c4861',
   '/dokunamayanlar': '1b0392488fe5811b8fd8f3c2c6e98b75',
   '/ivre-mort': '1b0392488fe581728173f7e5eacd1471'
-}
+},
 
   // whether to use the default notion navigation style or a custom one with links to
   // important pages. To use `navigationLinks`, set `navigationStyle` to `custom`.
