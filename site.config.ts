@@ -14,10 +14,10 @@ export default siteConfig({
   author: 'Kaybid',
 
   // open graph metadata (optional)
-  description: '...........',
+  description: 'kaybid',
 
   // social usernames (optional)
-  twitter: 'x',
+      // twitter: 'x',
 
   // mastodon: '#', // optional mastodon profile URL, provides link verification
   // newsletter: '#', // optional newsletter URL
