@@ -8,7 +8,7 @@ export default siteConfig({
   // (this should be a Notion ID; see the docs for how to extract this)
   rootNotionSpaceId: null,
 
-  // basic site info (required)
+  // basic site info (required )
   name: 'Kaybid',
   domain: 'https://nextjs-notion-starter-li0fiy43n-degers-projects-64d52290.vercel.app',
   author: 'Kaybid',
