@@ -47,13 +47,40 @@ export default siteConfig({
   // }
         //  pageUrlOverrides: null,
   
-pageUrlOverrides: {
+ pageUrlOverrides: {
+    '/kaybid-plak-gururla-sunar-volta': '1b0392488fe580f79589d1dd2ffbba93',
+    '/z-birakmadan': '1b0392488fe581718a9ee258ec7c672f',
+    '/son-adres': '1b0392488fe581a2b6d1c45170bcebb0',
+    '/gercegin-olu': '1b0392488fe58195a8f4efa4519c4861',
+    '/dokunamayanlar': '1b0392488fe5811b8fd8f3c2c6e98b75',
+    '/ivre-mort': '1b0392488fe581728173f7e5eacd1471'
+  },
 
-  
-},  
-
-
-
+  // whether to use the default notion navigation style or a custom one with links to
+  // important pages. To use `navigationLinks`, set `navigationStyle` to `custom`.
+  // navigationStyle: 'custom',
+  // navigationLinks: [
+  //   {
+  //     title: 'Home',
+  //     pageId: '7479b6483c7c47d1a4b16ec3c3b15060'
+  //   },
+    //   {
+  //     title: 'About',
+  //     pageId: '8401785badf840e99bb988a5e63eacb8'
+  //   },
+    //   {
+  //     title: 'Works',
+  //     pageId: 'f9757225c30447d49fa61fdd164703d7'
+  //   },
+    //   {
+  //     title: 'Art & Ideas',
+  //     pageId: '32345bd70e2d4156a30b399acd23c897'
+  //   },
+  //   {
+  //     title: 'Press',
+  //     pageId: '226392488fe580429c7fd774798d9c8a'
+  //   }
+  // ]
   navigationStyle: 'custom',
   navigationLinks: [
 
