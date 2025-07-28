@@ -75,27 +75,25 @@ export default siteConfig({
   //   }
   // ]
   navigationStyle: 'custom',
-navigationLinks: [
-  {
-    title: 'Home',
-    pageId: '7479b6483c7c47d1a4b16ec3c3b15060'
-  },
-  {
-    title: 'About',
-    pageId: '8401785badf840e99bb988a5e63eacb8'
-  },
-  {
-    title: 'Works',
-    pageId: 'f9757225c30447d49fa61fdd164703d7'
-  },
-  {
-    title: 'Art & Ideas',
-    pageId: '32345bd70e2d4156a30b399acd23c897'
-  },
-  {
-    title: 'Press',
-    pageId: '226392488fe580429c7fd774798d9c8a'
-  }
-]
-
-})
+  navigationLinks: [
+    {
+      title: 'Home',
+      pageId: '7479b6483c7c47d1a4b16ec3c3b15060'
+    },
+    {
+      title: 'About',
+      pageId: '8401785badf840e99bb988a5e63eacb8'
+    },
+    {
+      title: 'Works',
+      pageId: 'f9757225c30447d49fa61fdd164703d7'
+    },
+    {
+      title: 'Art & Ideas',
+      pageId: '32345bd70e2d4156a30b399acd23c897'
+    },
+    {
+      title: 'Press',
+      pageId: '226392488fe580429c7fd774798d9c8a'
+    }
+  ]
