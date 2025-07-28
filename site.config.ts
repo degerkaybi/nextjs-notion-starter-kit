@@ -48,6 +48,9 @@ export default siteConfig({
         //  pageUrlOverrides: null,
   
 pageUrlOverrides: {
+  '/kaybid-kimdir': '1d2392488fe5800e926efc0ac297788b',
+  '/resimlerimin-mirildandiklari': '1d1392488fe580ea834ae3c6a21590a7',
+  '/kavramsal-metin': '1cf392488fe58017954aea45ed6ee5e1',
   '/in-between-sips': '1bf392488fe5801eb9d8cdd52696975c',
   '/gag-reflex': '1b0392488fe581b082eef03a37f6343d',
   '/evacuation-protocol': '1b5392488fe580848876f4dff6437f49',
