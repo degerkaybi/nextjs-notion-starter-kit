@@ -1,65 +1,54 @@
-import { siteConfig } from './lib/site-config'
-
 export default siteConfig({
-  // the site's root Notion page (required)
   rootNotionPageId: '7479b6483c7c47d1a4b16ec3c3b15060',
 
-  // if you want to restrict pages to a single notion workspace (optional)
-  // (this should be a Notion ID; see the docs for how to extract this)
   rootNotionSpaceId: null,
 
-  // basic site info (required)
-  name: 'Next.js Notion Starter Kit',
-  domain: 'https://nextjs-notion-starter-li0fiy43n-degers-projects-64d52290.vercel.app',
-  author: 'DegerK',
+  name: 'Kaybid',
+  domain: 'nextjs-notion-starter-li0fiy43n-degers-projects-64d52290.vercel.app',
+  author: 'Kaybid',
 
-  // open graph metadata (optional)
   description: '...........',
 
-  // social usernames (optional)
   twitter: 'x',
-  github: 'g',
-  linkedin: 'l',
-  // mastodon: '#', // optional mastodon profile URL, provides link verification
-  // newsletter: '#', // optional newsletter URL
-  // youtube: '#', // optional youtube channel name or `channel/UCGbXXXXXXXXXXXXXXXXXXXXXX`
+  instagram: 'i',
+  giphy: 'g',
 
-  // default notion icon and cover images for site-wide consistency (optional)
-  // page-specific values will override these site-wide defaults
   defaultPageIcon: null,
   defaultPageCover: null,
   defaultPageCoverPosition: 0.5,
 
-  // whether or not to enable support for LQIP preview images (optional)
   isPreviewImageSupportEnabled: true,
-
-  // whether or not redis is enabled for caching generated preview images (optional)
-  // NOTE: if you enable redis, you need to set the `REDIS_HOST` and `REDIS_PASSWORD`
-  // environment variables. see the readme for more info
   isRedisEnabled: false,
 
-  // map of notion page IDs to URL paths (optional)
-  // any pages defined here will override their default URL paths
-  // example:
-  //
-  // pageUrlOverrides: {
-  //   '/foo': '067dd719a912471ea9a3ac10710e7fdf',
-  //   '/bar': '0be6efce9daf42688f65c76b89f8eb27'
-  // }
-  pageUrlOverrides: null,
 
-  // whether to use the default notion navigation style or a custom one with links to
-  // important pages. To use `navigationLinks`, set `navigationStyle` to `custom`.
-  navigationStyle: 'default'
-  // navigationStyle: 'custom',
-  // navigationLinks: [
-  //   {
-  //     title: 'About',
-  //     pageId: 'f1199d37579b41cbabfc0b5174f4256a'
-  //   },
-  //   {
-  //     title: 'Contact',
-  //     pageId: '6a29ebcb935a4f0689fe661ab5f3b8d1'
-  //   }
-  // ]
+
+pageUrlOverrides: {
+  '/silent-steps': '62d2c83cd0e0465490db610ddb78bfc7',
+  '/silen-steps-night-watch-milan-ed': '22a392488fe5803fa915f0b8c5bd2ebe',
+  '/silen-steps-panda': '22a392488fe580c8aae6fcdebd717fb8',
+  '/silent-steps-figures-edition': '22a392488fe58064b772d74978226a72',
+  '/night-watch': 'bd62c75cff0b4b11a8571ea394db1d59',
+  '/night-watch-bull-run-edition': '4902f670013a466182341cc6d94f00d4',
+  '/rabbit-h0le': '22a392488fe580778278ccc0674023b1',
+  '/dreams': 'f4ec07636c974df688d64ff6631ec26c',
+  '/mamut-art': '22a392488fe580f28c33e898a8fc01a6',
+  '/eid-la': 'da5cf4ffa5a74d81b2b4651d85c9a9d8',
+  '/faces': '22a392488fe580508c6fd28fd81cb677'
+},
+
+navigationStyle: 'custom',
+navigationLinks: [
+  { title: 'Silent Steps', pageId: '62d2c83cd0e0465490db610ddb78bfc7' },
+  { title: 'Silen Steps Night Watch Milan Ed', pageId: '22a392488fe5803fa915f0b8c5bd2ebe' },
+  { title: 'Silen Steps Panda', pageId: '22a392488fe580c8aae6fcdebd717fb8' },
+  { title: 'Silent Steps Figures Edition', pageId: '22a392488fe58064b772d74978226a72' },
+  { title: 'Night Watch', pageId: 'bd62c75cff0b4b11a8571ea394db1d59' },
+  { title: 'Night Watch Bull Run Edition', pageId: '4902f670013a466182341cc6d94f00d4' },
+  { title: 'Rabbit H0le', pageId: '22a392488fe580778278ccc0674023b1' },
+  { title: 'Dreams', pageId: 'f4ec07636c974df688d64ff6631ec26c' },
+  { title: 'Mamut Art', pageId: '22a392488fe580f28c33e898a8fc01a6' },
+  { title: 'Eid La', pageId: 'da5cf4ffa5a74d81b2b4651d85c9a9d8' },
+  { title: 'Faces', pageId: '22a392488fe580508c6fd28fd81cb677' }
+]
+
 })
