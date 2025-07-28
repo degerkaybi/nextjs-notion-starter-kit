@@ -95,4 +95,5 @@ export default siteConfig({
       title: 'Press',
       pageId: '226392488fe580429c7fd774798d9c8a'
     }
-  ]
+ ]
+})
