@@ -1,7 +1,7 @@
 import { siteConfig } from './lib/site-config'
 
 export default siteConfig({
-  // the site's root Notion page (required)
+  // the site's root Notion page (required )
   rootNotionPageId: '7479b6483c7c47d1a4b16ec3c3b15060',
 
   // if you want to restrict pages to a single notion workspace (optional)
@@ -163,7 +163,7 @@ pageUrlOverrides: {
     },
     {
       title: 'Press',
-      pageId: '226392488fe580429c7fd774798d9c8a'
+      pageId: '23e392488fe581c5af2acaf8c6d75479'
     }
  ]
 })
