@@ -13,7 +13,7 @@ export default siteConfig({
   domain: 'https://nextjs-notion-starter-li0fiy43n-degers-projects-64d52290.vercel.app',
   author: 'Kaybid',
 
-  // open graph metadata (optional)
+  // open graph metadata (optional )
   description: '...........',
 
   // social usernames (optional)
