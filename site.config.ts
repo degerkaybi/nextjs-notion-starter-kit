@@ -12,8 +12,7 @@ export default siteConfig({
   description: '...........',
 
   twitter: 'x',
-  instagram: 'i',
-  giphy: 'g',
+
 
   defaultPageIcon: null,
   defaultPageCover: null,
