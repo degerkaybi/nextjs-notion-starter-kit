@@ -45,7 +45,16 @@ export default siteConfig({
   //   '/foo': '067dd719a912471ea9a3ac10710e7fdf',
   //   '/bar': '0be6efce9daf42688f65c76b89f8eb27'
   // }
-  pageUrlOverrides: null,
+        //  pageUrlOverrides: null,
+  
+ pageUrlOverrides: {
+    '/kaybid-plak-gururla-sunar-volta': '1b0392488fe580f79589d1dd2ffbba93',
+    '/z-birakmadan': '1b0392488fe581718a9ee258ec7c672f',
+    '/son-adres': '1b0392488fe581a2b6d1c45170bcebb0',
+    '/gercegin-olu': '1b0392488fe58195a8f4efa4519c4861',
+    '/dokunamayanlar': '1b0392488fe5811b8fd8f3c2c6e98b75',
+    '/ivre-mort': '1b0392488fe581728173f7e5eacd1471'
+  },
 
   // whether to use the default notion navigation style or a custom one with links to
   // important pages. To use `navigationLinks`, set `navigationStyle` to `custom`.
