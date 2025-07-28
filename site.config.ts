@@ -10,7 +10,7 @@ export default siteConfig({
   description: '...........',
 
   twitter: 'x',
-  instagram: 'i',
+  instagram: 'ig',
   giphy: 'g',
 
   defaultPageIcon: null,
