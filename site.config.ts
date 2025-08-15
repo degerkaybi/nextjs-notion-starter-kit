@@ -17,7 +17,8 @@ export default siteConfig({
   description: 'kaybid',
 
   // social usernames (optional)
-      // twitter: 'x',
+  twitter: 'kaybidsteps',
+
 
   // mastodon: '#', // optional mastodon profile URL, provides link verification
   // newsletter: '#', // optional newsletter URL
