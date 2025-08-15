@@ -8,7 +8,7 @@
 }
 
 .dark-mode .notion-code {
-  background-color: rgba(17, 24, 39, 1);
+  background-color: rgb(26, 26, 26);
   border-color: rgba(55, 65, 81, 1);
 }
 .notion code {
@@ -23,7 +23,7 @@
 }
 
 .dark-mode .notion .notion-inline-code {
-  background: rgb(50, 50, 50) !important;
+  background: rgb(43, 43, 43) !important;
   color: #ff4081;
   padding: 0.2em 0.4em !important;
 }
