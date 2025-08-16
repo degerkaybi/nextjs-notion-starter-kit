@@ -11,12 +11,14 @@ export interface SiteConfig {
   language?: string
 
   twitter?: string
+  youtube?: string // <-- BU SATIRI EKLE
+  instagram?: string // <-- BU SATIRI EKLE
   github?: string
   linkedin?: string
   newsletter?: string
-  youtube?: string
   zhihu?: string
   mastodon?: string
+ 
 
   defaultPageIcon?: string | null
   defaultPageCover?: string | null
