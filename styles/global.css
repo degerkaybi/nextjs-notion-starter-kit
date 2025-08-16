@@ -127,9 +127,3 @@ body {
 .notion-h3 {
   font-size: 22px !important;
 }
-/* --- NOTION DATABASE/TABLE TITLE FIX --- */
-/* Veritabanı/tablo başlıklarının normal sayfa başlığı gibi devasa görünmesini engelle */
-.notion-collection .notion-page-title {
-  font-size: 32px !important; /* Buradaki boyutu istediğin gibi ayarla (orijinali ~28-32px) */
-  margin-bottom: 0.5em !important; /* Başlık ve tablo arasına biraz boşluk ekler */
-}
