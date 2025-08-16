@@ -95,3 +95,8 @@ body {
 .dark-mode ::-webkit-scrollbar-thumb {
   background-color: #444;
 }
+/* --- CUSTOM HIDES --- */
+/* Hide the 'View sitemap' link in the footer */
+.notion-page-footer a[href$="/sitemap.xml"] {
+  display: none !important;
+}
