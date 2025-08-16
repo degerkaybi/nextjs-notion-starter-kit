@@ -100,3 +100,30 @@ body {
 .notion-block-c923ce6dff884fb291bf5b89d035b7da {
     display: none !important;
 }
+/* --- HEADER FONT CUSTOMIZATIONS --- */
+
+/* "Kaybid" Ana Sayfa Linki (Breadcrumb Title) */
+.breadcrumbs .breadcrumb .title {
+  font-size: 22px !important;    /* İstediğin boyutu buraya yaz */
+  font-weight: 500 !important;  /* Kalınlık için 700 (bold) ideal */
+}
+
+/* 1. Üst Navigasyon Menüsü Linkleri (About, Works, etc.) */
+.notion-header a {
+  font-size: 18px !important;
+  font-weight: 500 !important;
+}
+
+/* 2. Notion Sayfa Başlıkları (H1) */
+.notion-page-title, .notion-h1 {
+  font-size: 40px !important;
+}
+
+/* İstersen diğer başlıkları da büyütebilirsin (H2, H3) */
+.notion-h2 {
+  font-size: 28px !important;
+}
+
+.notion-h3 {
+  font-size: 22px !important;
+}
