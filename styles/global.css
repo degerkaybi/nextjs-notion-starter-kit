@@ -1,3 +1,4 @@
+/* ====== BASE RESET ====== */
 * {
   box-sizing: border-box;
 }
@@ -19,14 +20,13 @@ body {
     'Droid Sans', 'Helvetica Neue', 'Noto Sans', sans-serif;
   font-family: var(--notion-font);
   overflow-x: hidden;
+  background: var(--bg-color);
+  color: var(--fg-color);
 }
 
+/* ====== TWEETS ====== */
 .static-tweet blockquote {
   margin: 0;
-  margin-block-start: 0;
-  margin-block-end: 0;
-  margin-inline-start: 0;
-  margin-inline-end: 0;
 }
 
 .static-tweet-emoji {
@@ -34,34 +34,52 @@ body {
   width: 1.2em !important;
 }
 
+/* ====== SEARCH INPUT ====== */
 .searchInput {
   color: var(--fg-color);
   caret-color: var(--fg-color);
 }
 
-::-webkit-scrollbar
-{
+/* ====== SCROLLBAR ====== */
+::-webkit-scrollbar {
   width: 5px;
   height: 5px;
-  background-color: #F5F5F5;
   background-color: var(--bg-color-1);
 }
 
-::-webkit-scrollbar-thumb
-{
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-  background-color: #555;
+::-webkit-scrollbar-thumb {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
   background-color: var(--fg-color-1);
 }
 
 ::-webkit-scrollbar-track {           
-    background-color: var(--bg-color);
+  background-color: var(--bg-color);
 }
+
+/* ====== DARK MODE OVERRIDES ====== */
+.dark-mode {
+  --bg-color: #121212;
+  --bg-color-1: #1e1e1e;
+  --fg-color: #e0e0e0;
+  --fg-color-1: #888;
+}
+
+.dark-mode body {
+  background: var(--bg-color);
+  color: var(--fg-color);
+}
+
 .dark-mode .notion .notion-inline-code {
   background: rgb(50, 50, 50) !important;
-  color: #ff4081;
+  color: #ff4081 !important;
   padding: 0.2em 0.4em !important;
+}
+
+.dark-mode a {
+  color: #82aaff; /* link rengi */
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+  background-color: #444;
 }
