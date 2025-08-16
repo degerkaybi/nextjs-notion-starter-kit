@@ -20,7 +20,7 @@ export default siteConfig({
   twitter: 'kaybidsteps',
 
   // YouTube için yorum satırını kaldırıp kanal adını/ID'sini yaz
-youtube: 'KaybidLive', // Örnek: 'c/KanalIsmi' veya sadece 'KanalIsmi'
+youtube: '@KaybidLive', // Örnek: 'c/KanalIsmi' veya sadece 'KanalIsmi'
 
 // Instagram için bu yeni satırı ekle
 instagram: 'kaybid', // Örnek: 'kaybidsteps'
