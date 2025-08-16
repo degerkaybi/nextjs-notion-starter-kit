@@ -42,6 +42,13 @@ export interface Site {
   // opengraph metadata
   description?: string
   image?: string
+
+  // social usernames
+  twitter?: string
+  github?: string
+  linkedin?: string
+  youtube?: string
+  instagram?: string
 }
 
 export interface SiteMap {
