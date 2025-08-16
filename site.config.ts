@@ -19,6 +19,12 @@ export default siteConfig({
   // social usernames (optional)
   twitter: 'kaybidsteps',
 
+  // YouTube için yorum satırını kaldırıp kanal adını/ID'sini yaz
+youtube: 'KaybidLive', // Örnek: 'c/KanalIsmi' veya sadece 'KanalIsmi'
+
+// Instagram için bu yeni satırı ekle
+instagram: 'kaybid', // Örnek: 'kaybidsteps'
+
 
   // mastodon: '#', // optional mastodon profile URL, provides link verification
   // newsletter: '#', // optional newsletter URL
