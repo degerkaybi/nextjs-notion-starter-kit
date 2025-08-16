@@ -60,3 +60,8 @@ body {
 ::-webkit-scrollbar-track {           
     background-color: var(--bg-color);
 }
+.dark-mode .notion .notion-inline-code {
+  background: rgb(50, 50, 50) !important;
+  color: #ff4081;
+  padding: 0.2em 0.4em !important;
+}
