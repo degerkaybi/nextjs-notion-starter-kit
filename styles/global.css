@@ -57,29 +57,29 @@ body {
   background-color: var(--bg-color);
 }
 
-/* ====== DARK MODE OVERRIDES (TEST IÇIN LIGHT-MODE YAPILDI) ====== */
-.light-mode { /* <-- Değişti */
+/* ====== DARK MODE OVERRIDES ====== */
+.dark-mode {
   --bg-color: #121212;
   --bg-color-1: #1e1e1e;
   --fg-color: #e0e0e0;
   --fg-color-1: #888;
 }
 
-.light-mode body { /* <-- Değişti */
+.dark-mode body {
   background: var(--bg-color);
   color: var(--fg-color);
 }
 
-.light-mode .notion .notion-inline-code { /* <-- Değişti */
-  background: rgb(50, 50, 50) !important;
+.dark-mode .notion .notion-inline-code {
+  background: rgb(24, 24, 24) !important;
   color: #ff4081 !important;
   padding: 0.2em 0.4em !important;
 }
 
-.light-mode a { /* <-- Değişti */
+.dark-mode a {
   color: #82aaff; /* link rengi */
 }
 
-.light-mode ::-webkit-scrollbar-thumb { /* <-- Değişti */
+.dark-mode ::-webkit-scrollbar-thumb {
   background-color: #444;
 }
