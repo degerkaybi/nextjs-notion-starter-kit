@@ -89,7 +89,7 @@ body {
 }
 
 .dark-mode a {
-  color: #82aaff; /* link rengi */
+  color: #c7c6c6; /* link rengi */
 }
 
 .dark-mode ::-webkit-scrollbar-thumb {
