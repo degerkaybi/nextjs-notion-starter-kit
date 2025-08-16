@@ -96,7 +96,8 @@ body {
   background-color: #444;
 }
 /* --- CUSTOM HIDES --- */
-/* Hide the 'View sitemap' link in the footer */
-.notion-page-footer a[href$="/sitemap.xml"] {
-  display: none !important;
+/* Hide the 'Site Map' toggle block at the bottom of the page */
+/* The data-id is specific to this block in your Notion page */
+div[data-id="c923ce6dff884fb291bf5b89d035b7da"] {
+    display: none !important;
 }
