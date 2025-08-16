@@ -95,7 +95,8 @@ body {
 .dark-mode ::-webkit-scrollbar-thumb {
   background-color: #444;
 }
-/* Alt. Hide the 'Site Map' toggle block (more specific) */
-details.notion-toggle[data-block-id="c923ce6dff884fb291bf5b89d035b7da"] {
-  display: none !important;
+/* --- CUSTOM HIDES --- */
+/* Hide the 'Site Map' toggle block by its unique class name */
+.notion-block-c923ce6dff884fb291bf5b89d035b7da {
+    display: none !important;
 }
