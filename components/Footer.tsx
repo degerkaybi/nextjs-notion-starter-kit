@@ -67,17 +67,17 @@ export function FooterImpl() {
           </a>
         )}
 
- {config.instagram && (
-          <a
-            className={styles.instagram}
-            href={`${config.instagram}`}
-            title={`Instagram ${config.author}`}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <FaInstagram />
-          </a>
-        )}
+{config.instagram && (
+  <a
+    className={styles.instagram}
+    href={`https://www.instagram.com/${config.instagram}`} // <--- DÜZELTİLMİŞ HALİ
+    title={`Instagram @${config.instagram}`} // (title'ı da güncelledim)
+    target='_blank'
+    rel='noopener noreferrer'
+  >
+    <FaInstagram />
+  </a>
+)}
 
         {config.mastodon && (
           <a
