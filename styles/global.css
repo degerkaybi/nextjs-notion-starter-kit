@@ -127,3 +127,8 @@ body {
 .notion-h3 {
   font-size: 22px !important;
 }
+/* --- NOTION GALLERY CARD TITLE FIX --- */
+/* Galeri görünümündeki kartların başlıklarının çok büyük olmasını engelle */
+.notion-gallery-grid .notion-page-title-text {
+  font-size: 16px !important; /* Orijinali 2em idi. 16px veya 18px gibi bir değer idealdir. */
+}
