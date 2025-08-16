@@ -57,29 +57,41 @@ body {
   background-color: var(--bg-color);
 }
 
-/* ====== DARK MODE OVERRIDES (TEST IÇIN LIGHT-MODE YAPILDI) ====== */
-.light-mode { /* <-- Değişti */
-  --bg-color: #121212;
-  --bg-color-1: #1e1e1e;
+/* ====== DARK MODE OVERRIDES ====== */
+.dark-mode {
+  /* Ana arka plan rengi. #0a0a0a çok koyu bir gridir. Tam siyah için #000000 kullanabilirsin. */
+  --bg-color: #0a0a0a; 
+
+  /* İkincil arka plan rengi (kartlar, vurgular vb. için) */
+  --bg-color-1: #1c1c1c; 
+
+  /* Ana yazı rengi */
   --fg-color: #e0e0e0;
+
+  /* İkincil, daha soluk yazı rengi */
   --fg-color-1: #888;
 }
 
-.light-mode body { /* <-- Değişti */
+/* Notion'un kendi iç arka plan değişkenini de ezmek daha garantili olabilir */
+.dark-mode .notion-frame {
+    --notion-background-color: var(--bg-color) !important;
+}
+
+.dark-mode body {
   background: var(--bg-color);
   color: var(--fg-color);
 }
 
-.light-mode .notion .notion-inline-code { /* <-- Değişti */
-  background: rgb(24, 24, 24) !important;
+.dark-mode .notion .notion-inline-code {
+  background: rgb(50, 50, 50) !important;
   color: #ff4081 !important;
   padding: 0.2em 0.4em !important;
 }
 
-.light-mode a { /* <-- Değişti */
+.dark-mode a {
   color: #82aaff; /* link rengi */
 }
 
-.light-mode ::-webkit-scrollbar-thumb { /* <-- Değişti */
+.dark-mode ::-webkit-scrollbar-thumb {
   background-color: #444;
 }
