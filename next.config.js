@@ -11,18 +11,20 @@ const withBundleAnalyzer = bundleAnalyzer({
 export default withBundleAnalyzer({
   staticPageGenerationTimeout: 300,
   images: {
-    remotePatterns: [
+  remotePatterns: [
       { protocol: 'https', hostname: 'www.notion.so' },
       { protocol: 'https', hostname: 'notion.so' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'abs.twimg.com' },
       { protocol: 'https', hostname: 'pbs.twimg.com' },
-      { protocol: 'https', hostname: 's3.us-west-2.amazonaws.com' }
-    ],
-    formats: ['image/avif', 'image/webp'],
-    dangerouslyAllowSVG: true,
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
-  },
+      { protocol: 'https', hostname: 's3.us-west-2.amazonaws.com' },
+      { protocol: 'https', hostname: 'i.imgur.com' } // ImgUr için eklendi ✅
+  ],
+  formats: ['image/avif', 'image/webp'],
+  dangerouslyAllowSVG: true,
+  contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
+},
+
 
   webpack: (config) => {
     // Workaround for ensuring that `react` and `react-dom` resolve correctly

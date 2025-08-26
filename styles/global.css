@@ -116,12 +116,12 @@ body {
 
 /* 2. Notion Sayfa Başlıkları (H1) */
 .notion-page-title, .notion-h1 {
-  font-size: 32px !important;
+  font-size: 30px !important;
 }
 
 /* İstersen diğer başlıkları da büyütebilirsin (H2, H3) */
 .notion-h2 {
-  font-size: 28px !important;
+  font-size: 26px !important;
 }
 
 .notion-h3 {
@@ -131,4 +131,8 @@ body {
 /* Galeri görünümündeki kartların başlıklarının çok büyük olmasını engelle */
 .notion-gallery-grid .notion-page-title-text {
   font-size: 16px !important; /* Orijinali 2em idi. 16px veya 18px gibi bir değer idealdir. */
+}
+/* --- HIDE TABLE OF CONTENTS (RIGHT SIDEBAR) --- */
+.notion-aside-table-of-contents {
+  display: none !important;
 }
