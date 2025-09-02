@@ -324,7 +324,7 @@ export function NotionPage({
         mapPageUrl={siteMapPageUrl}
         mapImageUrl={mapImageUrl}
         searchNotion={config.isSearchEnabled ? searchNotion : undefined}
-        pageAside={pageAside}
+        // pageAside={pageAside}
         footer={footer}
       />
 
