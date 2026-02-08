@@ -3,10 +3,9 @@
   "version": "2.0.0",
   "private": true,
   "description": "The perfect starter kit for building beautiful websites with Next.js and Notion.",
-  "author": "Travis Fischer <travis@transitivebullsh.it>",
+  "author": "Travis Fischer travis@transitivebullsh.it",
   "repository": "transitive-bullshit/nextjs-notion-starter-kit",
   "license": "MIT",
-  "packageManager": "pnpm@10.11.1",
   "engines": {
     "node": ">=18"
   },
@@ -17,16 +16,8 @@
     "start": "next start",
     "deploy": "vercel deploy",
     "deps:upgrade": "[ -z $GITHUB_ACTIONS ] && pnpm up -L notion-client notion-types notion-utils react-notion-x || echo 'Skipping deps:update on CI'",
-    "deps:link": "[ -z $GITHUB_ACTIONS ] && run-s deps:link:* || echo 'Skipping deps:update on CI'",
-    "deps:unlink": "[ -z $GITHUB_ACTIONS ] && pnpm add notion-client notion-types notion-utils react-notion-x || echo 'Skipping deps:update on CI'",
-    "deps:link:notion-types": "pnpm link ../react-notion-x/packages/notion-types",
-    "deps:link:notion-utils": "pnpm link ../react-notion-x/packages/notion-utils",
-    "deps:link:notion-client": "pnpm link ../react-notion-x/packages/notion-client",
-    "deps:link:react-notion-x": "pnpm link ../react-notion-x/packages/react-notion-x",
     "analyze": "cross-env ANALYZE=true next build",
-    "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
-    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build",
-    "test": "run-p test:*",
+    "test": "run-p test:",
     "test:lint": "eslint .",
     "test:prettier": "prettier '**/*.{js,jsx,ts,tsx}' --check"
   },
@@ -40,7 +31,7 @@
     "fathom-client": "^3.4.1",
     "ky": "^1.8.1",
     "lqip-modern": "^2.2.1",
-    "next": "14.2.13",
+    "next": "14.2.23",
     "notion-client": "^7.4.3",
     "notion-types": "^7.4.3",
     "notion-utils": "^7.4.3",
@@ -62,7 +53,7 @@
   },
   "devDependencies": {
     "@fisch0920/config": "^1.1.2",
-    "@next/bundle-analyzer": "14.2.13",
+    "@next/bundle-analyzer": "14.2.23",
     "@types/node": "^22.15.30",
     "@types/prismjs": "^1.26.5",
     "@types/react": "18.2.0",
@@ -75,19 +66,12 @@
     "prettier": "^3.5.3",
     "typescript": "^5.8.3"
   },
-  "overrides": {
-    "cacheable-request": {
-      "keyv": "npm:@keyvhq/core@~1.6.6"
+  "pnpm": {
+    "overrides": {
+      "react": "18.2.0",
+      "react-dom": "18.2.0",
+      "next": "14.2.23"
     }
   },
-  "prettier": "@fisch0920/config/prettier",
-  "simple-git-hooks": {
-    "pre-commit": "npx lint-staged"
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "prettier --ignore-unknown --write",
-      "eslint --fix"
-    ]
-  }
+  "prettier": "@fisch0920/config/prettier"
 }
