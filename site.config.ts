@@ -134,7 +134,7 @@ pageUrlOverrides: {
   '/just-because-youre-paranoid': '25f392488fe580b99041d50804c968cf',
   '/got': '25f392488fe5806fbadac95b0519b8f6',
   '/hope': '25f392488fe5804897c3e58496e8b2cd',
-  '/remap': '2e6392488fe580cca7c3c51c30088b4e'
+  '/remap': '2e6392488fe580cca7c3c51c30088b4e',
   '/ivre-mort': '1b0392488fe581728173f7e5eacd1471'
 },
 
