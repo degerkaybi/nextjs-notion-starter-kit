@@ -125,7 +125,6 @@ const config = {
     '/son-adres': '1b0392488fe581a2b6d1c45170bcebb0',
     '/gercegin-olu': '1b0392488fe58195a8f4efa4519c4861',
     '/dokunamayanlar': '1b0392488fe5811b8fd8f3c2c6e98b75',
-    '/works': 'f9757225c30447d49fa61fdd164703d7',
     '/Paris-Olympics-2024': '25f392488fe580dfac77ca4a82b720c4',
     '/figures': '26c392488fe580ffb74cf811b5bc29c0',
     '/just-because-youre-paranoid': '25f392488fe580b99041d50804c968cf',
