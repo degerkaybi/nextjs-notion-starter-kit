@@ -1,39 +1,75 @@
-import WorkHoverPreview from '../components/WorkHoverPreview'
+import { useState } from 'react'
+import Link from 'next/link'
 
 const works = [
   {
     title: 'Silent Steps',
-    url: '/silent-steps',
+    slug: '/silent-steps',
     pageId: '62d2c83cd0e0465490db610ddb78bfc7'
   },
   {
     title: 'Night Watch',
-    url: '/night-watch',
+    slug: '/night-watch',
     pageId: 'bd62c75cff0b4b11a8571ea394db1d59'
   }
 ]
 
 export default function WorksPage() {
-  return (
-    <main style={{ padding: 48 }}>
-      <h1 style={{ fontSize: 32, marginBottom: 32 }}>Works</h1>
+  const [preview, setPreview] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
-      <ul style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+  const handleHover = async (pageId: string) => {
+    setLoading(true)
+    const res = await fetch(`/api/work-preview?pageId=${pageId}`)
+    const data = await res.json()
+    setPreview(data.image ?? null)
+    setLoading(false)
+  }
+
+  return (
+    <div style={{ display: 'flex', gap: 48, padding: 48 }}>
+
+      {/* LİSTE */}
+      <div>
         {works.map((work) => (
-          <li key={work.pageId} style={{ position: 'relative' }}>
-            <WorkHoverPreview pageId={work.pageId} />
-            <a
-              href={work.url}
-              style={{
-                fontSize: 18,
-                textDecoration: 'underline'
-              }}
-            >
-              {work.title}
-            </a>
-          </li>
+          <div key={work.pageId} style={{ marginBottom: 20 }}>
+            <Link href={work.slug} legacyBehavior>
+              <a
+                onMouseEnter={() => handleHover(work.pageId)}
+                style={{
+                  fontSize: 18,
+                  textDecoration: 'none',
+                  color: '#000'
+                }}
+              >
+                {work.title}
+              </a>
+            </Link>
+          </div>
         ))}
-      </ul>
-    </main>
+      </div>
+
+      {/* PREVIEW */}
+      <div style={{ width: 320, minHeight: 200 }}>
+        {loading && <div>loading…</div>}
+
+        {preview && (
+          <div
+            style={{
+              border: '1px solid #ddd',
+              padding: 8,
+              borderRadius: 8
+            }}
+          >
+            <img
+              src={preview}
+              alt="preview"
+              style={{ width: '100%', borderRadius: 4 }}
+            />
+          </div>
+        )}
+      </div>
+
+    </div>
   )
 }
