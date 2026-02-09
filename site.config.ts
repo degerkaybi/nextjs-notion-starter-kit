@@ -128,12 +128,12 @@ pageUrlOverrides: {
   '/gercegin-olu': '1b0392488fe58195a8f4efa4519c4861',
   '/dokunamayanlar': '1b0392488fe5811b8fd8f3c2c6e98b75',
   '/works': 'f9757225c30447d49fa61fdd164703d7',
-  '/paris-olympics-2024': '25f392488fe580dfac77ca4a82b720c4',
+  '/Paris-Olympics-2024': '25f392488fe580dfac77ca4a82b720c4',
   '/figures': '26c392488fe580ffb74cf811b5bc29c0',
   '/just-because-youre-paranoid': '25f392488fe580b99041d50804c968cf',
   '/got': '25f392488fe5806fbadac95b0519b8f6',
   '/hope': '25f392488fe5804897c3e58496e8b2cd',
-  '/remap': '2e6392488fe580cca7c3c51c30088b4e',
+  '/Re-Map': '2e6392488fe580cca7c3c51c30088b4e',
   '/ivre-mort': '1b0392488fe581728173f7e5eacd1471'
 },
 
