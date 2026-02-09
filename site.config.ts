@@ -25,10 +25,8 @@ export default siteConfig({
   defaultPageCover: null,
   defaultPageCoverPosition: 0.5,
 
-  // ✅ CRITICAL: Database support için ZORUNLU
+  // ✅ CRITICAL: Database support
   includeInlineCollections: true,
-  
-  // ✅ CRITICAL: Temiz URL'ler için
   includeNotionIdInUrls: false,
 
   // whether or not to enable support for LQIP preview images (optional)
@@ -144,44 +142,6 @@ export default siteConfig({
 })
 ```
 
----
-
-### **ADIM 4: Değişiklikleri Kaydedin**
-
-1. Kodu yapıştırdıktan sonra **sağ üstte** yeşil **"Commit changes"** butonu var
-
-2. Tıklayın, açılan pencerede:
-   - **Commit message:** `add database support settings`
-   - **Extended description:** (boş bırakabilirsiniz)
-   - **"Commit directly to the main branch"** seçeneğini seçin
-
-3. **"Commit changes"** butonuna basın
-
----
-
-### **ADIM 5: Vercel Otomatik Deploy Başlatacak**
-
-1. GitHub'a commit yaptığınız anda **Vercel otomatik algılayacak**
-
-2. Vercel Dashboard'a gidin:
+Aslında kod aynı! Sorun başka yerde. `lib/site-config.ts` dosyasını kontrol edelim. GitHub'da şu dosyayı açın:
 ```
-   https://vercel.com/dashboard
-```
-
-3. **Deployments** tab'ına gidin
-
-4. En üstte **"Building"** yazıyor mu? → Deploy başlamış demektir
-
-5. **2-5 dakika** bekleyin (deploy tamamlansın)
-
----
-
-### **ADIM 6: Deploy Tamamlanınca Test Edin**
-
-Deploy **"Ready"** olduğunda:
-
-1. **Tarayıcıda incognito/gizli mod açın** (Ctrl+Shift+N)
-
-2. Şu adresi açın:
-```
-   https://www.kaybid.live/works
+lib/site-config.ts
