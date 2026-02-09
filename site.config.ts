@@ -131,7 +131,7 @@ const config = {
     '/got': '25f392488fe5806fbadac95b0519b8f6',
     '/hope': '25f392488fe5804897c3e58496e8b2cd',
     '/Re-Map': '2e6392488fe580cca7c3c51c30088b4e',
-    '/works': 'f9757225c30447d49fa61fdd164703d7',
+    '/works': '302392488fe580d4824accf5851dfe96',
     '/ivre-mort': '1b0392488fe581728173f7e5eacd1471'
   },
 
@@ -147,7 +147,7 @@ const config = {
     },
     {
       title: 'Works',
-      pageId: 'f9757225c30447d49fa61fdd164703d7'
+      pageId: '302392488fe580d4824accf5851dfe96'
     },
     {
       title: 'Art & Ideas',
