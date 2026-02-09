@@ -4,12 +4,13 @@ import { getBlockTitle } from 'notion-utils'
 export function ChildPageGrid({ recordMap }: { recordMap: any }) {
   const blocks = Object.values(recordMap.block)
 
+  const rootBlockId = Object.keys(recordMap.block)[0]
   const childPages = blocks.filter((b: any) => {
     const v = b.value
     return (
       v?.type === 'page' &&
       v?.parent_table === 'block' &&
-      v?.id !== recordMap.block[Object.keys(recordMap.block)[0]]?.value?.id
+      v?.id !== rootBlockId
     )
   })
 
@@ -35,8 +36,8 @@ export function ChildPageGrid({ recordMap }: { recordMap: any }) {
           ? cover.startsWith('http')
             ? cover
             : `https://www.notion.so/image/${encodeURIComponent(
-                cover
-              )}?table=block&id=${page.id}&cache=v2`
+              cover
+            )}?table=block&id=${page.id}&cache=v2`
           : null
 
         return (

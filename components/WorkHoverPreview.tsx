@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-export default function WorkHoverPreview({ pageId }) {
-  const [image, setImage] = useState(null)
+export default function WorkHoverPreview({ pageId }: { pageId: string }) {
+  const [image, setImage] = useState<string | null>(null)
   const [visible, setVisible] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
@@ -11,7 +11,7 @@ export default function WorkHoverPreview({ pageId }) {
 
     try {
       const res = await fetch(`/api/work-preview?pageId=${pageId}`)
-      const data = await res.json()
+      const data = (await res.json()) as { image: string }
       setImage(data.image)
     } catch {
       setImage(null)

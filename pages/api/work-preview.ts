@@ -1,8 +1,7 @@
-import { NotionClient } from 'notion-client'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { notion } from '../../lib/notion-api'
 
-const notion = new NotionClient()
-
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { pageId } = req.query
 
   if (!pageId || typeof pageId !== 'string') {
