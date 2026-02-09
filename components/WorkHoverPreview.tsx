@@ -1,13 +1,7 @@
-'use client'
-
 import { useState } from 'react'
 
-type Props = {
-  pageId: string
-}
-
-export default function WorkHoverPreview({ pageId }: Props) {
-  const [image, setImage] = useState<string | null>(null)
+export default function WorkHoverPreview({ pageId }) {
+  const [image, setImage] = useState(null)
   const [visible, setVisible] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
@@ -25,21 +19,30 @@ export default function WorkHoverPreview({ pageId }: Props) {
   }
 
   return (
-    <div
+    <span
       onMouseEnter={() => {
         setVisible(true)
         load()
       }}
       onMouseLeave={() => setVisible(false)}
-      className="relative inline-block"
+      style={{ position: 'relative', display: 'inline-block' }}
     >
       {visible && image && (
         <img
           src={image}
           alt=""
-          className="absolute left-full top-0 ml-4 w-56 rounded-lg shadow-lg z-50"
+          style={{
+            position: 'absolute',
+            left: '100%',
+            top: 0,
+            marginLeft: 12,
+            width: 220,
+            borderRadius: 8,
+            boxShadow: '0 10px 30px rgba(0,0,0,0.25)',
+            zIndex: 999
+          }}
         />
       )}
-    </div>
+    </span>
   )
 }
