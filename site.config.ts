@@ -39,7 +39,7 @@ const config = {
   // NOTION / DATABASE SUPPORT
   // --------------------------------------------------
 
-  includeInlineCollections: true,
+  includeInlineCollections: false,
   includeNotionIdInUrls: false,
 
   // preview images
