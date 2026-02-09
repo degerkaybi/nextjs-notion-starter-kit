@@ -1,41 +1,57 @@
 import { siteConfig } from './lib/site-config'
 
-export default siteConfig({
-  // the site's root Notion page (required)
+const config = {
+  ...siteConfig,
+
+  // --------------------------------------------------
+  // REQUIRED
+  // --------------------------------------------------
+
+  // the site's root Notion page
   rootNotionPageId: '7479b6483c7c47d1a4b16ec3c3b15060',
 
-  // if you want to restrict pages to a single notion workspace (optional)
+  // --------------------------------------------------
+  // OPTIONAL
+  // --------------------------------------------------
+
+  // restrict pages to a single notion workspace
   rootNotionSpaceId: null,
 
-  // basic site info (required)
+  // basic site info
   name: 'Kaybid',
   domain: 'www.kaybid.live',
   author: 'Kaybid',
 
-  // open graph metadata (optional)
+  // open graph metadata
   description: 'kaybid',
 
-  // social usernames (optional)
+  // social usernames
   twitter: 'kaybidsteps',
   youtube: '@KaybidLive',
   instagram: 'kaybid',
 
-  // default notion icon and cover images for site-wide consistency (optional)
+  // default notion icon and cover images
   defaultPageIcon: null,
   defaultPageCover: null,
   defaultPageCoverPosition: 0.5,
 
-  // ✅ CRITICAL: Database support
+  // --------------------------------------------------
+  // NOTION / DATABASE SUPPORT
+  // --------------------------------------------------
+
   includeInlineCollections: true,
   includeNotionIdInUrls: false,
 
-  // whether or not to enable support for LQIP preview images (optional)
+  // preview images
   isPreviewImageSupportEnabled: false,
 
-  // whether or not redis is enabled for caching generated preview images (optional)
+  // redis cache
   isRedisEnabled: false,
 
-  // map of notion page IDs to URL paths (optional)
+  // --------------------------------------------------
+  // PAGE URL OVERRIDES
+  // --------------------------------------------------
+
   pageUrlOverrides: {
     '/resimlerimin-mirildandiklari': '1d1392488fe580ea834ae3c6a21590a7',
     '/kavramsal-metin': '1cf392488fe58017954aea45ed6ee5e1',
@@ -119,7 +135,10 @@ export default siteConfig({
     '/ivre-mort': '1b0392488fe581728173f7e5eacd1471'
   },
 
-  // navigation
+  // --------------------------------------------------
+  // NAVIGATION
+  // --------------------------------------------------
+
   navigationStyle: 'custom',
   navigationLinks: [
     {
@@ -139,9 +158,6 @@ export default siteConfig({
       pageId: '226392488fe580429c7fd774798d9c8a'
     }
   ]
-})
-```
+}
 
-Aslında kod aynı! Sorun başka yerde. `lib/site-config.ts` dosyasını kontrol edelim. GitHub'da şu dosyayı açın:
-```
-lib/site-config.ts
+export default config
