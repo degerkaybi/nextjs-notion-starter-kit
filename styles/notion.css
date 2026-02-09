@@ -21,6 +21,15 @@
   line-height: 1.65;
 }
 
+/* Custom content pages - hide page content but show header */
+.custom-content-page .notion-page {
+  display: none !important;
+}
+
+.custom-content-page .notion-page-cover-wrapper {
+  display: none !important;
+}
+
 .index-page {
   --notion-max-width: 1100px;
 }
@@ -38,7 +47,7 @@
   margin-bottom: 1em;
 }
 
-.notion-asset-wrapper-video > div,
+.notion-asset-wrapper-video>div,
 .notion-asset-wrapper-video video {
   width: 100% !important;
 }
@@ -111,6 +120,7 @@
 
 /* only target safari */
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
+
   _::-webkit-full-page-media,
   _:future,
   :root,
@@ -203,6 +213,7 @@
 }
 
 @media only screen and (max-width: 1200px) {
+
   .notion-page-cover-wrapper,
   .notion-page-cover-wrapper span,
   .notion-page-cover-wrapper img {
@@ -264,71 +275,59 @@
   background-color: none;
 
   /* light yellow */
-  background-image: linear-gradient(
-    119deg,
-    var(--bg-color),
-    #ffffff 10.5%,
-    #ffffff 85.29%,
-    var(--bg-color)
-  );
+  background-image: linear-gradient(119deg,
+      var(--bg-color),
+      #ffffff 10.5%,
+      #ffffff 85.29%,
+      var(--bg-color));
 }
 
 .notion-purple_background,
 .notion-pink_background {
   /* light pink */
-  background-image: linear-gradient(
-    119deg,
-    var(--bg-color),
-    #ffffff 10.5%,
-    #ffffff 85.29%,
-    var(--bg-color)
-  );
+  background-image: linear-gradient(119deg,
+      var(--bg-color),
+      #ffffff 10.5%,
+      #ffffff 85.29%,
+      var(--bg-color));
 }
 
 .notion-blue_background,
 .notion-gray_background {
   /* light blue */
-  background-image: linear-gradient(
-    119deg,
-    var(--bg-color),
-    #ffffff 10.5%,
-    #ffffff 85.29%,
-    var(--bg-color)
-  );
+  background-image: linear-gradient(119deg,
+      var(--bg-color),
+      #ffffff 10.5%,
+      #ffffff 85.29%,
+      var(--bg-color));
 }
 
 .notion-red_background,
 .notion-orange_background {
   /* light red */
-  background-image: linear-gradient(
-    119deg,
-    var(--bg-color),
-    #dedede 10.5%,
-    #ffffff 85.29%,
-    var(--bg-color)
-  );
+  background-image: linear-gradient(119deg,
+      var(--bg-color),
+      #dedede 10.5%,
+      #ffffff 85.29%,
+      var(--bg-color));
 }
 
 .notion-teal_background {
   /* light green */
-  background-image: linear-gradient(
-    119deg,
-    var(--bg-color),
-    #ffffff 10.5%,
-    #ffffff 85.29%,
-    var(--bg-color)
-  );
+  background-image: linear-gradient(119deg,
+      var(--bg-color),
+      #ffffff 10.5%,
+      #ffffff 85.29%,
+      var(--bg-color));
 }
 
 .notion-brown_background {
   /* dark blue */
-  background-image: linear-gradient(
-    119deg,
-    var(--bg-color),
-    #d8d8d8 10.5%,
-    #a6c3f0 85.29%,
-    var(--bg-color)
-  );
+  background-image: linear-gradient(119deg,
+      var(--bg-color),
+      #d8d8d8 10.5%,
+      #a6c3f0 85.29%,
+      var(--bg-color));
 }
 
 /* disable highlighting in dark mode */
@@ -352,6 +351,7 @@
   border-radius: 50%;
   box-shadow: 0 8px 40px 0 rgb(0 0 0 / 21%);
 }
+
 .notion-page-icon-hero.notion-page-icon-image span,
 .notion-page-icon-hero.notion-page-icon-image img {
   border-radius: 50%;
@@ -400,6 +400,279 @@
   color: var(--fg-color-2);
 }
 
-.notion-equation.notion-equation-block{
+.notion-equation.notion-equation-block {
   align-items: center;
+}
+
+/* ==========================================================================
+   PAGE LINK CARDS
+   Notion'da page olarak eklenen linkleri kart formatında gösterir.
+   Navigation ve breadcrumb linkleri bundan etkilenmez.
+   ========================================================================== */
+
+/* Page content içinde grid layout */
+.notion-page-content-inner {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  /* 3 kolon zorlandı */
+  gap: 24px;
+  align-items: start;
+}
+
+/* Mobilde tek kolon, tablette 2 kolon olabilir */
+@media only screen and (max-width: 1024px) {
+  .notion-page-content-inner {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media only screen and (max-width: 720px) {
+  .notion-page-content-inner {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+}
+
+/* Grid içindeki diğer elementler için tam genişlik */
+.notion-page-content-inner>*:not(.notion-page-link) {
+  grid-column: 1 / -1;
+}
+
+/* Page link kartları */
+.notion-page-content-inner>.notion-page-link,
+.notion-page>.notion-page-link,
+.notion-column>.notion-page-link {
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px !important;
+  /* Kullanıcı isteği: 5px */
+  overflow: hidden;
+  text-decoration: none !important;
+  color: inherit;
+  background: var(--bg-color);
+  border: 1px solid var(--fg-color-1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.25s ease;
+  position: relative;
+  min-height: 220px;
+}
+
+.notion-page-content-inner>.notion-page-link:hover,
+.notion-page>.notion-page-link:hover,
+.notion-column>.notion-page-link:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  border-color: var(--fg-color-2);
+}
+
+/* Placeholder görsel alanı (::before ile) */
+.notion-page-content-inner>.notion-page-link::before,
+.notion-page>.notion-page-link::before,
+.notion-column>.notion-page-link::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 160px;
+  background: linear-gradient(135deg, var(--bg-color-1) 0%, var(--bg-color-2) 100%);
+  position: relative;
+}
+
+.notion-page-content-inner>.notion-page-link .notion-page-icon-inline,
+.notion-page>.notion-page-link .notion-page-icon-inline,
+.notion-column>.notion-page-link .notion-page-icon-inline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 200px !important;
+  z-index: 0;
+  /* Z-index düşürüldü, title (position relative) üstte kalacak */
+  background: transparent;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px !important;
+  /* Kullanıcı isteği: 5px */
+  box-shadow: none;
+  transform: none;
+  overflow: hidden;
+  max-width: none !important;
+  max-height: none !important;
+}
+
+/* Icon resim ise tam kapla - Wrapper span ve img için */
+.notion-page-content-inner>.notion-page-link .notion-page-icon-inline span,
+.notion-page-content-inner>.notion-page-link .notion-page-icon-inline img,
+.notion-page>.notion-page-link .notion-page-icon-inline span,
+.notion-page>.notion-page-link .notion-page-icon-inline img,
+.notion-column>.notion-page-link .notion-page-icon-inline span,
+.notion-column>.notion-page-link .notion-page-icon-inline img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  border-radius: 5px !important;
+  /* Kullanıcı isteği: 5px */
+  display: block !important;
+  position: absolute !important;
+  top: 0;
+  left: 0;
+}
+
+/* Icon emoji ise (text) sadece fontu büyüt */
+.notion-page-content-inner>.notion-page-link .notion-page-icon-inline span[role="img"],
+.notion-page>.notion-page-link .notion-page-icon-inline span[role="img"],
+.notion-column>.notion-page-link .notion-page-icon-inline span[role="img"] {
+  position: relative !important;
+  width: auto !important;
+  height: auto !important;
+  font-size: 80px !important;
+  z-index: 1;
+}
+
+/* Title Styling */
+.notion-page-content-inner>.notion-page-link .notion-page-title-text,
+.notion-page>.notion-page-link .notion-page-title-text,
+.notion-column>.notion-page-link .notion-page-title-text {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  padding: 16px !important;
+  text-align: center !important;
+  position: relative !important;
+  z-index: 2 !important;
+  margin-top: auto !important;
+  width: 100% !important;
+  background: #ffffff !important;
+  /* Düz beyaz */
+  color: #000000 !important;
+  /* Siyah yazı */
+  text-shadow: none !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+.notion-page-content-inner>.notion-page-link .notion-page-title-text span,
+.notion-page>.notion-page-link .notion-page-title-text span,
+.notion-column>.notion-page-link .notion-page-title-text span {
+  border-bottom: none !important;
+  text-decoration: none !important;
+}
+
+/* Dark mode stilleri */
+.dark-mode .notion-page-content-inner>.notion-page-link,
+.dark-mode .notion-page>.notion-page-link,
+.dark-mode .notion-column>.notion-page-link {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .notion-page-content-inner>.notion-page-link:hover,
+.dark-mode .notion-page>.notion-page-link:hover,
+.dark-mode .notion-column>.notion-page-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .notion-page-content-inner>.notion-page-link::before,
+.dark-mode .notion-page>.notion-page-link::before,
+.dark-mode .notion-column>.notion-page-link::before {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.06) 100%);
+}
+
+.dark-mode .notion-page-content-inner>.notion-page-link .notion-page-icon-inline,
+.dark-mode .notion-page>.notion-page-link .notion-page-icon-inline,
+.dark-mode .notion-column>.notion-page-link .notion-page-icon-inline {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dark-mode .notion-page-content-inner>.notion-page-link .notion-page-title-text,
+.dark-mode .notion-page>.notion-page-link .notion-page-title-text,
+.dark-mode .notion-column>.notion-page-link .notion-page-title-text {
+  background: #3fb8d1 !important;
+  /* Geçici kontrol: Bu renk görünürse selector çalışıyor */
+  background: #373C3F !important;
+  /* Solid Dark Gray - Sayfa renginden bir tık açık, opak */
+  color: rgba(255, 255, 255, 0.9) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Navigation header içindeki linkler kart olmamalı */
+.notion-nav-header-rhs .notion-page-link,
+.notion-header .notion-page-link,
+.breadcrumbs .notion-page-link,
+.notion-breadcrumb .notion-page-link {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: auto !important;
+  transform: none !important;
+}
+
+.notion-nav-header-rhs .notion-page-link::before,
+.notion-header .notion-page-link::before,
+.breadcrumbs .notion-page-link::before,
+.notion-breadcrumb .notion-page-link::before {
+  display: none !important;
+}
+
+.notion-nav-header-rhs .notion-page-link .notion-page-icon-inline,
+.notion-header .notion-page-link .notion-page-icon-inline,
+.breadcrumbs .notion-page-link .notion-page-icon-inline,
+.notion-breadcrumb .notion-page-link .notion-page-icon-inline {
+  position: static !important;
+  transform: none !important;
+  width: auto !important;
+  height: auto !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 1em !important;
+  margin-right: 4px;
+}
+
+.notion-nav-header-rhs .notion-page-link .notion-page-title-text,
+.notion-header .notion-page-link .notion-page-title-text,
+.breadcrumbs .notion-page-link .notion-page-title-text,
+.notion-breadcrumb .notion-page-link .notion-page-title-text {
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.notion-nav-header-rhs .notion-page-link:hover,
+.notion-header .notion-page-link:hover,
+.breadcrumbs .notion-page-link:hover,
+.notion-breadcrumb .notion-page-link:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Responsive - mobilde tek sütun */
+@media only screen and (max-width: 720px) {
+  .notion-page-content-inner {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .notion-page-content-inner>.notion-page-link::before,
+  .notion-page>.notion-page-link::before,
+  .notion-column>.notion-page-link::before {
+    height: 140px;
+  }
+
+  .notion-page-content-inner>.notion-page-link .notion-page-icon-inline,
+  .notion-page>.notion-page-link .notion-page-icon-inline,
+  .notion-column>.notion-page-link .notion-page-icon-inline {
+    top: 50px;
+  }
 }

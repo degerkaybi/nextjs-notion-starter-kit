@@ -29,6 +29,7 @@ import { NotionPageHeader } from './NotionPageHeader'
 import { Page404 } from './Page404'
 // import { PageAside } from './PageAside'
 import { PageHead } from './PageHead'
+import { PageLinkBlock } from './PageLinkCard'
 import styles from './styles.module.css'
 
 // -----------------------------------------------------------------------------
@@ -187,8 +188,11 @@ export function NotionPage({
   site,
   recordMap,
   error,
-  pageId
-}: types.PageProps) {
+  pageId,
+  customContent
+}: types.PageProps & {
+  customContent?: React.ReactNode
+}) {
   const router = useRouter()
   const lite = useSearchParam('lite')
 
@@ -203,6 +207,7 @@ export function NotionPage({
       Modal,
       Tweet,
       Header: NotionPageHeader,
+      Page: PageLinkBlock as any,
       propertyLastEditedTimeValue,
       propertyTextValue,
       propertyDateValue
@@ -279,8 +284,8 @@ export function NotionPage({
 
   const socialImage = mapImageUrl(
     getPageProperty<string>('Social Image', block, recordMap) ||
-      (block as PageBlock).format?.page_cover ||
-      config.defaultPageCover,
+    (block as PageBlock).format?.page_cover ||
+    config.defaultPageCover,
     block
   )
 
@@ -303,30 +308,62 @@ export function NotionPage({
       {isLiteMode && <BodyClassName className='notion-lite' />}
       {isDarkMode && <BodyClassName className='dark-mode' />}
 
-      <NotionRenderer
-        bodyClassName={cs(
-          styles.notion,
-          pageId === site.rootNotionPageId && 'index-page'
-        )}
-        darkMode={isDarkMode}
-        components={components}
-        recordMap={recordMap}
-        rootPageId={site.rootNotionPageId}
-        rootDomain={site.domain}
-        fullPage={!isLiteMode}
-        previewImages={!!recordMap.preview_images}
-        showCollectionViewDropdown={false}
-        showTableOfContents={showTableOfContents}
-        minTableOfContentsItems={minTableOfContentsItems}
-        defaultPageIcon={config.defaultPageIcon}
-        defaultPageCover={config.defaultPageCover}
-        defaultPageCoverPosition={config.defaultPageCoverPosition}
-        mapPageUrl={siteMapPageUrl}
-        mapImageUrl={mapImageUrl}
-        searchNotion={config.isSearchEnabled ? searchNotion : undefined}
-        // pageAside={pageAside}
-        footer={footer}
-      />
+      {customContent ? (
+        <>
+          <NotionRenderer
+            bodyClassName={cs(
+              styles.notion,
+              pageId === site.rootNotionPageId && 'index-page',
+              'custom-content-page'
+            )}
+            darkMode={isDarkMode}
+            components={components}
+            recordMap={recordMap}
+            rootPageId={site.rootNotionPageId}
+            rootDomain={site.domain}
+            fullPage={!isLiteMode}
+            previewImages={!!recordMap.preview_images}
+            showCollectionViewDropdown={false}
+            showTableOfContents={false}
+            minTableOfContentsItems={minTableOfContentsItems}
+            defaultPageIcon={config.defaultPageIcon}
+            defaultPageCover={config.defaultPageCover}
+            defaultPageCoverPosition={config.defaultPageCoverPosition}
+            mapPageUrl={siteMapPageUrl}
+            mapImageUrl={mapImageUrl}
+            searchNotion={config.isSearchEnabled ? searchNotion : undefined}
+            footer={null}
+          />
+          <div className="custom-content-wrapper" style={{ marginTop: 0 }}>
+            {customContent}
+          </div>
+        </>
+      ) : (
+        <NotionRenderer
+          bodyClassName={cs(
+            styles.notion,
+            pageId === site.rootNotionPageId && 'index-page'
+          )}
+          darkMode={isDarkMode}
+          components={components}
+          recordMap={recordMap}
+          rootPageId={site.rootNotionPageId}
+          rootDomain={site.domain}
+          fullPage={!isLiteMode}
+          previewImages={!!recordMap.preview_images}
+          showCollectionViewDropdown={false}
+          showTableOfContents={showTableOfContents}
+          minTableOfContentsItems={minTableOfContentsItems}
+          defaultPageIcon={config.defaultPageIcon}
+          defaultPageCover={config.defaultPageCover}
+          defaultPageCoverPosition={config.defaultPageCoverPosition}
+          mapPageUrl={siteMapPageUrl}
+          mapImageUrl={mapImageUrl}
+          searchNotion={config.isSearchEnabled ? searchNotion : undefined}
+          // pageAside={pageAside}
+          footer={footer}
+        />
+      )}
 
       <GitHubShareButton />
     </>

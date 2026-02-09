@@ -1,5 +1,6 @@
 import { type ExtendedRecordMap } from 'notion-types'
-import { parsePageId } from 'notion-utils'
+import { parsePageId, mergeRecordMaps } from 'notion-utils'
+import pMap from 'p-map'
 
 import type { PageProps } from './types'
 import * as acl from './acl'
@@ -7,6 +8,7 @@ import { environment, pageUrlAdditions, pageUrlOverrides, site } from './config'
 import { db } from './db'
 import { getSiteMap } from './get-site-map'
 import { getPage } from './notion'
+import { notion } from './notion-api'
 
 export async function resolveNotionPage(
   domain: string,
@@ -19,8 +21,6 @@ export async function resolveNotionPage(
     pageId = parsePageId(rawPageId)!
 
     if (!pageId) {
-      // check if the site configuration provides an override or a fallback for
-      // the page's URI
       const override =
         pageUrlOverrides[rawPageId] || pageUrlAdditions[rawPageId]
 
@@ -31,18 +31,12 @@ export async function resolveNotionPage(
 
     const useUriToPageIdCache = true
     const cacheKey = `uri-to-page-id:${domain}:${environment}:${rawPageId}`
-    // TODO: should we use a TTL for these mappings or make them permanent?
-    // const cacheTTL = 8.64e7 // one day in milliseconds
-    const cacheTTL = undefined // disable cache TTL
+    const cacheTTL = undefined
 
     if (!pageId && useUriToPageIdCache) {
       try {
-        // check if the database has a cached mapping of this URI to page ID
         pageId = await db.get(cacheKey)
-
-        // console.log(`redis get "${cacheKey}"`, pageId)
       } catch (err: any) {
-        // ignore redis errors
         console.warn(`redis error get "${cacheKey}"`, err.message)
       }
     }
@@ -50,31 +44,20 @@ export async function resolveNotionPage(
     if (pageId) {
       recordMap = await getPage(pageId)
     } else {
-      // handle mapping of user-friendly canonical page paths to Notion page IDs
-      // e.g., /developer-x-entrepreneur versus /71201624b204481f862630ea25ce62fe
       const siteMap = await getSiteMap()
       pageId = siteMap?.canonicalPageMap[rawPageId]
 
       if (pageId) {
-        // TODO: we're not re-using the page recordMap from siteMaps because it is
-        // cached aggressively
-        // recordMap = siteMap.pageMap[pageId]
-
         recordMap = await getPage(pageId)
 
         if (useUriToPageIdCache) {
           try {
-            // update the database mapping of URI to pageId
             await db.set(cacheKey, pageId, cacheTTL)
-
-            // console.log(`redis set "${cacheKey}"`, pageId, { cacheTTL })
           } catch (err: any) {
-            // ignore redis errors
             console.warn(`redis error set "${cacheKey}"`, err.message)
           }
         }
       } else {
-        // note: we're purposefully not caching URI to pageId mappings for 404s
         return {
           error: {
             message: `Not found "${rawPageId}"`,
@@ -85,10 +68,88 @@ export async function resolveNotionPage(
     }
   } else {
     pageId = site.rootNotionPageId
-
-    console.log(site)
     recordMap = await getPage(pageId)
   }
+
+  // --------------------------------------------------------------------------
+  // Pre-fetch child pages (RECURSIVE)
+  // --------------------------------------------------------------------------
+  if (recordMap?.block && pageId) {
+    const rootBlock = recordMap.block[pageId]?.value
+    const effectiveRootBlock = rootBlock || Object.values(recordMap.block)[0]?.value
+
+    if (effectiveRootBlock) {
+      const pendingBlocks = [effectiveRootBlock.id]
+      const foundPageIds = new Set<string>()
+      const processedBlocks = new Set<string>()
+
+      // BFS traversal to find link_to_page and page blocks
+      // Limit depth/count to avoid infinite loops or excessive processing
+      let iterations = 0
+      const maxIterations = 2000
+
+      while (pendingBlocks.length > 0 && iterations < maxIterations) {
+        iterations++
+        const blockId = pendingBlocks.shift()!
+        if (processedBlocks.has(blockId)) continue
+        processedBlocks.add(blockId)
+
+        const block = recordMap.block[blockId]?.value
+        if (!block) continue
+
+        // Check content
+        if (block.content) {
+          pendingBlocks.push(...block.content)
+        }
+
+        // Identify target pages
+        const blockAny = block as any
+        if (blockAny.type === 'page' && blockAny.parent_table === 'block' && blockAny.id !== effectiveRootBlock.id) {
+          foundPageIds.add(blockAny.id)
+        } else if (blockAny.type === 'link_to_page' && blockAny.format?.page_id) {
+          foundPageIds.add(blockAny.format.page_id)
+        }
+      }
+
+      // Filter and limit
+      const uniquePageIds = [...foundPageIds].slice(0, 50)
+
+      if (uniquePageIds.length > 0) {
+        try {
+          // Fetch child pages in parallel
+          const childRecordMaps = await pMap(
+            uniquePageIds,
+            async (childPageId) => {
+              try {
+                // Determine chunk limit depending on likelihood of image being deep?
+                // Stick to 1 for now.
+                return await notion.getPage(childPageId, {
+                  chunkLimit: 1,
+                  fetchMissingBlocks: false,
+                  fetchCollections: false,
+                  signFileUrls: false
+                })
+              } catch (err) {
+                return null
+              }
+            },
+            {
+              concurrency: 4
+            }
+          )
+
+          for (const childRecordMap of childRecordMaps) {
+            if (childRecordMap) {
+              mergeRecordMaps(recordMap, childRecordMap)
+            }
+          }
+        } catch (err) {
+          console.error('Error prefetching child pages', err)
+        }
+      }
+    }
+  }
+  // --------------------------------------------------------------------------
 
   const props: PageProps = { site, recordMap, pageId }
   return { ...props, ...(await acl.pageAcl(props)) }
