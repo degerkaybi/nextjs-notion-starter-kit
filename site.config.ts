@@ -139,7 +139,7 @@ const config = {
   // NAVIGATION
   // --------------------------------------------------
 
-  navigationStyle: 'custom',
+  navigationStyle: 'custom' as const,
   navigationLinks: [
     {
       title: 'About',
