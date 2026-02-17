@@ -34,9 +34,9 @@ export function FooterImpl({ recordMap }: { recordMap?: any }) {
     setHasMounted(true)
   }, [])
 
-  const navLinks = config.navigationLinks?.filter(
+  const navLinks = (config.navigationLinks?.filter(
     (link) => link?.pageId || link?.url
-  ) ?? []
+  ) || []) as Array<{ pageId?: string; url?: string; title: string }>
 
   return (
     <footer className="site-footer">

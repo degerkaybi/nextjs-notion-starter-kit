@@ -1,0 +1,78 @@
+﻿
+> nextjs-notion-starter-kit@2.0.0 build
+> next build
+
+  Γû▓ Next.js 14.2.23
+
+   Skipping linting
+   Checking validity of types ...
+node.exe : Failed to 
+compile.
+At C:\Program Files\n
+odejs\npm.ps1:29 char
+:3
++   & $NODE_EXE $NPM_
+CLI_JS $args
++   ~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (Failed    
+ to compile.:Stri    
+ng) [], RemoteEx    c
+eption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+
+./components/Footer.t
+sx:46:26
+Type error: 'link' is
+ possibly 'undefined'
+.
+
+[0m [90m 44 |[39m 
+        [33m<[39m[
+33mnav[39m className
+[33m=[39m[32m"foot
+er-nav"[39m[33m>[3
+9m[0m
+[0m [90m 45 |[39m 
+          {navLinks[
+33m.[39mmap((link[3
+3m,[39m index) [33m
+=>[39m {[0m
+[0m[31m[1m>[22m[
+39m[90m 46 |[39m   
+          [36mconst
+[39m slug [33m=[39m
+ link[33m.[39mpageI
+d [33m&&[39m record
+Map[0m
+[0m [90m    |[39m 
+                     
+    [31m[1m^[22m[
+39m[0m
+[0m [90m 47 |[39m 
+              [33m?
+[39m getCanonicalPage
+Id(link[33m.[39mpag
+eId[33m,[39m record
+Map)[0m
+[0m [90m 48 |[39m 
+              [33m:
+[39m [36mnull[39m[
+0m
+[0m [90m 49 |[39m 
+            [36mcons
+t[39m href [33m=[3
+9m link[33m.[39murl
+ [33m?[39m[33m?[3
+9m (slug [33m?[39m 
+[32m`/${slug}`[39m 
+[33m:[39m [32m'#'
+[39m)[0m
+Static worker exited 
+with code: 1 and sign
+al: null

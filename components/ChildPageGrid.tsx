@@ -66,8 +66,8 @@ export function ChildPageGrid({
           // Construct a partial block object for mapImageUrl
           const dummyBlock = { value: { id, type: 'page' } } as any
 
-          const icon = rawIcon ? mapImageUrl(rawIcon, dummyBlock.value) : null
-          const coverUrl = rawCover ? mapImageUrl(rawCover, dummyBlock.value) : null
+          const icon = rawIcon ? mapImageUrl(rawIcon, dummyBlock.value) : undefined
+          const coverUrl = rawCover ? mapImageUrl(rawCover, dummyBlock.value) : undefined
 
           return (
             <Link key={id} href={href} legacyBehavior>
