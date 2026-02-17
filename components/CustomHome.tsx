@@ -73,56 +73,28 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
         startTime={28}
       />
 
-      <section className="featured-projects">
-        <h2 className="featured-projects-title">Selected Works</h2>
-        <ChildPageGrid manualItems={featuredItems} columns={4} />
-        <div className="more-works-container">
-          <Link href="/works" className="more-works-link">
-            More works
-          </Link>
-        </div>
+      <section className="map-section">
+        <iframe
+          src="https://www.google.com/maps/d/u/0/embed?mid=1tHoeYbM6SzK_Q1106KHegwvG7mPNBL2d&femb=1"
+          width="100%"
+          height="600"
+          className="google-map"
+          title="Kaybid Map"
+        />
       </section>
 
       <style jsx>{`
         .custom-home {
           width: 100%;
         }
-        .featured-projects {
-          padding: 4rem 2rem;
-          max-width: 1400px;
-          margin: 0 auto;
+        .map-section {
+          width: 100%;
+          height: 600px;
+          background: #000;
         }
-        .featured-projects-title {
-          font-size: 1.75rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 2px;
-          margin: 0 0 2.5rem 0;
-          text-align: center;
-        }
-        .more-works-container {
-          margin-top: 3rem;
-          text-align: center;
-        }
-        .more-works-link {
-          display: inline-block;
-          font-size: 1rem;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          color: inherit;
-          text-decoration: none;
-          padding: 0.75rem 2rem;
-          border: 1px solid currentColor;
-          border-radius: 50px;
-          opacity: 0.7;
-          transition: all 0.3s ease;
-        }
-        .more-works-link:hover {
-          opacity: 1;
-          background: currentColor;
-          color: var(--bg-color, #fff);
-          transform: translateY(-2px);
+        .google-map {
+          border: none;
+          filter: invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%);
         }
       `}</style>
     </div>
