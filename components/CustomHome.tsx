@@ -91,30 +91,39 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
         }
         .map-section {
           width: 100%;
-          padding: 4rem 2rem;
+          padding: 2rem 2rem;
           background: var(--bg-color, #000);
           display: flex;
           justify-content: center;
         }
         .map-container {
           width: 100%;
-          max-width: 1200px;
-          height: 600px;
-          border-radius: 20px;
+          max-width: 700px;
+          height: 350px;
+          border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
           border: 1px solid var(--divider-color, rgba(255,255,255,0.1));
+          position: relative;
         }
         .google-map {
           border: none;
           filter: invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%);
+          position: absolute;
+          top: -50px; /* Hides the header */
+          left: 0;
+          height: calc(350px + 50px) !important;
         }
         @media (max-width: 640px) {
           .map-section {
-            padding: 2rem 1rem;
+            padding: 1rem;
           }
-          .map-container, .map-section {
-            height: 450px;
+          .map-container {
+            max-width: 100%;
+            height: 300px;
+          }
+          .google-map {
+            height: calc(300px + 50px) !important;
           }
         }
       `}</style>
