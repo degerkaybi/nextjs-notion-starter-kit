@@ -21,7 +21,7 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
     const findPage = (titlePart: string) => {
       return (blocks.find((b: any) =>
         (b.value as any)?.type === 'page' &&
-        getBlockTitle((b.value as any), recordMap)?.toLowerCase().includes(titlePart.toLowerCase())
+        getBlockTitle((b.value as any), recordMap)?.toLowerCase()?.includes(titlePart.toLowerCase())
       ) as any)?.value
     }
 

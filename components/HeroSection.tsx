@@ -12,18 +12,22 @@ export function HeroSection({ videoUrl, imageUrl, subtitle, startTime }: { video
   }
 
   const getYoutubeStartTime = (url: string) => {
-    const urlObj = new URL(url.replace('youtu.be/', 'youtube.com/watch?v='))
-    const t = urlObj.searchParams.get('t')
-    if (!t) return null
+    try {
+      const urlObj = new URL(url.replace('youtu.be/', 'youtube.com/watch?v='))
+      const t = urlObj.searchParams.get('t')
+      if (!t) return null
 
-    // Handle formats like 1m30s, 90, 90s
-    const match = t.match(/(?:(\d+)m)?(?:(\d+)s?)?/)
-    if (match) {
-      const minutes = parseInt(match[1] || '0', 10)
-      const seconds = parseInt(match[2] || '0', 10)
-      return minutes * 60 + seconds
+      // Handle formats like 1m30s, 90, 90s
+      const match = t.match(/(?:(\d+)m)?(?:(\d+)s?)?/)
+      if (match) {
+        const minutes = parseInt(match[1] || '0', 10)
+        const seconds = parseInt(match[2] || '0', 10)
+        return minutes * 60 + seconds
+      }
+      return parseInt(t, 10) || null
+    } catch (e) {
+      return null
     }
-    return parseInt(t, 10) || null
   }
 
   const youtubeId = videoUrl ? getYoutubeId(videoUrl) : null

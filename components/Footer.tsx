@@ -43,17 +43,17 @@ export function FooterImpl({ recordMap }: { recordMap?: any }) {
       <div className="footer-inner">
         <nav className="footer-nav">
           {navLinks.map((link, index) => {
-            const slug = link.pageId && recordMap
+            const slug = link?.pageId && recordMap
               ? getCanonicalPageId(link.pageId, recordMap)
               : null
-            const href = link.url ?? (slug ? `/${slug}` : '#')
+            const href = link?.url ?? (slug ? `/${slug}` : '#')
             return (
               <Link
                 key={index}
                 href={href}
                 className="footer-nav-link"
               >
-                {link.title}
+                {link?.title}
               </Link>
             )
           })}
