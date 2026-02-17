@@ -75,6 +75,11 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
 
       <section className="map-section">
         <h2 className="map-title">Silent Steps Series Istanbul Map</h2>
+        <div className="map-subtitle">
+          <p>
+            The project ongoing since 2018 and over 600+ individual unique collages created from 40+ different species were created and applied to the streets.
+          </p>
+        </div>
         <div className="map-container">
           <iframe
             src="https://www.google.com/maps/d/u/0/embed?mid=1tHoeYbM6SzK_Q1106KHegwvG7mPNBL2d&femb=1"
@@ -85,9 +90,6 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
           />
         </div>
         <div className="map-description">
-          <p>
-            The project ongoing since 2018 and over 600+ individual unique collages created from 40+ different species were created and applied to the streets.
-          </p>
           <p className="quote">
             “All my collage works are original and unique. None of them are copies, prints, or stickers. That is all organic. I make them with traditional methods.”
           </p>
@@ -111,13 +113,22 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 2px;
-          margin: 0 0 2.5rem 0;
+          margin: 0 0 1rem 0;
           text-align: center;
           color: var(--fg-color);
         }
+        .map-subtitle {
+          max-width: 800px;
+          margin-bottom: 2.5rem;
+          text-align: center;
+          font-size: 1.1rem;
+          line-height: 1.6;
+          opacity: 0.8;
+          padding: 0 1rem;
+        }
         .map-description {
           max-width: 800px;
-          margin-top: 3rem;
+          margin-top: 2rem;
           text-align: center;
           font-size: 1.1rem;
           line-height: 1.6;
@@ -125,7 +136,6 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
           padding: 0 1rem;
         }
         .quote {
-          margin-top: 1.5rem;
           font-style: italic;
           font-weight: 300;
           opacity: 0.9;
