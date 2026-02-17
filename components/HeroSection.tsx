@@ -2,85 +2,102 @@ import * as React from 'react'
 import * as config from '@/lib/config'
 import { IoChevronDownOutline } from '@react-icons/all-files/io5/IoChevronDownOutline'
 
-export function HeroSection({ videoUrl, imageUrl, subtitle }: { videoUrl?: string, imageUrl?: string, subtitle?: string }) {
-    const [isModalOpen, setIsModalOpen] = React.useState(false)
+export function HeroSection({ videoUrl, imageUrl, subtitle, startTime }: { videoUrl?: string, imageUrl?: string, subtitle?: string, startTime?: number }) {
+  const [isModalOpen, setIsModalOpen] = React.useState(false)
 
-    const getYoutubeId = (url: string) => {
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
-        const match = url.match(regExp)
-        return (match && match[2] && match[2].length === 11) ? match[2] : null
+  const getYoutubeId = (url: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
+    const match = url.match(regExp)
+    return (match && match[2] && match[2].length === 11) ? match[2] : null
+  }
+
+  const getYoutubeStartTime = (url: string) => {
+    const urlObj = new URL(url.replace('youtu.be/', 'youtube.com/watch?v='))
+    const t = urlObj.searchParams.get('t')
+    if (!t) return null
+
+    // Handle formats like 1m30s, 90, 90s
+    const match = t.match(/(?:(\d+)m)?(?:(\d+)s?)?/)
+    if (match) {
+      const minutes = parseInt(match[1] || '0', 10)
+      const seconds = parseInt(match[2] || '0', 10)
+      return minutes * 60 + seconds
     }
+    return parseInt(t, 10) || null
+  }
 
-    const youtubeId = videoUrl ? getYoutubeId(videoUrl) : null
+  const youtubeId = videoUrl ? getYoutubeId(videoUrl) : null
+  const urlStartTime = videoUrl ? getYoutubeStartTime(videoUrl) : null
+  const finalStartTime = startTime || urlStartTime || 0
 
-    return (
-        <section className="hero">
-            <div className="hero-background">
-                {youtubeId ? (
-                    <div className="hero-youtube-wrapper">
-                        <iframe
-                            src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${youtubeId}&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1`}
-                            frameBorder="0"
-                            allow="autoplay; encrypted-media"
-                            allowFullScreen
-                            className="hero-youtube-iframe"
-                        />
-                    </div>
-                ) : videoUrl ? (
-                    <video
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        className="hero-media"
-                    >
-                        <source src={videoUrl} type="video/mp4" />
-                    </video>
-                ) : imageUrl ? (
-                    <img src={imageUrl} alt="Background" className="hero-media" />
-                ) : (
-                    <div className="hero-media hero-placeholder" />
-                )}
-                <div className="hero-overlay" />
-            </div>
+  return (
+    <section className="hero">
+      <div className="hero-background">
+        {youtubeId ? (
+          <div className="hero-youtube-wrapper">
+            <iframe
+              src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${youtubeId}&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1${finalStartTime ? `&start=${finalStartTime}` : ''}`}
+              frameBorder="0"
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+              className="hero-youtube-iframe"
+            />
+          </div>
+        ) : videoUrl ? (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="hero-media"
+          >
+            <source src={videoUrl} type="video/mp4" />
+          </video>
+        ) : imageUrl ? (
+          <img src={imageUrl} alt="Background" className="hero-media" />
+        ) : (
+          <div className="hero-media hero-placeholder" />
+        )}
+        <div className="hero-overlay" />
+      </div>
 
-            <div className="hero-content">
-                <h1 className="hero-title">{config.name}</h1>
-                <p className="hero-subtitle">{subtitle || config.description}</p>
+      <div className="hero-content">
+        <h1 className="hero-title">{config.name}</h1>
+        <p className="hero-subtitle">{subtitle || config.description}</p>
 
-                {videoUrl && (
-                    <button className="hero-cta" onClick={() => setIsModalOpen(true)}>
-                        <span>Watch Full Documentary</span>
-                    </button>
-                )}
-            </div>
+        {videoUrl && (
+          <button className="hero-cta" onClick={() => setIsModalOpen(true)}>
+            <span>Watch Full Documentary</span>
+          </button>
+        )}
+      </div>
 
-            {isModalOpen && (
-                <div className="video-modal-overlay" onClick={() => setIsModalOpen(false)}>
-                    <div className="video-modal-container" onClick={(e) => e.stopPropagation()}>
-                        <button className="modal-close" onClick={() => setIsModalOpen(false)}>×</button>
-                        {youtubeId ? (
-                            <iframe
-                                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1`}
-                                frameBorder="0"
-                                allow="autoplay; encrypted-media"
-                                allowFullScreen
-                                className="modal-video-iframe"
-                            />
-                        ) : (
-                            <video controls autoPlay className="modal-video-native">
-                                <source src={videoUrl} type="video/mp4" />
-                            </video>
-                        )}
-                    </div>
-                </div>
+      {isModalOpen && (
+        <div className="video-modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="video-modal-container" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setIsModalOpen(false)}>×</button>
+            {youtubeId ? (
+              <iframe
+                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1${finalStartTime ? `&start=${finalStartTime}` : ''}`}
+                frameBorder="0"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                className="modal-video-iframe"
+              />
+            ) : (
+              <video controls autoPlay className="modal-video-native">
+                <source src={videoUrl} type="video/mp4" />
+              </video>
             )}
+          </div>
+        </div>
+      )}
 
-            <div className="hero-scroll-indicator">
-                <IoChevronDownOutline />
-            </div>
+      <div className="hero-scroll-indicator">
+        <IoChevronDownOutline />
+      </div>
 
-            <style jsx>{`
+      <style jsx>{`
         .hero {
           position: relative;
           height: 100vh;
@@ -267,6 +284,6 @@ export function HeroSection({ videoUrl, imageUrl, subtitle }: { videoUrl?: strin
           60% {transform: translateX(-50%) translateY(-5px);}
         }
       `}</style>
-        </section>
-    )
+    </section>
+  )
 }

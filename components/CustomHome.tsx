@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Link from 'next/link'
 import * as config from '@/lib/config'
 import { HeroSection } from './HeroSection'
 import { ChildPageGrid } from './ChildPageGrid'
@@ -69,11 +70,17 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
         videoUrl={videoUrl}
         imageUrl={coverUrl}
         subtitle="Street Art | Animation |  Traditional Collage"
+        startTime={28}
       />
 
       <section className="featured-projects">
-        <h2 className="featured-projects-title">Seçilmiş Projeler/Eserler</h2>
+        <h2 className="featured-projects-title">Selected Works</h2>
         <ChildPageGrid manualItems={featuredItems} columns={4} />
+        <div className="more-works-container">
+          <Link href="/works" className="more-works-link">
+            More works
+          </Link>
+        </div>
       </section>
 
       <style jsx>{`
@@ -92,6 +99,30 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
           letter-spacing: 2px;
           margin: 0 0 2.5rem 0;
           text-align: center;
+        }
+        .more-works-container {
+          margin-top: 3rem;
+          text-align: center;
+        }
+        .more-works-link {
+          display: inline-block;
+          font-size: 1rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          color: inherit;
+          text-decoration: none;
+          padding: 0.75rem 2rem;
+          border: 1px solid currentColor;
+          border-radius: 50px;
+          opacity: 0.7;
+          transition: all 0.3s ease;
+        }
+        .more-works-link:hover {
+          opacity: 1;
+          background: currentColor;
+          color: var(--bg-color, #fff);
+          transform: translateY(-2px);
         }
       `}</style>
     </div>
