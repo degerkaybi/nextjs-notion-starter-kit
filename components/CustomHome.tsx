@@ -74,13 +74,15 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
       />
 
       <section className="map-section">
-        <iframe
-          src="https://www.google.com/maps/d/u/0/embed?mid=1tHoeYbM6SzK_Q1106KHegwvG7mPNBL2d&femb=1"
-          width="100%"
-          height="600"
-          className="google-map"
-          title="Kaybid Map"
-        />
+        <div className="map-container">
+          <iframe
+            src="https://www.google.com/maps/d/u/0/embed?mid=1tHoeYbM6SzK_Q1106KHegwvG7mPNBL2d&femb=1"
+            width="100%"
+            height="600"
+            className="google-map"
+            title="Kaybid Map"
+          />
+        </div>
       </section>
 
       <style jsx>{`
@@ -89,12 +91,31 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
         }
         .map-section {
           width: 100%;
+          padding: 4rem 2rem;
+          background: var(--bg-color, #000);
+          display: flex;
+          justify-content: center;
+        }
+        .map-container {
+          width: 100%;
+          max-width: 1200px;
           height: 600px;
-          background: #000;
+          border-radius: 20px;
+          overflow: hidden;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+          border: 1px solid var(--divider-color, rgba(255,255,255,0.1));
         }
         .google-map {
           border: none;
           filter: invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%);
+        }
+        @media (max-width: 640px) {
+          .map-section {
+            padding: 2rem 1rem;
+          }
+          .map-container, .map-section {
+            height: 450px;
+          }
         }
       `}</style>
     </div>
