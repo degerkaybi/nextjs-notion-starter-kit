@@ -108,7 +108,6 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
         }
         .google-map {
           border: none;
-          filter: invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%);
           position: absolute;
           top: -50px; /* Hides the header */
           left: 0;
