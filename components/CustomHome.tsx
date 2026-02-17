@@ -74,6 +74,7 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
       />
 
       <section className="map-section">
+        <h2 className="map-title">Silent Steps Series Istanbul Map</h2>
         <div className="map-container">
           <iframe
             src="https://www.google.com/maps/d/u/0/embed?mid=1tHoeYbM6SzK_Q1106KHegwvG7mPNBL2d&femb=1"
@@ -91,10 +92,20 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
         }
         .map-section {
           width: 100%;
-          padding: 2rem 2rem;
+          padding: 4rem 2rem;
           background: var(--bg-color, #000);
           display: flex;
-          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+        }
+        .map-title {
+          font-size: 1.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          margin: 0 0 2.5rem 0;
+          text-align: center;
+          color: var(--fg-color);
         }
         .map-container {
           width: 100%;
