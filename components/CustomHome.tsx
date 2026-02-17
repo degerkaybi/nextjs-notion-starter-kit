@@ -84,6 +84,14 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
             title="Kaybid Map"
           />
         </div>
+        <div className="map-description">
+          <p>
+            The project ongoing since 2018 and over 600+ individual unique collages created from 40+ different species were created and applied to the streets.
+          </p>
+          <p className="quote">
+            “All my collage works are original and unique. None of them are copies, prints, or stickers. That is all organic. I make them with traditional methods.”
+          </p>
+        </div>
       </section>
 
       <style jsx>{`
@@ -106,6 +114,21 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
           margin: 0 0 2.5rem 0;
           text-align: center;
           color: var(--fg-color);
+        }
+        .map-description {
+          max-width: 800px;
+          margin-top: 3rem;
+          text-align: center;
+          font-size: 1.1rem;
+          line-height: 1.6;
+          opacity: 0.8;
+          padding: 0 1rem;
+        }
+        .quote {
+          margin-top: 1.5rem;
+          font-style: italic;
+          font-weight: 300;
+          opacity: 0.9;
         }
         .map-container {
           width: 100%;
