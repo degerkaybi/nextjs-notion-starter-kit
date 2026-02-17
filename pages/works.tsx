@@ -22,11 +22,14 @@ export const getStaticProps = async () => {
 }
 
 export default function WorksPage(props: PageProps) {
-  // NotionPage'i kullanarak header, navigation ve dark mode desteğini koruyoruz
-  // customContent prop'u ile WorksPageCards'ı gösteriyoruz
   return (
     <NotionPage
       {...props}
+      customContent={
+        props.recordMap && props.site ? (
+          <WorksPageCards recordMap={props.recordMap} site={props.site} />
+        ) : null
+      }
     />
   )
 }

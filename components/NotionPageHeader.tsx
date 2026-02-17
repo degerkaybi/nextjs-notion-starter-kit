@@ -2,10 +2,12 @@ import type * as types from 'notion-types'
 import { IoMoonSharp } from '@react-icons/all-files/io5/IoMoonSharp'
 import { IoSunnyOutline } from '@react-icons/all-files/io5/IoSunnyOutline'
 import cs from 'classnames'
+import Link from 'next/link'
 import * as React from 'react'
 import { Breadcrumbs, Header, Search, useNotionContext } from 'react-notion-x'
+import { parsePageId } from 'notion-utils'
 
-import { isSearchEnabled, navigationLinks, navigationStyle } from '@/lib/config'
+import { isSearchEnabled, name, navigationLinks, navigationStyle, rootNotionPageId } from '@/lib/config'
 import { useDarkMode } from '@/lib/use-dark-mode'
 
 import styles from './styles.module.css'
@@ -38,6 +40,7 @@ export function NotionPageHeader({
   block: types.CollectionViewPageBlock | types.PageBlock
 }) {
   const { components, mapPageUrl } = useNotionContext()
+  const isRootPage = block?.id && parsePageId(block.id) === parsePageId(rootNotionPageId)
 
   if (navigationStyle === 'default') {
     return <Header block={block} />
@@ -46,7 +49,15 @@ export function NotionPageHeader({
   return (
     <header className='notion-header'>
       <div className='notion-nav-header'>
-        <Breadcrumbs block={block} rootOnly={true} />
+        {isRootPage ? (
+          <div className="breadcrumbs">
+            <Link href='/' className={cs(styles.navLink, 'breadcrumb', 'button', 'title')}>
+              {name}
+            </Link>
+          </div>
+        ) : (
+          <Breadcrumbs block={block} rootOnly={true} />
+        )}
 
         <div className='notion-nav-header-rhs breadcrumbs'>
           {navigationLinks

@@ -23,11 +23,11 @@ import { searchNotion } from '@/lib/search-notion'
 import { useDarkMode } from '@/lib/use-dark-mode'
 
 import { Footer } from './Footer'
+import { CustomHome } from './CustomHome'
 import { GitHubShareButton } from './GitHubShareButton'
 import { Loading } from './Loading'
 import { NotionPageHeader } from './NotionPageHeader'
 import { Page404 } from './Page404'
-// import { PageAside } from './PageAside'
 import { PageHead } from './PageHead'
 import { PageLinkBlock } from './PageLinkCard'
 import styles from './styles.module.css'
@@ -250,7 +250,7 @@ export function NotionPage({
   //   [block, recordMap, isBlogPost]
   // )
 
-  const footer = React.useMemo(() => <Footer />, [])
+  const footer = React.useMemo(() => <Footer recordMap={recordMap} />, [recordMap])
 
   if (router.isFallback) {
     return <Loading />
@@ -261,22 +261,7 @@ export function NotionPage({
   }
 
   const title = getBlockTitle(block, recordMap) || site.name
-
-  console.log('notion page', {
-    isDev: config.isDev,
-    title,
-    pageId,
-    rootNotionPageId: site.rootNotionPageId,
-    recordMap
-  })
-
-  if (!config.isServer) {
-    // add important objects to the window global for easy debugging
-    const g = window as any
-    g.pageId = pageId
-    g.recordMap = recordMap
-    g.block = block
-  }
+  const isRootPage = pageId === site.rootNotionPageId
 
   const canonicalPageUrl = config.isDev
     ? undefined
@@ -308,12 +293,17 @@ export function NotionPage({
       {isLiteMode && <BodyClassName className='notion-lite' />}
       {isDarkMode && <BodyClassName className='dark-mode' />}
 
-      {customContent ? (
+      {isRootPage ? (
+        <>
+          <NotionPageHeader block={block as any} />
+          <CustomHome recordMap={recordMap} />
+          {footer}
+        </>
+      ) : customContent ? (
         <>
           <NotionRenderer
             bodyClassName={cs(
               styles.notion,
-              pageId === site.rootNotionPageId && 'index-page',
               'custom-content-page'
             )}
             darkMode={isDarkMode}
@@ -337,32 +327,33 @@ export function NotionPage({
           <div className="custom-content-wrapper" style={{ marginTop: 0 }}>
             {customContent}
           </div>
+          {footer}
         </>
       ) : (
-        <NotionRenderer
-          bodyClassName={cs(
-            styles.notion,
-            pageId === site.rootNotionPageId && 'index-page'
-          )}
-          darkMode={isDarkMode}
-          components={components}
-          recordMap={recordMap}
-          rootPageId={site.rootNotionPageId}
-          rootDomain={site.domain}
-          fullPage={!isLiteMode}
-          previewImages={!!recordMap.preview_images}
-          showCollectionViewDropdown={false}
-          showTableOfContents={showTableOfContents}
-          minTableOfContentsItems={minTableOfContentsItems}
-          defaultPageIcon={config.defaultPageIcon}
-          defaultPageCover={config.defaultPageCover}
-          defaultPageCoverPosition={config.defaultPageCoverPosition}
-          mapPageUrl={siteMapPageUrl}
-          mapImageUrl={mapImageUrl}
-          searchNotion={config.isSearchEnabled ? searchNotion : undefined}
-          // pageAside={pageAside}
-          footer={footer}
-        />
+        <>
+          <NotionRenderer
+            bodyClassName={cs(
+              styles.notion
+            )}
+            darkMode={isDarkMode}
+            components={components}
+            recordMap={recordMap}
+            rootPageId={site.rootNotionPageId}
+            rootDomain={site.domain}
+            fullPage={!isLiteMode}
+            previewImages={!!recordMap.preview_images}
+            showCollectionViewDropdown={false}
+            showTableOfContents={showTableOfContents}
+            minTableOfContentsItems={minTableOfContentsItems}
+            defaultPageIcon={config.defaultPageIcon}
+            defaultPageCover={config.defaultPageCover}
+            defaultPageCoverPosition={config.defaultPageCoverPosition}
+            mapPageUrl={siteMapPageUrl}
+            mapImageUrl={mapImageUrl}
+            searchNotion={config.isSearchEnabled ? searchNotion : undefined}
+            footer={footer}
+          />
+        </>
       )}
 
       <GitHubShareButton />
