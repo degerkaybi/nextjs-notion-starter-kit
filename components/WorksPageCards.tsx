@@ -9,6 +9,8 @@ interface WorksPageCardsProps {
 }
 
 export function WorksPageCards({ recordMap }: WorksPageCardsProps) {
+  if (!recordMap?.block) return null
+
   const blocks = Object.values(recordMap.block)
   const rootBlockId = Object.keys(recordMap.block)[0]
   const rootPageId = rootBlockId
