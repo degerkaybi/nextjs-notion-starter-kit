@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Link from 'next/link'
 import * as config from '@/lib/config'
 import { IoChevronDownOutline } from '@react-icons/all-files/io5/IoChevronDownOutline'
 
@@ -70,11 +71,21 @@ export function HeroSection({ videoUrl, imageUrl, subtitle, startTime }: { video
         
         <p className="hero-subtitle">{subtitle || config.description}</p>
 
-        {videoUrl && (
-          <button className="hero-cta" onClick={() => setIsModalOpen(true)}>
-            <span>Watch Full Documentary</span>
-          </button>
-        )}
+        <div className="hero-description">
+          <p>Known for the Silent Steps Series—a long-term street art project featuring hand-cut collages of endangered animals, installed across cities worldwide since 2018. Featured: Straat Museum Amsterdam, Paris Olympics 2024, Times Square NYC, WWF partnership.</p>
+        </div>
+
+        <div className="hero-actions">
+          {videoUrl && (
+            <button className="hero-btn" onClick={() => setIsModalOpen(true)}>
+              <span>Watch Full Documentary</span>
+            </button>
+          )}
+
+          <Link href="/302392488fe580d4824accf5851dfe96" className="hero-btn">
+            <span>Explore All Works →</span>
+          </Link>
+        </div>
       </div>
 
       {isModalOpen && (
@@ -188,36 +199,61 @@ export function HeroSection({ videoUrl, imageUrl, subtitle, startTime }: { video
 
 
 
-        .hero-subtitle {
-          font-size: clamp(0.9rem, 2.5vw, 1.2rem);
-          font-weight: 400;
-          opacity: 0.8;
-          letter-spacing: 4px;
-          margin-bottom: 2rem;
-          text-transform: uppercase;
-          display: block;
+        .hero-description {
+          font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+          font-weight: 300;
+          max-width: 800px;
+          margin: 0 auto 2.5rem;
+          line-height: 1.6;
+          opacity: 0.85;
         }
 
-        .hero-cta {
-          background: rgba(255, 255, 255, 0.1);
-          color: #fff;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          padding: 1rem 2rem;
+        .hero-actions {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1.25rem;
+        }
+
+        .hero-btn {
+          position: relative;
+          z-index: 10;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(255, 255, 255, 0.1) !important;
+          color: #fff !important;
+          border: 1px solid rgba(255, 255, 255, 0.3) !important;
+          padding: 1.2rem 3rem;
+          min-width: 300px;
           font-size: 0.9rem;
-          font-weight: 600;
+          font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 2px;
           border-radius: 50px;
-          cursor: pointer;
+          cursor: pointer !important;
           backdrop-filter: blur(10px);
-          transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+          transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+          text-decoration: none;
+          outline: none;
+          pointer-events: auto !important;
         }
 
-        .hero-cta:hover {
-          background: #fff;
-          color: #000;
-          transform: translateY(-5px);
-          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        .hero-btn:hover {
+          background: #fff !important;
+          color: #000 !important;
+          transform: translateY(-8px) scale(1.05);
+          box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 30px rgba(255,255,255,0.2);
+          border-color: #fff !important;
+        }
+
+        .hero-btn span {
+          display: inline-block;
+          transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .hero-btn:hover span {
+          transform: translateX(8px);
         }
 
         @media (max-width: 640px) {
@@ -230,10 +266,25 @@ export function HeroSection({ videoUrl, imageUrl, subtitle, startTime }: { video
           .hero-subtitle {
             font-size: 0.8rem;
             letter-spacing: 2px;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
           }
 
+          .hero-description {
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+          }
 
+          .hero-actions {
+            gap: 1rem;
+          }
+
+          .hero-btn {
+            padding: 0.8rem 1.5rem;
+            font-size: 0.75rem;
+            width: 100%;
+            max-width: 250px;
+          }
         }
 
         .video-modal-overlay {

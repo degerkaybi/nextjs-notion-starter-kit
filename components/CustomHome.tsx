@@ -73,23 +73,14 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
         startTime={28}
       />
 
-      <section className="about-section">
-        <h2 className="section-title">About</h2>
-        <div className="about-content">
-          <p>Best known for the Silent Steps Series—a long-term street art project featuring hand-cut collages of endangered animals, installed across cities worldwide since 2018. Featured: Straat Museum Amsterdam, Paris Olympics 2024, Times Square NYC, WWF partnership.</p>
-          <div className="about-link-container">
-            <Link href="/8401785badf840e99bb988a5e63eacb8" className="read-more">Read more →</Link>
-          </div>
-        </div>
-      </section>
-
       <section className="map-section">
-        <h2 className="map-title">Silent Steps Series Istanbul Map</h2>
+        <h2 className="map-title">Silent Steps Series</h2>
         <div className="map-subtitle">
           <p>
             The project ongoing since 2018 and over 600+ individual unique collages created from 40+ different species were created and applied to the streets.
           </p>
         </div>
+        <h3 className="city-map-title">Istanbul Map</h3>
         <div className="map-container">
           <iframe
             src="https://www.google.com/maps/d/u/0/embed?mid=1tHoeYbM6SzK_Q1106KHegwvG7mPNBL2d&femb=1"
@@ -110,52 +101,6 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
         .custom-home {
           width: 100%;
         }
-        .about-section {
-          width: 100%;
-          padding: 6rem 2rem 2rem;
-          background: var(--bg-color);
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-        }
-        .section-title {
-          font-size: 2rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 4px;
-          margin-bottom: 2.5rem;
-          color: var(--fg-color);
-        }
-        .about-content {
-          max-width: 800px;
-          font-size: 1.1rem;
-          line-height: 1.8;
-          opacity: 0.9;
-        }
-        .about-content p {
-          margin-bottom: 1.5rem;
-        }
-        .about-link-container {
-          margin-top: 2rem;
-        }
-        .read-more {
-          color: var(--fg-color);
-          text-decoration: none;
-          font-weight: 600;
-          font-size: 1rem;
-          text-transform: uppercase;
-          letter-spacing: 2px;
-          opacity: 0.8;
-          transition: all 0.2s ease;
-          border-bottom: 1px solid var(--fg-color);
-          padding-bottom: 4px;
-          cursor: pointer;
-        }
-        .read-more:hover {
-          opacity: 1;
-          letter-spacing: 3px;
-        }
         .map-section {
           width: 100%;
           padding: 4rem 2rem;
@@ -165,12 +110,21 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
           align-items: center;
         }
         .map-title {
-          font-size: 1.75rem;
+          font-size: 2rem;
           font-weight: 700;
           text-transform: uppercase;
-          letter-spacing: 2px;
-          margin: 0 0 1rem 0;
+          letter-spacing: 4px;
+          margin-bottom: 1.5rem;
           text-align: center;
+          color: var(--fg-color);
+        }
+        .city-map-title {
+          font-size: 1.2rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          margin-bottom: 2rem;
+          opacity: 0.7;
           color: var(--fg-color);
         }
         .map-subtitle {
