@@ -69,6 +69,13 @@ export function NotionPageHeader({
         )}
 
         <div className={cs('notion-nav-header-rhs', 'breadcrumbs', isMobileMenuOpen && 'mobile-menu-open')}>
+          <Link
+            href='/'
+            className={cs(styles.navLink, 'breadcrumb', 'button')}
+          >
+            Home
+          </Link>
+
           {navigationLinks
             ?.map((link, index) => {
               if (!link?.pageId && !link?.url) {
