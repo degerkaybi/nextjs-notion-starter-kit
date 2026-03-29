@@ -188,11 +188,8 @@ export function NotionPage({
   site,
   recordMap,
   error,
-  pageId,
-  customContent
-}: types.PageProps & {
-  customContent?: React.ReactNode
-}) {
+  pageId
+}: types.PageProps) {
   const router = useRouter()
   const lite = useSearchParam('lite')
 
@@ -228,8 +225,7 @@ export function NotionPage({
     return site ? mapPageUrl(site, recordMap!, searchParams) : undefined
   }, [site, recordMap, lite])
 
-  const keys = Object.keys(recordMap?.block || {})
-  const block = recordMap?.block?.[keys[0]!]?.value
+  const block = (pageId ? recordMap?.block?.[pageId]?.value : null) || recordMap?.block?.[Object.keys(recordMap?.block || {})[0]!]?.value
 
   // const isRootPage =
   //   parsePageId(block?.id) === parsePageId(site?.rootNotionPageId)
@@ -260,22 +256,22 @@ export function NotionPage({
     return <Page404 site={site} pageId={pageId} error={error} />
   }
 
-  const title = getBlockTitle(block, recordMap) || site.name
+  const title = getBlockTitle(block, recordMap!) || site.name
   const isRootPage = pageId === site.rootNotionPageId
 
   const canonicalPageUrl = config.isDev
     ? undefined
-    : getCanonicalPageUrl(site, recordMap)(pageId)
+    : getCanonicalPageUrl(site, recordMap!)(pageId)
 
   const socialImage = mapImageUrl(
-    getPageProperty<string>('Social Image', block, recordMap) ||
+    getPageProperty<string>('Social Image', block, recordMap!) ||
     (block as PageBlock).format?.page_cover ||
     config.defaultPageCover,
     block
   )
 
   const socialDescription =
-    getPageProperty<string>('Description', block, recordMap) ||
+    getPageProperty<string>('Description', block, recordMap!) ||
     config.description
 
   return (
@@ -299,36 +295,6 @@ export function NotionPage({
           <CustomHome recordMap={recordMap} />
           {footer}
         </>
-      ) : customContent ? (
-        <>
-          <NotionRenderer
-            bodyClassName={cs(
-              styles.notion,
-              'custom-content-page'
-            )}
-            darkMode={isDarkMode}
-            components={components}
-            recordMap={recordMap}
-            rootPageId={site.rootNotionPageId}
-            rootDomain={site.domain}
-            fullPage={!isLiteMode}
-            previewImages={!!recordMap.preview_images}
-            showCollectionViewDropdown={false}
-            showTableOfContents={false}
-            minTableOfContentsItems={minTableOfContentsItems}
-            defaultPageIcon={config.defaultPageIcon}
-            defaultPageCover={config.defaultPageCover}
-            defaultPageCoverPosition={config.defaultPageCoverPosition}
-            mapPageUrl={siteMapPageUrl}
-            mapImageUrl={mapImageUrl}
-            searchNotion={config.isSearchEnabled ? searchNotion : undefined}
-            footer={null}
-          />
-          <div className="custom-content-wrapper" style={{ marginTop: 0 }}>
-            {customContent}
-          </div>
-          {footer}
-        </>
       ) : (
         <>
           <NotionRenderer
@@ -337,11 +303,11 @@ export function NotionPage({
             )}
             darkMode={isDarkMode}
             components={components}
-            recordMap={recordMap}
+            recordMap={recordMap!}
             rootPageId={site.rootNotionPageId}
             rootDomain={site.domain}
             fullPage={!isLiteMode}
-            previewImages={!!recordMap.preview_images}
+            previewImages={!!recordMap!.preview_images}
             showCollectionViewDropdown={false}
             showTableOfContents={showTableOfContents}
             minTableOfContentsItems={minTableOfContentsItems}

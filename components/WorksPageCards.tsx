@@ -6,16 +6,16 @@ import { getCanonicalPageId } from '@/lib/get-canonical-page-id'
 interface WorksPageCardsProps {
   recordMap: ExtendedRecordMap
   site: any
+  pageId: string
 }
 
-export function WorksPageCards({ recordMap }: WorksPageCardsProps) {
+export function WorksPageCards({ recordMap, pageId }: WorksPageCardsProps) {
   if (!recordMap?.block) return null
 
-  const blocks = Object.values(recordMap.block)
-  const rootBlockId = Object.keys(recordMap.block)[0]
-  const rootPageId = rootBlockId
-    ? (recordMap.block as any)[rootBlockId]?.value?.id
-    : null
+  const blocks = Object.values(recordMap.block).sort((a: any, b: any) =>
+    a.value.id.localeCompare(b.value.id)
+  )
+  const rootPageId = pageId
 
   // Child pages (alt sayfalar)
   const childPages = blocks.filter((b: any) => {

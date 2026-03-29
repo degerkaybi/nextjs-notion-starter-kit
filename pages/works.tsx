@@ -1,6 +1,6 @@
 import type { PageProps } from '@/lib/types'
 import { NotionPage } from '@/components/NotionPage'
-import { WorksPageCards } from '@/components/WorksPageCards'
+
 import { domain } from '@/lib/config'
 import { resolveNotionPage } from '@/lib/resolve-notion-page'
 
@@ -22,14 +22,5 @@ export const getStaticProps = async () => {
 }
 
 export default function WorksPage(props: PageProps) {
-  return (
-    <NotionPage
-      {...props}
-      customContent={
-        props.recordMap && props.site ? (
-          <WorksPageCards recordMap={props.recordMap} site={props.site} />
-        ) : null
-      }
-    />
-  )
+  return <NotionPage {...props} />
 }

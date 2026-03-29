@@ -21,14 +21,7 @@
   line-height: 1.65;
 }
 
-/* Custom content pages - hide page content but show header */
-.custom-content-page .notion-page {
-  display: none !important;
-}
 
-.custom-content-page .notion-page-cover-wrapper {
-  display: none !important;
-}
 
 .index-page {
   --notion-max-width: 1100px;

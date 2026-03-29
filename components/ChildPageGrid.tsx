@@ -55,6 +55,9 @@ export function ChildPageGrid({
     items = items.slice(0, limit)
   }
 
+  // Ensure deterministic ordering for hydration
+  items.sort((a, b) => a.id.localeCompare(b.id))
+
   if (!items.length) return null
 
   return (
