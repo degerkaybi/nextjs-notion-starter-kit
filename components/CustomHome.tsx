@@ -73,6 +73,17 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
         startTime={28}
       />
 
+      <section className="about-section">
+        <h2 className="section-title">About</h2>
+        <div className="about-content">
+          <p>Best known for the Silent Steps Series—a long-term street art project featuring hand-cut collages of endangered animals, installed across cities worldwide since 2018.</p>
+          <p>Featured: Straat Museum Amsterdam, Paris Olympics 2024, Times Square NYC, WWF partnership.</p>
+          <div className="about-link-container">
+            <Link href="/about" className="read-more">Read more →</Link>
+          </div>
+        </div>
+      </section>
+
       <section className="map-section">
         <h2 className="map-title">Silent Steps Series Istanbul Map</h2>
         <div className="map-subtitle">
@@ -99,6 +110,52 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
       <style jsx>{`
         .custom-home {
           width: 100%;
+        }
+        .about-section {
+          width: 100%;
+          padding: 6rem 2rem 2rem;
+          background: var(--bg-color);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        .section-title {
+          font-size: 2rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 4px;
+          margin-bottom: 2.5rem;
+          color: var(--fg-color);
+        }
+        .about-content {
+          max-width: 800px;
+          font-size: 1.1rem;
+          line-height: 1.8;
+          opacity: 0.9;
+        }
+        .about-content p {
+          margin-bottom: 1.5rem;
+        }
+        .about-link-container {
+          margin-top: 2rem;
+        }
+        .read-more {
+          color: var(--fg-color);
+          text-decoration: none;
+          font-weight: 600;
+          font-size: 1rem;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          opacity: 0.8;
+          transition: all 0.2s ease;
+          border-bottom: 1px solid var(--fg-color);
+          padding-bottom: 4px;
+          cursor: pointer;
+        }
+        .read-more:hover {
+          opacity: 1;
+          letter-spacing: 3px;
         }
         .map-section {
           width: 100%;

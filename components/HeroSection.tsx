@@ -67,6 +67,7 @@ export function HeroSection({ videoUrl, imageUrl, subtitle, startTime }: { video
 
       <div className="hero-content">
         <h1 className="hero-title">{config.name}</h1>
+        
         <p className="hero-subtitle">{subtitle || config.description}</p>
 
         {videoUrl && (
@@ -172,7 +173,7 @@ export function HeroSection({ videoUrl, imageUrl, subtitle, startTime }: { video
           position: relative;
           z-index: 2;
           text-align: center;
-          max-width: 800px;
+          max-width: 900px;
           padding: 0 2rem;
         }
 
@@ -180,17 +181,21 @@ export function HeroSection({ videoUrl, imageUrl, subtitle, startTime }: { video
           font-size: clamp(3rem, 10vw, 6rem);
           font-weight: 800;
           letter-spacing: -2px;
-          margin-bottom: 1rem;
+          margin-bottom: 1.5rem;
           text-transform: uppercase;
           line-height: 1;
         }
 
+
+
         .hero-subtitle {
-          font-size: clamp(1rem, 3vw, 1.5rem);
-          font-weight: 300;
-          opacity: 0.9;
-          letter-spacing: 2px;
-          margin-bottom: 2.5rem;
+          font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+          font-weight: 400;
+          opacity: 0.8;
+          letter-spacing: 4px;
+          margin-bottom: 2rem;
+          text-transform: uppercase;
+          display: block;
         }
 
         .hero-cta {
@@ -213,6 +218,22 @@ export function HeroSection({ videoUrl, imageUrl, subtitle, startTime }: { video
           color: #000;
           transform: translateY(-5px);
           box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 640px) {
+          .hero-title {
+            font-size: 3.5rem;
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+          }
+
+          .hero-subtitle {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+          }
+
+
         }
 
         .video-modal-overlay {

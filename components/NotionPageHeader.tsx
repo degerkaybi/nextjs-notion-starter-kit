@@ -1,8 +1,8 @@
 import type * as types from 'notion-types'
 import { IoMoonSharp } from '@react-icons/all-files/io5/IoMoonSharp'
 import { IoSunnyOutline } from '@react-icons/all-files/io5/IoSunnyOutline'
-import { IoMenuOutline } from '@react-icons/all-files/io5/IoMenuOutline'
-import { IoCloseOutline } from '@react-icons/all-files/io5/IoCloseOutline'
+import { IoMenu } from '@react-icons/all-files/io5/IoMenu'
+import { IoClose } from '@react-icons/all-files/io5/IoClose'
 import cs from 'classnames'
 import Link from 'next/link'
 import * as React from 'react'
@@ -56,7 +56,7 @@ export function NotionPageHeader({
           className='hamburger-menu'
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-          {isMobileMenuOpen ? <IoCloseOutline /> : <IoMenuOutline />}
+          {isMobileMenuOpen ? <IoClose /> : <IoMenu />}
         </div>
         {isRootPage ? (
           <div className="breadcrumbs">
