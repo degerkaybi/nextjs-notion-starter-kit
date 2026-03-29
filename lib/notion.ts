@@ -16,6 +16,34 @@ import { getTweetsMap } from './get-tweets'
 import { notion } from './notion-api'
 import { getPreviewImageMap } from './preview-images'
 
+// Exponential backoff retry helper
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  retries = 3,
+  delayMs = 500
+): Promise<T> {
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      return await fn()
+    } catch (err: any) {
+      const isRateLimit =
+        err?.response?.status === 429 ||
+        err?.status === 429 ||
+        (err?.message && err.message.includes('429'))
+      const isLastAttempt = attempt === retries - 1
+
+      if (isLastAttempt || !isRateLimit) throw err
+
+      const backoff = delayMs * Math.pow(2, attempt)
+      console.warn(
+        `Notion API rate limited (attempt ${attempt + 1}/${retries}), retrying in ${backoff}ms...`
+      )
+      await new Promise((resolve) => setTimeout(resolve, backoff))
+    }
+  }
+  throw new Error('unreachable')
+}
+
 const getNavigationLinkPages = pMemoize(
   async (): Promise<ExtendedRecordMap[]> => {
     const navigationLinkPageIds = (navigationLinks || [])
@@ -25,17 +53,28 @@ const getNavigationLinkPages = pMemoize(
     if (navigationStyle !== 'default' && navigationLinkPageIds.length) {
       return pMap(
         navigationLinkPageIds,
-        async (navigationLinkPageId) =>
-          notion.getPage(navigationLinkPageId, {
-            chunkLimit: 1,
-            fetchMissingBlocks: false,
-            fetchCollections: false,
-            signFileUrls: false
-          }),
+        async (navigationLinkPageId) => {
+          try {
+            return await withRetry(() =>
+              notion.getPage(navigationLinkPageId, {
+                chunkLimit: 1,
+                fetchMissingBlocks: false,
+                fetchCollections: false,
+                signFileUrls: false
+              })
+            )
+          } catch (err) {
+            console.warn(
+              `Failed to fetch navigation link page ${navigationLinkPageId}:`,
+              err
+            )
+            return null
+          }
+        },
         {
-          concurrency: 4
+          concurrency: 1 // reduce from 4 to 1 to avoid rate limiting
         }
-      )
+      ).then((results) => results.filter(Boolean) as ExtendedRecordMap[])
     }
 
     return []
@@ -43,20 +82,24 @@ const getNavigationLinkPages = pMemoize(
 )
 
 export async function getPage(pageId: string): Promise<ExtendedRecordMap> {
-  let recordMap = await notion.getPage(pageId)
+  let recordMap = await withRetry(() => notion.getPage(pageId))
 
   if (navigationStyle !== 'default') {
     // ensure that any pages linked to in the custom navigation header have
     // their block info fully resolved in the page record map so we know
     // the page title, slug, etc.
-    const navigationLinkRecordMaps = await getNavigationLinkPages()
+    try {
+      const navigationLinkRecordMaps = await getNavigationLinkPages()
 
-    if (navigationLinkRecordMaps?.length) {
-      recordMap = navigationLinkRecordMaps.reduce(
-        (map, navigationLinkRecordMap) =>
-          mergeRecordMaps(map, navigationLinkRecordMap),
-        recordMap
-      )
+      if (navigationLinkRecordMaps?.length) {
+        recordMap = navigationLinkRecordMaps.reduce(
+          (map, navigationLinkRecordMap) =>
+            mergeRecordMaps(map, navigationLinkRecordMap),
+          recordMap
+        )
+      }
+    } catch (err) {
+      console.warn('Failed to fetch navigation link pages:', err)
     }
   }
 

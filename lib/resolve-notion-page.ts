@@ -112,7 +112,7 @@ export async function resolveNotionPage(
       }
 
       // Filter and limit
-      const uniquePageIds = [...foundPageIds].slice(0, 50)
+      const uniquePageIds = [...foundPageIds].slice(0, 20) // limit to 20 to reduce API pressure
 
       if (uniquePageIds.length > 0) {
         try {
@@ -121,20 +121,30 @@ export async function resolveNotionPage(
             uniquePageIds,
             async (childPageId) => {
               try {
-                // Determine chunk limit depending on likelihood of image being deep?
-                // Stick to 1 for now.
-                return await notion.getPage(childPageId, {
-                  chunkLimit: 1,
-                  fetchMissingBlocks: false,
-                  fetchCollections: false,
-                  signFileUrls: false
-                })
+                // Retry with backoff on rate limit
+                for (let attempt = 0; attempt < 3; attempt++) {
+                  try {
+                    return await notion.getPage(childPageId, {
+                      chunkLimit: 1,
+                      fetchMissingBlocks: false,
+                      fetchCollections: false,
+                      signFileUrls: false
+                    })
+                  } catch (err: any) {
+                    const isRateLimit =
+                      err?.response?.status === 429 ||
+                      err?.status === 429 ||
+                      (err?.message && err.message.includes('429'))
+                    if (!isRateLimit || attempt === 2) throw err
+                    await new Promise((r) => setTimeout(r, 500 * Math.pow(2, attempt)))
+                  }
+                }
               } catch (err) {
                 return null
               }
             },
             {
-              concurrency: 4
+              concurrency: 2 // reduce from 4 to 2 to avoid rate limiting
             }
           )
 
