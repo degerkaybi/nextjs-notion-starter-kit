@@ -257,6 +257,11 @@ export function HeroSection({ videoUrl, imageUrl, subtitle, startTime }: { video
         }
 
         @media (max-width: 640px) {
+          .hero {
+            align-items: flex-start !important;
+            padding-top: 10vh;
+          }
+
           .hero-title {
             font-size: 3.5rem;
             letter-spacing: -1px;
@@ -277,6 +282,10 @@ export function HeroSection({ videoUrl, imageUrl, subtitle, startTime }: { video
 
           .hero-actions {
             gap: 1rem;
+          }
+
+          .hero-content {
+            transform: translateY(0);
           }
 
           .hero-btn {
