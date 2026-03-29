@@ -689,6 +689,8 @@
     align-items: center;
     justify-content: center;
     z-index: 100000;
+    width: 32px;
+    height: 32px;
   }
 
   .notion-header {
@@ -700,6 +702,7 @@
     flex-wrap: nowrap;
     position: relative;
     width: 100%;
+    overflow: visible !important;
   }
 
   .notion-nav-header-rhs {
@@ -709,10 +712,12 @@
     left: -16px; /* Adjusting for padding usually found on mobile */
     right: 0;
     width: 100vw !important;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    height: auto !important;
+    min-height: fit-content !important;
     padding: 16px 20px 32px 20px;
-    background: var(--bg-color);
+    background: var(--bg-color) !important;
     box-shadow: 0 16px 24px rgba(0,0,0,0.1);
     z-index: 99998 !important;
     border-top: 1px solid var(--fg-color-1);
@@ -726,10 +731,12 @@
   .notion-nav-header-rhs > * {
     width: 100% !important;
     justify-content: flex-start !important;
-    padding: 12px 0px !important;
+    padding: 12px 15px !important;
     margin: 0 !important;
+    box-sizing: border-box !important;
   }
   
+  .notion-search,
   .notion-search-button {
     display: flex !important;
     width: 100% !important;
