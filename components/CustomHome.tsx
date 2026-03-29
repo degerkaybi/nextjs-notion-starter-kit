@@ -76,10 +76,9 @@ export function CustomHome({ recordMap }: { recordMap: any }) {
       <section className="about-section">
         <h2 className="section-title">About</h2>
         <div className="about-content">
-          <p>Best known for the Silent Steps Series—a long-term street art project featuring hand-cut collages of endangered animals, installed across cities worldwide since 2018.</p>
-          <p>Featured: Straat Museum Amsterdam, Paris Olympics 2024, Times Square NYC, WWF partnership.</p>
+          <p>Best known for the Silent Steps Series—a long-term street art project featuring hand-cut collages of endangered animals, installed across cities worldwide since 2018. Featured: Straat Museum Amsterdam, Paris Olympics 2024, Times Square NYC, WWF partnership.</p>
           <div className="about-link-container">
-            <Link href="/about" className="read-more">Read more →</Link>
+            <Link href="/8401785badf840e99bb988a5e63eacb8" className="read-more">Read more →</Link>
           </div>
         </div>
       </section>
