@@ -7,7 +7,7 @@ import * as acl from './acl'
 import { environment, pageUrlAdditions, pageUrlOverrides, site } from './config'
 import { db } from './db'
 import { getSiteMap } from './get-site-map'
-import { getPage } from './notion'
+import { getPage, withRetry } from './notion'
 import { notion } from './notion-api'
 
 export async function resolveNotionPage(
@@ -121,30 +121,21 @@ export async function resolveNotionPage(
             uniquePageIds,
             async (childPageId) => {
               try {
-                // Retry with backoff on rate limit
-                for (let attempt = 0; attempt < 3; attempt++) {
-                  try {
-                    return await notion.getPage(childPageId, {
-                      chunkLimit: 1,
-                      fetchMissingBlocks: false,
-                      fetchCollections: false,
-                      signFileUrls: false
-                    })
-                  } catch (err: any) {
-                    const isRateLimit =
-                      err?.response?.status === 429 ||
-                      err?.status === 429 ||
-                      (err?.message && err.message.includes('429'))
-                    if (!isRateLimit || attempt === 2) throw err
-                    await new Promise((r) => setTimeout(r, 500 * Math.pow(2, attempt)))
-                  }
-                }
+                return await withRetry(() =>
+                  notion.getPage(childPageId, {
+                    chunkLimit: 1,
+                    fetchMissingBlocks: false,
+                    fetchCollections: false,
+                    signFileUrls: false
+                  })
+                )
               } catch (err) {
+                console.warn(`Failed to fetch child page ${childPageId}:`, err)
                 return null
               }
             },
             {
-              concurrency: 2 // reduce from 4 to 2 to avoid rate limiting
+              concurrency: 1 // reduced to 1 for Vercel
             }
           )
 

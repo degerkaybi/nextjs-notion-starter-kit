@@ -17,10 +17,10 @@ import { notion } from './notion-api'
 import { getPreviewImageMap } from './preview-images'
 
 // Exponential backoff retry helper
-async function withRetry<T>(
+export async function withRetry<T>(
   fn: () => Promise<T>,
-  retries = 3,
-  delayMs = 500
+  retries = 5,
+  delayMs = 2000
 ): Promise<T> {
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
@@ -29,12 +29,27 @@ async function withRetry<T>(
       const isRateLimit =
         err?.response?.status === 429 ||
         err?.status === 429 ||
-        (err?.message && err.message.includes('429'))
+        (err?.message && err.message.includes('429')) ||
+        err?.name === 'HTTPError'
+
       const isLastAttempt = attempt === retries - 1
 
       if (isLastAttempt || !isRateLimit) throw err
 
-      const backoff = delayMs * Math.pow(2, attempt)
+      let backoff = delayMs * Math.pow(1.5, attempt)
+
+      try {
+        const retryAfterStr = err?.response?.headers?.get('retry-after')
+        if (retryAfterStr) {
+          const retryAfterSec = parseInt(retryAfterStr, 10)
+          if (!isNaN(retryAfterSec)) {
+            backoff = Math.max(backoff, retryAfterSec * 1000 + 1000)
+          }
+        }
+      } catch (headerErr) {
+        // ignore header parsing errors
+      }
+
       console.warn(
         `Notion API rate limited (attempt ${attempt + 1}/${retries}), retrying in ${backoff}ms...`
       )
