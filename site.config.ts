@@ -132,9 +132,9 @@ const config = {
     '/hope': '25f392488fe5804897c3e58496e8b2cd',
     '/Re-Map': '2e6392488fe580cca7c3c51c30088b4e',
     '/works': '302392488fe580d4824accf5851dfe96',
-    '/stek-ark-almay-Katiyen-Reddeden-M-zisyen-Heykeli-2026:332392488fe58018b85bcbdb6ba6e03f',
-    '/Find-What-You-Love-and-Let-It-Kill-You-2026:332392488fe580b895e0c3971654c746',
-    '/Jinns-Bent-Souls-2026:332392488fe58035b6e9ceb07a9c84fd',
+    '/stek-ark-almay-Katiyen-Reddeden-M-zisyen-Heykeli-2026': '332392488fe58018b85bcbdb6ba6e03f',
+    '/Find-What-You-Love-and-Let-It-Kill-You-2026': '332392488fe580b895e0c3971654c746',
+    '/Jinns-Bent-Souls-2026': '332392488fe58035b6e9ceb07a9c84fd',
     '/ivre-mort': '1b0392488fe581728173f7e5eacd1471'
   },
 
