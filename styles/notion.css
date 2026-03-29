@@ -669,3 +669,70 @@
     top: 50px;
   }
 }
+
+/* ==========================================================================
+   MOBILE HAMBURGER MENU
+   ========================================================================== */
+
+.hamburger-menu {
+  display: none;
+  cursor: pointer;
+  font-size: 28px;
+  padding: 4px;
+  margin-right: 12px;
+  color: inherit;
+}
+
+@media only screen and (max-width: 720px) {
+  .hamburger-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+  }
+
+  .notion-header {
+    overflow: visible !important;
+    z-index: 99999 !important;
+  }
+
+  .notion-header .notion-nav-header {
+    flex-wrap: nowrap;
+    position: relative;
+    width: 100%;
+  }
+
+  .notion-nav-header-rhs {
+    display: none !important;
+    position: absolute !important;
+    top: 54px; /* Standard notion header height */
+    left: -16px; /* Adjusting for padding usually found on mobile */
+    right: 0;
+    width: 100vw !important;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 20px 32px 20px;
+    background: var(--bg-color);
+    box-shadow: 0 16px 24px rgba(0,0,0,0.1);
+    z-index: 99998 !important;
+    border-top: 1px solid var(--fg-color-1);
+    border-bottom: 1px solid var(--fg-color-1);
+  }
+
+  .notion-nav-header-rhs.mobile-menu-open {
+    display: flex !important;
+  }
+
+  .notion-nav-header-rhs > * {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    padding: 12px 0px !important;
+    margin: 0 !important;
+  }
+  
+  .notion-search-button {
+    display: flex !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+  }
+}

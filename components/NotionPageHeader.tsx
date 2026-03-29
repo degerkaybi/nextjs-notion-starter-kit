@@ -1,6 +1,8 @@
 import type * as types from 'notion-types'
 import { IoMoonSharp } from '@react-icons/all-files/io5/IoMoonSharp'
 import { IoSunnyOutline } from '@react-icons/all-files/io5/IoSunnyOutline'
+import { IoMenuOutline } from '@react-icons/all-files/io5/IoMenuOutline'
+import { IoCloseOutline } from '@react-icons/all-files/io5/IoCloseOutline'
 import cs from 'classnames'
 import Link from 'next/link'
 import * as React from 'react'
@@ -40,6 +42,7 @@ export function NotionPageHeader({
   block: types.CollectionViewPageBlock | types.PageBlock
 }) {
   const { components, mapPageUrl } = useNotionContext()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
   const isRootPage = block?.id && parsePageId(block.id) === parsePageId(rootNotionPageId)
 
   if (navigationStyle === 'default') {
@@ -49,6 +52,12 @@ export function NotionPageHeader({
   return (
     <header className='notion-header'>
       <div className='notion-nav-header'>
+        <div
+          className='hamburger-menu'
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <IoCloseOutline /> : <IoMenuOutline />}
+        </div>
         {isRootPage ? (
           <div className="breadcrumbs">
             <Link href='/' className={cs(styles.navLink, 'breadcrumb', 'button', 'title')}>
@@ -59,7 +68,7 @@ export function NotionPageHeader({
           <Breadcrumbs block={block} rootOnly={true} />
         )}
 
-        <div className='notion-nav-header-rhs breadcrumbs'>
+        <div className={cs('notion-nav-header-rhs', 'breadcrumbs', isMobileMenuOpen && 'mobile-menu-open')}>
           {navigationLinks
             ?.map((link, index) => {
               if (!link?.pageId && !link?.url) {
