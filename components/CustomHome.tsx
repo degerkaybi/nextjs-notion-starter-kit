@@ -8,10 +8,7 @@ import { getCanonicalPageId } from '@/lib/get-canonical-page-id'
 
 export function CustomHome({ recordMap }: { recordMap: any }) {
   const blocks = recordMap?.block ? Object.values(recordMap.block) : []
-  const videoBlock = blocks.find(
-    (b: any) => b.value?.type === 'video'
-  ) as any
-  const videoUrl = videoBlock?.value?.properties?.source?.[0]?.[0] || null
+  const videoUrl = 'https://www.youtube.com/watch?v=lyU31zPyY6I'
 
   const coverUrl = (blocks.find(
     (b: any) => (b.value as any)?.format?.page_cover

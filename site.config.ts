@@ -137,7 +137,8 @@ const config = {
     '/Jinns-Bent-Souls-2026': '332392488fe58035b6e9ceb07a9c84fd',
     '/RePack': '300392488fe580f0b82dd6214c7caab4',
     '/about': '8401785badf840e99bb988a5e63eacb8',
-    '/ivre-mort': '1b0392488fe581728173f7e5eacd1471'
+    '/ivre-mort': '1b0392488fe581728173f7e5eacd1471',
+    '/art-ideas': '32345bd70e2d4156a30b399acd23c897'
   },
 
   // --------------------------------------------------

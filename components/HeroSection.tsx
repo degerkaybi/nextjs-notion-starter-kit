@@ -7,9 +7,13 @@ export function HeroSection({ videoUrl, imageUrl, subtitle, startTime }: { video
   const [isModalOpen, setIsModalOpen] = React.useState(false)
 
   const getYoutubeId = (url: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/
     const match = url.match(regExp)
-    return (match && match[2] && match[2].length === 11) ? match[2] : null
+    const id = (match && match[2] && match[2].length === 11) ? match[2] : null
+    if (!id && url.includes('youtube.com/embed/')) {
+        return url.split('embed/')[1]?.split('?')[0] || null
+    }
+    return id
   }
 
   const getYoutubeStartTime = (url: string) => {
