@@ -153,5 +153,16 @@ export async function resolveNotionPage(
   // --------------------------------------------------------------------------
 
   const props: PageProps = { site, recordMap, pageId }
+
+  // Ensure all blocks in recordMap have an id to avoid crashes in react-notion-x/notion-utils
+  if (recordMap?.block) {
+    for (const blockId of Object.keys(recordMap.block)) {
+      const blockModel = recordMap.block[blockId]
+      if (blockModel?.value && !blockModel.value.id) {
+        blockModel.value.id = blockId
+      }
+    }
+  }
+
   return { ...props, ...(await acl.pageAcl(props)) }
 }
