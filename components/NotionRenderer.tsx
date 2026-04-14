@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import Lightbox from "yet-another-react-lightbox"
 import "yet-another-react-lightbox/styles.css"
+import InstagramEmbed from './InstagramEmbed'
 
 export default function NotionRenderer({ blocks, pageMetadata = [] }: { blocks: any[], pageMetadata?: any[] }) {
   const [index, setIndex] = useState(-1)
@@ -230,6 +231,15 @@ export default function NotionRenderer({ blocks, pageMetadata = [] }: { blocks: 
               </div>
             )
           }
+        }
+
+        // Instagram embed support
+        if (src.includes('instagram.com')) {
+          return (
+            <div key={id} className="notion-embed-container">
+              <InstagramEmbed url={src} />
+            </div>
+          )
         }
 
         return (
