@@ -175,7 +175,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [] }: { blocks: 
               style={{ cursor: 'pointer' }}
             >
               <img 
-                src={`/_next/image?url=${encodeURIComponent(src)}&w=1920&q=75`} 
+                src={src} 
                 decoding="async"
                 onLoad={(e) => {
                   const target = e.target as HTMLElement;
@@ -313,7 +313,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [] }: { blocks: 
                     <div className="card-icon-wrapper">
                       {bgImage ? (
                         <img 
-                          src={`/_next/image?url=${encodeURIComponent(bgImage)}&w=828&q=80`} 
+                          src={bgImage} 
                           alt="" 
                           className="card-icon-img" 
                         />
