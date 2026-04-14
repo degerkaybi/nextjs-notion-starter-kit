@@ -1,32 +1,28 @@
 'use client'
 
+import { Instagram } from 'lucide-react'
+
 export default function InstagramEmbed({ url }: { url: string }) {
-  // Extract the post/reel path and convert to embed URL
-  // e.g. https://www.instagram.com/p/ABC123/ -> https://www.instagram.com/p/ABC123/embed/
-  // e.g. https://www.instagram.com/reel/ABC123/ -> https://www.instagram.com/reel/ABC123/embed/
-  const cleanUrl = url.split('?')[0].replace(/\/$/, '')
-  const embedUrl = cleanUrl + '/embed/'
+  const cleanUrl = url.split('?')[0].replace(/\/$/, '') + '/'
+  
+  // Try to extract the post code for display
+  const codeMatch = cleanUrl.match(/\/(p|reel|tv)\/([^/]+)/)
+  const postType = codeMatch?.[1] === 'reel' ? 'Reel' : 'Post'
 
   return (
-    <div className="notion-instagram-embed" style={{
-      margin: '1.5rem auto',
-      maxWidth: '540px',
-      width: '100%',
-    }}>
-      <iframe
-        src={embedUrl}
-        style={{
-          width: '100%',
-          minHeight: '500px',
-          border: 'none',
-          borderRadius: '16px',
-          overflow: 'hidden',
-          background: 'transparent',
-        }}
-        allowFullScreen
-        scrolling="no"
-        title="Instagram Post"
-      />
-    </div>
+    <a 
+      href={cleanUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="instagram-card"
+    >
+      <div className="instagram-card-icon">
+        <Instagram size={28} />
+      </div>
+      <div className="instagram-card-info">
+        <span className="instagram-card-label">Instagram {postType}</span>
+        <span className="instagram-card-action">View on Instagram →</span>
+      </div>
+    </a>
   )
 }
