@@ -7,7 +7,7 @@ import Lightbox from "yet-another-react-lightbox"
 import "yet-another-react-lightbox/styles.css"
 import InstagramEmbed from './InstagramEmbed'
 
-export default function NotionRenderer({ blocks, pageMetadata = [] }: { blocks: any[], pageMetadata?: any[] }) {
+export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {} }: { blocks: any[], pageMetadata?: any[], slugMap?: Record<string, string> }) {
   const [index, setIndex] = useState(-1)
   
   // Recursively collect all images for the gallery
@@ -65,7 +65,8 @@ export default function NotionRenderer({ blocks, pageMetadata = [] }: { blocks: 
       }
 
       if (type === 'mention' && mention?.type === 'page') {
-        const mentionSlug = mention.page.id.replace(/-/g, '')
+        const mentionId = mention.page.id
+        const mentionSlug = slugMap[mentionId] || mentionId.replace(/-/g, '')
         return (
           <Link key={i} href={`/${mentionSlug}`} style={style} className="notion-link-mention">
             {plain_text}
@@ -255,7 +256,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [] }: { blocks: 
         )
       }
       case 'child_page': {
-        const slug = id.replace(/-/g, '')
+        const slug = slugMap[id] || id.replace(/-/g, '')
         return (
           <Link key={id} href={`/${slug}`} className="notion-link-page">
             <ArrowUpRight size={18} />
@@ -299,9 +300,11 @@ export default function NotionRenderer({ blocks, pageMetadata = [] }: { blocks: 
         )
       }
       case 'link_to_page': {
-        const pageId = value.page_id.replace(/-/g, '')
+        const linkedId = value.page_id.replace(/-/g, '') // Notion API returns ID with/without dashes sometimes
+        // Try to match with original ID or normalized ID
+        const slug = slugMap[value.page_id] || slugMap[linkedId] || linkedId
         return (
-          <Link key={id} href={`/${pageId}`} className="notion-link-page">
+          <Link key={id} href={`/${slug}`} className="notion-link-page">
             <ArrowUpRight size={18} />
             <span>Link to Page</span>
           </Link>
@@ -337,7 +340,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [] }: { blocks: 
           return (
             <div key={`group-${idx}`} className="works-grid">
               {item.pages.map((page: any) => {
-                const slug = page.id.replace(/-/g, '')
+                const slug = slugMap[page.id] || page.id.replace(/-/g, '')
                 const meta = pageMetadata.find(m => m.id === page.id)
                 const icon = meta?.icon
                 const cover = meta?.cover
