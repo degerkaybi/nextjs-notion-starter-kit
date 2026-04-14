@@ -263,15 +263,41 @@ export default function NotionRenderer({ blocks, pageMetadata = [] }: { blocks: 
           </Link>
         )
       }
-      case 'bookmark':
+      case 'bookmark': {
+        const bookmarkUrl = value.url || ''
+        
+        // Auto-embed Google Maps bookmarks
+        if (bookmarkUrl.includes('google.') && bookmarkUrl.includes('/maps')) {
+          let mapSrc = bookmarkUrl
+            .replace('http://', 'https://')
+            .replace('viewer?', 'embed?')
+            .replace('edit?', 'embed?')
+          if (!mapSrc.includes('google.com')) {
+            mapSrc = mapSrc.replace('google.', 'www.google.')
+          }
+          return (
+            <div key={id} className="notion-video-container">
+              <iframe
+                src={mapSrc}
+                frameBorder="0"
+                allowFullScreen
+                title="Google Map"
+                className="notion-embed-iframe"
+                style={{ minHeight: '450px' }}
+              ></iframe>
+            </div>
+          )
+        }
+
         return (
-          <a key={id} href={value.url} target="_blank" rel="noopener noreferrer" className="notion-bookmark">
+          <a key={id} href={bookmarkUrl} target="_blank" rel="noopener noreferrer" className="notion-bookmark">
             <div className="notion-bookmark-content">
-              <div className="notion-bookmark-title">{value.url}</div>
-              <div className="notion-bookmark-link">{value.url}</div>
+              <div className="notion-bookmark-title">{bookmarkUrl}</div>
+              <div className="notion-bookmark-link">{bookmarkUrl}</div>
             </div>
           </a>
         )
+      }
       case 'link_to_page': {
         const pageId = value.page_id.replace(/-/g, '')
         return (
