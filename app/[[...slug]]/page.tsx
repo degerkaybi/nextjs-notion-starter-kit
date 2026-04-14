@@ -1,5 +1,6 @@
 import { getPage, getBlocks, getPageMetadata } from '@/lib/notion'
 import { config } from '@/lib/config'
+import { resolveSlug, getSlugMap } from '@/lib/slugs'
 import NotionRenderer from '@/components/NotionRenderer'
 import Hero from '@/components/Hero'
 import MapSection from '@/components/MapSection'
@@ -10,7 +11,20 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
   
   const path = slug?.join('/') || ''
   const isRoot = path === ''
-  const pageId = config.pageUrlOverrides[path] || (slug ? slug[slug.length - 1] : config.rootNotionPageId)
+
+  // Resolve the page ID: first check config overrides, then dynamic slugs, then raw ID
+  let pageId: string | null = config.pageUrlOverrides[path] || null
+  
+  if (!pageId && path) {
+    pageId = await resolveSlug(path)
+  }
+  
+  if (!pageId) {
+    pageId = slug ? slug[slug.length - 1] : config.rootNotionPageId
+  }
+
+  // Get the slug map for generating proper links in the renderer
+  const { idToSlug } = await getSlugMap()
 
   try {
     const page: any = await getPage(pageId)
@@ -26,11 +40,6 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
       if (truncateIndex !== -1) {
         blocks = blocks.slice(0, truncateIndex + 1)
       }
-    } else {
-      console.log(`Blocks content for ${pageId}:`, blocks.map(b => ({
-        type: b.type,
-        text: b[b.type]?.rich_text?.[0]?.plain_text || 'NO TEXT'
-      })))
     }
 
     // Fetch metadata for child pages to get icons
@@ -53,7 +62,7 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
           <div className="content-wrapper">
             <section className="notion-content">
               <h1>{page.properties?.title?.title?.[0]?.plain_text || 'Untitled'}</h1>
-              <NotionRenderer blocks={blocks} pageMetadata={pageMetadata} />
+              <NotionRenderer blocks={blocks} pageMetadata={pageMetadata} slugMap={idToSlug} />
             </section>
           </div>
         )}

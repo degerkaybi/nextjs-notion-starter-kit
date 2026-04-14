@@ -4,6 +4,7 @@ import { Instagram, Twitter, Youtube } from 'lucide-react'
 import Link from 'next/link'
 import ThemeToggle from '@/components/ThemeToggle'
 import NavigationProgress from '@/components/NavigationProgress'
+import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
   title: 'Kaybid | Artist Portfolio',
@@ -19,21 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <NavigationProgress />
-        <nav className="site-header">
-          <div className="nav-container">
-            <Link href="/" className="logo">Kaybid</Link>
-            <div className="nav-menu">
-              <div className="nav-links">
-                <Link href="/">Home</Link>
-                <Link href="/about">About</Link>
-                <Link href="/works">Works</Link>
-                <Link href="/art-ideas">Art & Ideas</Link>
-                <Link href="/press">Press</Link>
-              </div>
-              <ThemeToggle />
-            </div>
-          </div>
-        </nav>
+        <SiteHeader />
         <main>{children}</main>
         <footer className="site-footer">
           <div className="footer-row footer-nav">
