@@ -11,9 +11,14 @@ export const notion = new Client({
 
 const REVALIDATE_TIME = 1 // Force fresh fetch for debugging
 
+function ensureDashedId(id: string): string {
+  if (id.includes('-')) return id
+  return id.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5')
+}
+
 export const getPage = unstable_cache(
   async (pageId: string) => {
-    return await notion.pages.retrieve({ page_id: pageId })
+    return await notion.pages.retrieve({ page_id: ensureDashedId(pageId) })
   },
   ['notion-page'],
   { revalidate: REVALIDATE_TIME, tags: ['notion'] }
@@ -26,7 +31,7 @@ async function fetchBlocksRecursive(blockId: string): Promise<any[]> {
   try {
     while (true) {
       const response: any = await notion.blocks.children.list({
-        block_id: blockId,
+        block_id: ensureDashedId(blockId),
         start_cursor: cursor,
       })
       blocks.push(...response.results)
@@ -65,7 +70,7 @@ export const getPageMetadata = unstable_cache(
     const metadata = await Promise.all(
       pageIds.map(async (id) => {
         try {
-          const page: any = await notion.pages.retrieve({ page_id: id })
+          const page: any = await notion.pages.retrieve({ page_id: ensureDashedId(id) })
           return {
             id: page.id,
             icon: page.icon,
