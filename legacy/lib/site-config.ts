@@ -20,6 +20,9 @@ export interface SiteConfig {
   mastodon?: string
  
 
+  includeInlineCollections?: boolean
+  includeNotionIdInUrls?: boolean
+
   defaultPageIcon?: string | null
   defaultPageCover?: string | null
   defaultPageCoverPosition?: number | null
@@ -29,7 +32,6 @@ export interface SiteConfig {
   isRedisEnabled?: boolean
   isSearchEnabled?: boolean
 
-  includeNotionIdInUrls?: boolean
   pageUrlOverrides?: types.PageUrlOverridesMap | null
   pageUrlAdditions?: types.PageUrlOverridesMap | null
 

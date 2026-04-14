@@ -1,133 +1,85 @@
-import {
-  type ExtendedRecordMap,
-  type SearchParams,
-  type SearchResults
-} from 'notion-types'
-import { mergeRecordMaps } from 'notion-utils'
-import pMap from 'p-map'
-import pMemoize from 'p-memoize'
+import { Client } from '@notionhq/client'
+import { unstable_cache } from 'next/cache'
 
-import {
-  isPreviewImageSupportEnabled,
-  navigationLinks,
-  navigationStyle
-} from './config'
-import { getTweetsMap } from './get-tweets'
-import { notion } from './notion-api'
-import { getPreviewImageMap } from './preview-images'
-
-// Exponential backoff retry helper
-export async function withRetry<T>(
-  fn: () => Promise<T>,
-  retries = 5,
-  delayMs = 2000
-): Promise<T> {
-  for (let attempt = 0; attempt < retries; attempt++) {
-    try {
-      return await fn()
-    } catch (err: any) {
-      const isRateLimit =
-        err?.response?.status === 429 ||
-        err?.status === 429 ||
-        (err?.message && err.message.includes('429')) ||
-        err?.name === 'HTTPError'
-
-      const isLastAttempt = attempt === retries - 1
-
-      if (isLastAttempt || !isRateLimit) throw err
-
-      let backoff = delayMs * Math.pow(1.5, attempt)
-
-      try {
-        const retryAfterStr = err?.response?.headers?.get('retry-after')
-        if (retryAfterStr) {
-          const retryAfterSec = parseInt(retryAfterStr, 10)
-          if (!isNaN(retryAfterSec)) {
-            backoff = Math.max(backoff, retryAfterSec * 1000 + 1000)
-          }
-        }
-      } catch (headerErr) {
-        // ignore header parsing errors
-      }
-
-      console.warn(
-        `Notion API rate limited (attempt ${attempt + 1}/${retries}), retrying in ${backoff}ms...`
-      )
-      await new Promise((resolve) => setTimeout(resolve, backoff))
-    }
-  }
-  throw new Error('unreachable')
+if (!process.env.NOTION_TOKEN) {
+  throw new Error('Missing NOTION_TOKEN in environment variables')
 }
 
-const getNavigationLinkPages = pMemoize(
-  async (): Promise<ExtendedRecordMap[]> => {
-    const navigationLinkPageIds = (navigationLinks || [])
-      .map((link) => link?.pageId)
-      .filter(Boolean)
+export const notion = new Client({
+  auth: process.env.NOTION_TOKEN,
+})
 
-    if (navigationStyle !== 'default' && navigationLinkPageIds.length) {
-      return pMap(
-        navigationLinkPageIds,
-        async (navigationLinkPageId) => {
-          try {
-            return await withRetry(() =>
-              notion.getPage(navigationLinkPageId, {
-                chunkLimit: 1,
-                fetchMissingBlocks: false,
-                fetchCollections: false,
-                signFileUrls: false
-              })
-            )
-          } catch (err) {
-            console.warn(
-              `Failed to fetch navigation link page ${navigationLinkPageId}:`,
-              err
-            )
-            return null
-          }
-        },
-        {
-          concurrency: 1 // reduce from 4 to 1 to avoid rate limiting
-        }
-      ).then((results) => results.filter(Boolean) as ExtendedRecordMap[])
-    }
+const REVALIDATE_TIME = 1 // Force fresh fetch for debugging
 
-    return []
-  }
+export const getPage = unstable_cache(
+  async (pageId: string) => {
+    return await notion.pages.retrieve({ page_id: pageId })
+  },
+  ['notion-page'],
+  { revalidate: REVALIDATE_TIME, tags: ['notion'] }
 )
 
-export async function getPage(pageId: string): Promise<ExtendedRecordMap> {
-  let recordMap = await withRetry(() => notion.getPage(pageId))
-
-  if (navigationStyle !== 'default') {
-    // ensure that any pages linked to in the custom navigation header have
-    // their block info fully resolved in the page record map so we know
-    // the page title, slug, etc.
-    try {
-      const navigationLinkRecordMaps = await getNavigationLinkPages()
-
-      if (navigationLinkRecordMaps?.length) {
-        recordMap = navigationLinkRecordMaps.reduce(
-          (map, navigationLinkRecordMap) =>
-            mergeRecordMaps(map, navigationLinkRecordMap),
-          recordMap
-        )
-      }
-    } catch (err) {
-      console.warn('Failed to fetch navigation link pages:', err)
+async function fetchBlocksRecursive(blockId: string): Promise<any[]> {
+  const blocks: any[] = []
+  let cursor: string | undefined
+  
+  try {
+    while (true) {
+      const response: any = await notion.blocks.children.list({
+        block_id: blockId,
+        start_cursor: cursor,
+      })
+      blocks.push(...response.results)
+      if (!response.next_cursor) break
+      cursor = response.next_cursor
     }
+
+    // Parallel fetch for children to speed up
+    const blocksWithChildren = await Promise.all(
+      blocks.map(async (block: any) => {
+        if (block.has_children && !['child_page', 'child_database'].includes(block.type)) {
+          const children = await fetchBlocksRecursive(block.id)
+          return { ...block, children }
+        }
+        return block
+      })
+    )
+
+    return blocksWithChildren
+  } catch (error) {
+    console.error(`Error fetching blocks for ${blockId}:`, error)
+    return []
   }
-
-  if (isPreviewImageSupportEnabled) {
-    const previewImageMap = await getPreviewImageMap(recordMap)
-    ;(recordMap as any).preview_images = previewImageMap
-  }
-
-  await getTweetsMap(recordMap)
-
-  return recordMap
 }
 
-export async function search(params: SearchParams): Promise<SearchResults> {
-  return notion.search(params)
-}
+export const getBlocks = unstable_cache(
+  async (blockId: string) => {
+    return await fetchBlocksRecursive(blockId)
+  },
+  ['notion-blocks-v2'], // Cache buster
+  { revalidate: REVALIDATE_TIME, tags: ['notion-v2'] }
+)
+
+export const getPageMetadata = unstable_cache(
+  async (pageIds: string[]) => {
+    const metadata = await Promise.all(
+      pageIds.map(async (id) => {
+        try {
+          const page: any = await notion.pages.retrieve({ page_id: id })
+          return {
+            id: page.id,
+            icon: page.icon,
+            cover: page.cover,
+            title: page.properties?.title?.title?.[0]?.plain_text || 'Untitled'
+          }
+        } catch (e) {
+          console.error(`Error fetching metadata for page ${id}:`, e)
+          return null
+        }
+      })
+    )
+    return metadata.filter(m => m !== null) as any[]
+  },
+  ['notion-metadata-v2'], // Cache buster
+  { revalidate: REVALIDATE_TIME, tags: ['notion-v2'] }
+)

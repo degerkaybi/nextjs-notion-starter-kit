@@ -1,14 +1,10 @@
-import { siteConfig } from './lib/site-config'
-
 const config = {
-  ...siteConfig,
-
   // --------------------------------------------------
   // REQUIRED
   // --------------------------------------------------
 
   // the site's root Notion page
-  rootNotionPageId: '7479b6483c7c47d1a4b16ec3c3b15060',
+  rootNotionPageId: '7479b648-3c7c-47d1-a4b1-6ec3c3b15060',
 
   // --------------------------------------------------
   // OPTIONAL
@@ -138,7 +134,8 @@ const config = {
     '/RePack': '300392488fe580f0b82dd6214c7caab4',
     '/about': '8401785badf840e99bb988a5e63eacb8',
     '/ivre-mort': '1b0392488fe581728173f7e5eacd1471',
-    '/art-ideas': '32345bd70e2d4156a30b399acd23c897'
+    '/art-ideas': '32345bd70e2d4156a30b399acd23c897',
+    '/press': '226392488fe580429c7fd774798d9c8a'
   },
 
   // --------------------------------------------------
@@ -149,19 +146,23 @@ const config = {
   navigationLinks: [
     {
       title: 'About',
-      pageId: '8401785badf840e99bb988a5e63eacb8'
+      pageId: '8401785b-adf8-40e9-9bb9-88a5e63eacb8',
+      url: '/about'
     },
     {
       title: 'Works',
-      pageId: '302392488fe580d4824accf5851dfe96'
+      pageId: '30239248-8fe5-80d4-824a-ccf5851dfe96',
+      url: '/works'
     },
     {
       title: 'Art & Ideas',
-      pageId: '32345bd70e2d4156a30b399acd23c897'
+      pageId: '32345bd7-0e2d-4156-a30b-399acd23c897',
+      url: '/art-ideas'
     },
     {
       title: 'Press',
-      pageId: '226392488fe580429c7fd774798d9c8a'
+      pageId: '22639248-8fe5-8042-9c7f-d774798d9c8a',
+      url: '/press'
     }
   ]
 }

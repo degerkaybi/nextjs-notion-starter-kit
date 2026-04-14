@@ -23,8 +23,8 @@ export async function pageAcl({
     }
   }
 
-  const keys = Object.keys(recordMap.block)
-  const rootKey = keys[0]
+  const fallbackPageId = pageId || ''
+  const rootKey = recordMap.block[fallbackPageId] ? fallbackPageId : Object.keys(recordMap.block).find(key => key.replace(/-/g, '') === fallbackPageId.replace(/-/g, '')) || Object.keys(recordMap.block)[0]
 
   if (!rootKey) {
     return {

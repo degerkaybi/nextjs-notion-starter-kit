@@ -37,16 +37,22 @@ function ToggleThemeButton() {
 }
 
 export function NotionPageHeader({
-  block
+  block,
+  components: propsComponents,
+  mapPageUrl: propsMapPageUrl
 }: {
   block: types.CollectionViewPageBlock | types.PageBlock
+  components?: any
+  mapPageUrl?: (pageId: string) => string
 }) {
-  const { components, mapPageUrl } = useNotionContext()
+  const context = useNotionContext()
+  const components = propsComponents || context?.components || {}
+  const mapPageUrl = propsMapPageUrl || context?.mapPageUrl || ((pageId: string) => `/${pageId}`)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
   const isRootPage = block?.id && parsePageId(block.id) === parsePageId(rootNotionPageId)
 
   if (navigationStyle === 'default') {
-    return <Header block={block} />
+    return <Header block={block as any} />
   }
 
   return (
@@ -67,48 +73,55 @@ export function NotionPageHeader({
         ) : (
           <Breadcrumbs block={block} rootOnly={true} />
         )}
-
         <div className={cs('notion-nav-header-rhs', 'breadcrumbs', isMobileMenuOpen && 'mobile-menu-open')}>
           <Link
             href='/'
             className={cs(styles.navLink, 'breadcrumb', 'button')}
           >
-            Home
+            {name}
           </Link>
+        </div>
 
+        <div className='notion-nav-header-rhs breadcrumbs'>
           {navigationLinks
             ?.map((link, index) => {
               if (!link?.pageId && !link?.url) {
                 return null
               }
 
-              if (link.pageId) {
-                return (
-                  <components.PageLink
-                    href={mapPageUrl(link.pageId)}
-                    key={index}
-                    className={cs(styles.navLink, 'breadcrumb', 'button')}
-                  >
-                    {link.title}
-                  </components.PageLink>
-                )
-              } else {
-                return (
-                  <components.Link
-                    href={link.url}
-                    key={index}
-                    className={cs(styles.navLink, 'breadcrumb', 'button')}
-                  >
-                    {link.title}
-                  </components.Link>
-                )
-              }
+              const href =
+                link.url ||
+                (link.pageId
+                  ? typeof mapPageUrl === 'function'
+                    ? mapPageUrl(link.pageId)
+                    : `/${link.pageId}`
+                  : '#')
+
+              const isInternalLink = href.startsWith('/')
+
+              return isInternalLink ? (
+                <Link
+                  href={href}
+                  key={index}
+                  className={cs(styles.navLink, 'breadcrumb', 'button')}
+                >
+                  {link.title}
+                </Link>
+              ) : (
+                <a
+                  href={href}
+                  key={index}
+                  className={cs(styles.navLink, 'breadcrumb', 'button')}
+                >
+                  {link.title}
+                </a>
+              )
             })
             .filter(Boolean)}
 
           <ToggleThemeButton />
 
-          {isSearchEnabled && <Search block={block} title={null} />}
+          {isSearchEnabled && <Search block={block as any} title={null} />}
         </div>
       </div>
     </header>

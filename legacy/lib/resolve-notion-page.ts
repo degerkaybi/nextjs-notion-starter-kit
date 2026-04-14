@@ -1,5 +1,5 @@
 import { type ExtendedRecordMap } from 'notion-types'
-import { parsePageId, mergeRecordMaps } from 'notion-utils'
+import { parsePageId, mergeRecordMaps, uuidToId } from 'notion-utils'
 import pMap from 'p-map'
 
 import type { PageProps } from './types'
@@ -18,14 +18,14 @@ export async function resolveNotionPage(
   let recordMap: ExtendedRecordMap
 
   if (rawPageId && rawPageId !== 'index') {
-    pageId = parsePageId(rawPageId)!
+    pageId = parsePageId(rawPageId, { uuid: true })!
 
     if (!pageId) {
       const override =
         pageUrlOverrides[rawPageId] || pageUrlAdditions[rawPageId]
 
       if (override) {
-        pageId = parsePageId(override)!
+        pageId = parsePageId(override, { uuid: true })!
       }
     }
 
@@ -75,7 +75,7 @@ export async function resolveNotionPage(
   // Pre-fetch child pages (RECURSIVE)
   // --------------------------------------------------------------------------
   if (recordMap?.block && pageId) {
-    const rootBlock = recordMap.block[pageId]?.value
+    const rootBlock = recordMap.block[pageId]?.value || recordMap.block[uuidToId(pageId)]?.value
     const effectiveRootBlock = rootBlock || Object.values(recordMap.block)[0]?.value
 
     if (effectiveRootBlock) {

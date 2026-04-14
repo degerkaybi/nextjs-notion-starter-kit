@@ -11,7 +11,7 @@ export function getCanonicalPageId(
   recordMap: ExtendedRecordMap,
   { uuid = true }: { uuid?: boolean } = {}
 ): string | undefined {
-  const cleanPageId = parsePageId(pageId, { uuid: false })
+  const cleanPageId = parsePageId(pageId, { uuid: true })
   if (!cleanPageId) {
     return
   }

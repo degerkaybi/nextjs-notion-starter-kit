@@ -18,7 +18,7 @@ export const mapPageUrl =
       return createUrl(pageId || '/', searchParams)
     }
 
-    if (uuidToId(pageUuid) === site.rootNotionPageId) {
+    if (parsePageId(pageUuid, { uuid: true }) === site.rootNotionPageId) {
       return createUrl('/', searchParams)
     } else {
       return createUrl(
@@ -37,7 +37,7 @@ export const getCanonicalPageUrl =
       return `https://${site.domain}`
     }
 
-    if (uuidToId(pageUuid) === site.rootNotionPageId) {
+    if (parsePageId(pageUuid, { uuid: true }) === site.rootNotionPageId) {
       return `https://${site.domain}`
     } else {
       return `https://${site.domain}/${getCanonicalPageId(pageUuid, recordMap, {
