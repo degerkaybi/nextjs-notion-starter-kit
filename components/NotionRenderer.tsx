@@ -179,6 +179,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
               <img 
                 src={src} 
                 decoding="async"
+                referrerPolicy="no-referrer"
                 onLoad={(e) => {
                   const target = e.target as HTMLElement;
                   target.parentElement?.classList.remove('loading-skeleton');
@@ -355,6 +356,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                           src={bgImage} 
                           alt="" 
                           className="card-icon-img" 
+                          referrerPolicy="no-referrer"
                         />
                       ) : (
                         icon?.type === 'emoji' && <span className="card-emoji">{icon.emoji}</span>
