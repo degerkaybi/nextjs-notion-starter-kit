@@ -19,11 +19,12 @@ function slugify(text: string): string {
 
 export { slugify }
 
-// Build a bidirectional map: slug <-> pageId
+// Build a bidirectional map: slug <-> pageId, and also parent tracking
 export const getSlugMap = unstable_cache(
-  async (): Promise<{ slugToId: Record<string, string>, idToSlug: Record<string, string> }> => {
+  async (): Promise<{ slugToId: Record<string, string>, idToSlug: Record<string, string>, idToParentSlug: Record<string, string> }> => {
     const slugToId: Record<string, string> = {}
     const idToSlug: Record<string, string> = {}
+    const idToParentSlug: Record<string, string> = {}
 
     // Start with hardcoded overrides from config (these take priority)
     for (const [slug, pageId] of Object.entries(config.pageUrlOverrides)) {
@@ -64,9 +65,9 @@ export const getSlugMap = unstable_cache(
         cursor = response.next_cursor
       }
 
-      // Also fetch children of children (2 levels deep for sub-pages like Works children)
+      // Also fetch children of children (2 levels deep for sub-pages like Works/Art&Ideas children)
       const topLevelPages = Object.entries(slugToId).map(([slug, id]) => ({ slug, id }))
-      for (const { id } of topLevelPages) {
+      for (const { slug: parentSlug, id } of topLevelPages) {
         try {
           const dashedId = id.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5')
           let subCursor: string | undefined
@@ -87,6 +88,9 @@ export const getSlugMap = unstable_cache(
                   idToSlug[pageId] = slug
                   idToSlug[subDashedId] = slug
                 }
+                // Track parent relationship
+                idToParentSlug[pageId] = parentSlug
+                idToParentSlug[subDashedId] = parentSlug
               }
             }
             if (!subResponse.next_cursor) break
@@ -100,9 +104,9 @@ export const getSlugMap = unstable_cache(
       console.error('Error building slug map:', error)
     }
 
-    return { slugToId, idToSlug }
+    return { slugToId, idToSlug, idToParentSlug }
   },
-  ['slug-map-v1'],
+  ['slug-map-v2'],
   { revalidate: 60, tags: ['slugs'] }
 )
 
