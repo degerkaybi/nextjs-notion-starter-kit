@@ -438,6 +438,65 @@ main {
   max-width: 900px;
 }
 
+/* Breadcrumbs */
+.breadcrumbs {
+  margin-bottom: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.breadcrumbs-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-separator {
+  display: flex;
+  align-items: center;
+  color: var(--secondary-text);
+  opacity: 0.4;
+}
+
+.breadcrumb-link {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--secondary-text);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, color 0.2s ease;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+}
+
+.breadcrumb-link:hover {
+  opacity: 1;
+  color: var(--text-color);
+  background: var(--glass-bg);
+}
+
+.breadcrumb-home {
+  opacity: 0.6;
+}
+
+.breadcrumb-current {
+  font-size: 0.85rem;
+  color: var(--secondary-text);
+  opacity: 0.5;
+  padding: 0.2rem 0.4rem;
+  cursor: default;
+}
+
 .notion-blocks {
   display: flex;
   flex-direction: column;

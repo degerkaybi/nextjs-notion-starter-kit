@@ -121,8 +121,16 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
       return <div className="notion-children">{children.map(renderBlock)}</div>
     }
 
-    // Wrap in toggle if Notion says so or if it's a toggle type
-    if (type === 'toggle' || (hasVisibleChildren && type.startsWith('heading_'))) {
+    // Check if block should behave as a toggle
+    const isToggleBlock = type === 'toggle'
+    const isToggleableHeading = type.startsWith('heading_') && (value?.is_toggleable === true || hasVisibleChildren)
+
+    // DEBUG: log all block types to find toggle/image issues
+    if (type === 'toggle' || (type.startsWith('heading_') && value?.is_toggleable)) {
+      console.log('[TOGGLE DEBUG]', type, 'is_toggleable:', value?.is_toggleable, 'has children:', children?.length)
+    }
+
+    if (isToggleBlock || isToggleableHeading) {
       return (
         <details key={id} className={`notion-toggle toggle-${type}`}>
           <summary className="notion-summary">
