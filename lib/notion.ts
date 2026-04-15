@@ -50,6 +50,21 @@ async function fetchBlocksRecursive(blockId: string): Promise<any[]> {
       })
     )
 
+    // DEBUG: log block types and rich text mention types
+    blocksWithChildren.forEach((b: any) => {
+      const val = b[b.type]
+      if (val?.rich_text) {
+        val.rich_text.forEach((rt: any) => {
+          if (rt.type === 'mention' || rt.href) {
+            console.log('[DEBUG rich_text]', JSON.stringify(rt, null, 2))
+          }
+        })
+      }
+      if (b.type === 'link_preview' || b.type === 'bookmark' || b.type === 'embed') {
+        console.log('[DEBUG block]', JSON.stringify(b, null, 2))
+      }
+    })
+
     return blocksWithChildren
   } catch (error) {
     console.error(`Error fetching blocks for ${blockId}:`, error)

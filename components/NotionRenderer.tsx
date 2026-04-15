@@ -69,8 +69,30 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         const mentionSlug = slugMap[mentionId] || mentionId.replace(/-/g, '')
         return (
           <Link key={i} href={`/${mentionSlug}`} style={style} className="notion-link-mention">
+            <svg viewBox="0 0 14 14" className="notion-mention-icon">
+              <path d="M2.5 1.5v11h9v-7.38L8.12 1.5H2.5zM1.5 1.5A1 1 0 012.5.5h5.83l.11.04 3.42 3.42.04.11v8.43a1 1 0 01-1 1h-9a1 1 0 01-1-1v-11z" />
+            </svg>
             {plain_text}
           </Link>
+        )
+      }
+
+      if (type === 'mention' && mention?.type === 'link_preview') {
+        const previewUrl = mention.link_preview?.url || href || '#'
+        const isYouTube = previewUrl.includes('youtube') || previewUrl.includes('youtu.be')
+        return (
+          <a key={i} href={previewUrl} target="_blank" rel="noopener noreferrer" className="notion-link-mention">
+            {isYouTube ? (
+              <svg viewBox="0 0 24 24" className="notion-mention-icon" fill="currentColor">
+                <path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6a3 3 0 00-2.1 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1C4.5 20.5 12 20.5 12 20.5s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.8 15.5V8.5l6.2 3.5-6.2 3.5z"/>
+              </svg>
+            ) : (
+              <svg viewBox="0 0 14 14" className="notion-mention-icon" fill="currentColor">
+                <path d="M7 1a6 6 0 100 12A6 6 0 007 1zM0 7a7 7 0 1114 0A7 7 0 010 7zm7-3.5a.5.5 0 01.5.5v3.19l1.65 1.65a.5.5 0 01-.7.71L6.65 7.85A.5.5 0 016.5 7.5v-3a.5.5 0 01.5-.5z"/>
+              </svg>
+            )}
+            {plain_text}
+          </a>
         )
       }
 
@@ -180,6 +202,12 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                 src={src} 
                 decoding="async"
                 referrerPolicy="no-referrer"
+                ref={(el) => {
+                  if (el?.complete) {
+                    el.parentElement?.classList.remove('loading-skeleton')
+                    el.classList.add('loaded')
+                  }
+                }}
                 onLoad={(e) => {
                   const target = e.target as HTMLElement;
                   target.parentElement?.classList.remove('loading-skeleton');
@@ -321,6 +349,34 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
             <div className="notion-file-info">
               <span className="notion-file-name">{name}</span>
             </div>
+          </a>
+        )
+      }
+      case 'link_preview': {
+        const previewUrl = value?.url || ''
+        if (!previewUrl) return null
+        const isYouTube = previewUrl.includes('youtube') || previewUrl.includes('youtu.be')
+        if (isYouTube) {
+          const ytMatch = previewUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|live\/|watch\?v=|watch\?.+&v=))(([\w-]){11})/)
+          const videoId = ytMatch?.[1]
+          if (videoId) {
+            return (
+              <div key={id} className="notion-video-container">
+                <iframe
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  title="YouTube Video"
+                ></iframe>
+              </div>
+            )
+          }
+        }
+        return (
+          <a key={id} href={previewUrl} target="_blank" rel="noopener noreferrer" className="notion-link-preview-block">
+            <span className="notion-link-preview-icon">🔗</span>
+            <span className="notion-link-preview-url">{previewUrl}</span>
           </a>
         )
       }

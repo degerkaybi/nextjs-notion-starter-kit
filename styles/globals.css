@@ -209,7 +209,7 @@ body.light-mode .map-section {
   opacity: 0.8;
 }
 
-.notion-link, .notion-link-mention {
+.notion-link {
   color: #fff;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -218,11 +218,49 @@ body.light-mode .map-section {
   transition: all 0.2s ease;
 }
 
-.notion-link:hover, .notion-link-mention:hover {
+.notion-link:hover {
   text-decoration-color: #fff;
   opacity: 1;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 4px;
+}
+
+.notion-link-mention {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0px 6px;
+  border-radius: 4px;
+  color: #fff !important;
+  text-decoration: none !important;
+  font-weight: 500;
+  transition: background 0.2s ease;
+  line-height: normal;
+  vertical-align: text-bottom;
+  white-space: nowrap;
+  margin: 0 2px;
+}
+
+.notion-link-mention:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.notion-mention-icon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  opacity: 0.8;
+  margin-bottom: 2px;
+}
+
+body.light-mode .notion-link-mention {
+  background: rgba(0, 0, 0, 0.08);
+  color: #000 !important;
+}
+
+body.light-mode .notion-link-mention:hover {
+  background: rgba(0, 0, 0, 0.12);
 }
 
 /* Header & Navigation */
@@ -840,6 +878,46 @@ body.light-mode .loading-skeleton {
   text-decoration: none !important;
   font-weight: 500;
   margin: 0.5rem 0;
+}
+
+.notion-link-preview-block {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--text-color);
+  text-decoration: none !important;
+  font-size: 0.95rem;
+  transition: background 0.2s ease;
+  margin: 0.3rem 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.notion-link-preview-block:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.notion-link-preview-icon {
+  flex-shrink: 0;
+}
+
+.notion-link-preview-url {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.8;
+}
+
+body.light-mode .notion-link-preview-block {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .notion-link-preview-block:hover {
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .notion-file-link {
