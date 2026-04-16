@@ -1407,6 +1407,53 @@ a.hero-secondary-link:active,
   margin-bottom: 2rem;
 }
 
+/* Panda Video Full Width Breakout */
+.panda-video-full-width {
+  width: 95vw !important;
+  max-width: 900px !important; /* Matches gallery max-width */
+  margin-left: 50% !important;
+  margin-right: -50vw !important; /* Add this to help certain flex layouts */
+  transform: translateX(-50%) !important;
+  position: relative !important;
+  display: block !important;
+  margin-top: 3rem !important;
+  margin-bottom: 3rem !important;
+}
+
+.panda-video-full-width .notion-video-container {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+
+/* Ensure the iframe inside matches the container */
+.panda-video-full-width iframe {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16/9 !important;
+  display: block;
+}
+
+.panda-video-caption-full-width {
+  text-align: left !important;
+  max-width: 800px !important;
+  margin: 1.5rem auto !important;
+  line-height: 1.6;
+}
+
+.panda-story-text {
+  font-style: italic;
+  opacity: 0.9;
+  margin-bottom: 1.2rem;
+  font-size: 1.05rem;
+}
+
+.panda-metadata-text {
+  font-weight: 700;
+  color: var(--text-color);
+  letter-spacing: 0.02rem;
+}
+
 @media (max-width: 768px) {
   .notion-slider-container.slider-full-width {
     padding: 1rem 0;

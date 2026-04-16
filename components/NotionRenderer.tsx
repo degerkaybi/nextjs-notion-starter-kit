@@ -131,7 +131,8 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         const url = value?.type === 'external' ? value.external.url : (value?.file?.url || value?.url || block.video?.external?.url || block.video?.file?.url || '')
         const isMap = isGoogleMap(url)
         const caption = value?.caption?.[0]?.plain_text || ''
-        const isExcluded = caption.includes('Panda, 2018-2022')
+        const isPandaVideo = caption.includes('Panda, 2018-2022') && type === 'video'
+        const isExcluded = isPandaVideo // Only exclude the video version from gallery pooling
 
         const isMedia = ['image', 'video', 'embed', 'google_drive'].includes(type)
         if (isMedia) {
@@ -578,6 +579,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
       case 'embed': {
         let src = value.type === 'external' ? value.external.url : value.file?.url || value.url
         const caption = value.caption
+        const isPandaVideo = caption?.[0]?.plain_text?.includes('Panda, 2018-2022')
         const isMap = isGoogleMap(src)
 
         // If we are pooling this into the gallery, suppress inline rendering
@@ -609,6 +611,33 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
           )
         }
 
+        if (isPandaVideo && isSilentStepsPage) {
+          const ytMatch = src.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|live\/|watch\?v=|watch\?.+&v=))((\w|-){11})/);
+          const videoId = (ytMatch && ytMatch[1]) ? ytMatch[1] : '';
+          
+          if (videoId) {
+            return (
+              <div key={id} className="notion-video-container-wrapper panda-video-full-width">
+                <div className="notion-video-container">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${videoId}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    title="YouTube Video"
+                  ></iframe>
+                </div>
+                <figcaption className="notion-image-caption panda-video-caption-full-width">
+                  <div className="panda-story-text">
+                    It took me nearly four years to capture the frames in this film. From beginning to end, in less than a minute, an entire lifetime passes before our eyes. In fact, if you watch each loop only once in sequence, it doesn’t even add up to five seconds. I extended it in the edit through repetition. Everything happens between two blinks of an eye.
+                  </div>
+                  <div className="panda-metadata-text">Panda, 2018-2022 - Istanbul, Ankara</div>
+                </figcaption>
+              </div>
+            )
+          }
+        }
+
         // Broad support for Google Maps & My Maps (viewer/edit -> embed transformation)
         if (isMap) {
           src = src
@@ -625,10 +654,11 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
           const ytMatch = src.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|live\/|watch\?v=|watch\?.+&v=))((\w|-){11})/);
           const videoId = (ytMatch && ytMatch[1]) ? ytMatch[1] : '';
           
-          if (videoId) {
-            return (
-              <div key={id} className="notion-video-container-wrapper">
-                <div className="notion-video-container">
+            if (videoId) {
+              const pandaClass = isPandaVideo && isSilentStepsPage ? 'panda-video-full-width' : ''
+              return (
+                <div key={id} className={`notion-video-container-wrapper ${pandaClass}`}>
+                  <div className="notion-video-container">
                   <iframe
                     src={`https://www.youtube.com/embed/${videoId}`}
                     frameBorder="0"
@@ -637,11 +667,24 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                     title="YouTube Video"
                   ></iframe>
                 </div>
-                {caption && caption.length > 0 && (
-                  <figcaption className="notion-image-caption">
-                    {renderRichText(caption)}
-                  </figcaption>
-                )}
+                {(() => {
+                  const isPandaVideo = caption?.[0]?.plain_text?.includes('Panda, 2018-2022')
+                  if (isPandaVideo && isSilentStepsPage) {
+                    return (
+                      <figcaption className="notion-image-caption panda-video-caption-full-width">
+                        <div className="panda-story-text">
+                          It took me nearly four years to capture the frames in this film. From beginning to end, in less than a minute, an entire lifetime passes before our eyes. In fact, if you watch each loop only once in sequence, it doesn’t even add up to five seconds. I extended it in the edit through repetition. Everything happens between two blinks of an eye.
+                        </div>
+                        <div className="panda-metadata-text">Panda, 2018-2022 - Istanbul, Ankara</div>
+                      </figcaption>
+                    )
+                  }
+                  return caption && caption.length > 0 && (
+                    <figcaption className="notion-image-caption">
+                      {renderRichText(caption)}
+                    </figcaption>
+                  )
+                })()}
               </div>
             )
           }
@@ -906,8 +949,53 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     }
   }
 
+  // Move specific blocks (like the Panda video) after Google Maps for better layout on Silent Steps
+  const processedBlocks = (() => {
+    if (!isSilentStepsPage) return blocks
+    
+    let pandaBlock: any = null
+    const cleanBlocks = (arr: any[]): any[] => {
+      return arr.filter(b => {
+        const val = b[b.type]
+        const caption = val?.caption?.[0]?.plain_text || ''
+        if (caption.includes('Panda, 2018-2022') && b.type === 'video') {
+          pandaBlock = b
+          return false
+        }
+        if (b.children && b.children.length > 0) {
+          b.children = cleanBlocks(b.children)
+        }
+        return true
+      })
+    }
+
+    const newBlocks = cleanBlocks([...blocks])
+    if (pandaBlock) {
+      // Find the index of the last Google Map to place Panda video after it
+      let lastMapIndex = -1
+      newBlocks.forEach((block, idx) => {
+        const type = block.type
+        const value = block[type]
+        const url = value?.type === 'external' ? value.external.url : (value?.file?.url || value?.url || block.video?.external?.url || block.video?.file?.url || '')
+        if (isGoogleMap(url)) {
+          lastMapIndex = idx
+        }
+      })
+
+      if (lastMapIndex !== -1) {
+        const result = [...newBlocks]
+        result.splice(lastMapIndex + 1, 0, pandaBlock)
+        return result
+      } else {
+        // Fallback: if no map found, put at top
+        return [pandaBlock, ...newBlocks]
+      }
+    }
+    return newBlocks
+  })()
+
   // Group consecutive child_page blocks for grid display
-  const groupedBlocks = blocks.reduce((acc: any[], block: any) => {
+  const groupedBlocks = processedBlocks.reduce((acc: any[], block: any) => {
     if (block.type === 'child_page') {
       const last = acc[acc.length - 1]
       if (last && last._type === '_child_page_group') {
@@ -1101,20 +1189,6 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                   {item.items.map((b: any) => renderBlock(b))}
                 </div>
               ) : renderBlock(item)
-
-              // For Silent Steps, insert the lead text after the first block/group
-              if (isSilentStepsPage && i === 0) {
-                return (
-                  <React.Fragment key={item.id || `group-${i}`}>
-                    {content}
-                    <header className="notion-page-lead-text" style={{ marginTop: '3rem', marginBottom: '2rem' }}>
-                      <p>
-                        It took me nearly four years to capture the frames in this film. From beginning to end, in less than a minute, an entire lifetime passes before our eyes. In fact, if you watch each loop only once in sequence, it doesn’t even add up to five seconds. I extended it in the edit through repetition. Everything happens between two blinks of an eye.
-                      </p>
-                    </header>
-                  </React.Fragment>
-                )
-              }
               
               return content
             })}
