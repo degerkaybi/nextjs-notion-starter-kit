@@ -1096,14 +1096,27 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                 if (!text && !item.children?.length) return null
               }
               
-              if (item._type === '_child_page_group') {
+              const content = (item._type === '_child_page_group') ? (
+                <div key={`group-${i}`} className="works-grid-inline">
+                  {item.items.map((b: any) => renderBlock(b))}
+                </div>
+              ) : renderBlock(item)
+
+              // For Silent Steps, insert the lead text after the first block/group
+              if (isSilentStepsPage && i === 0) {
                 return (
-                  <div key={`group-${i}`} className="works-grid-inline">
-                    {item.items.map((b: any) => renderBlock(b))}
-                  </div>
+                  <React.Fragment key={item.id || `group-${i}`}>
+                    {content}
+                    <header className="notion-page-lead-text" style={{ marginTop: '3rem', marginBottom: '2rem' }}>
+                      <p>
+                        It took me nearly four years to capture the frames in this film. From beginning to end, in less than a minute, an entire lifetime passes before our eyes. In fact, if you watch each loop only once in sequence, it doesn’t even add up to five seconds. I extended it in the edit through repetition. Everything happens between two blinks of an eye.
+                      </p>
+                    </header>
+                  </React.Fragment>
                 )
               }
-              return renderBlock(item)
+              
+              return content
             })}
           </div>
         )
