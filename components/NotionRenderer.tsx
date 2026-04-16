@@ -60,6 +60,41 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
       url.includes('maps.app.goo.gl')
     )
   }
+
+  const convertCountryToFlag = (text: string) => {
+    const flags: Record<string, string> = {
+      'TR': '🇹🇷',
+      'TUR': '🇹🇷',
+      'TURKEY': '🇹🇷',
+      'TÜRKİYE': '🇹🇷',
+      'USA': '🇺🇸',
+      'US': '🇺🇸',
+      'FRANCE': '🇫🇷',
+      'FR': '🇫🇷',
+      'ITALY': '🇮🇹',
+      'IT': '🇮🇹',
+      'PORTUGAL': '🇵🇹',
+      'PT': '🇵🇹',
+      'NETHERLANDS': '🇳🇱',
+      'NL': '🇳🇱',
+      'GERMANY': '🇩🇪',
+      'DE': '🇩🇪',
+      'UK': '🇬🇧',
+      'GB': '🇬🇧',
+      'SPAIN': '🇪🇸',
+      'ES': '🇪🇸',
+      'BRAZIL': '🇧🇷',
+      'BR': '🇧🇷',
+      'JAPAN': '🇯🇵',
+      'JP': '🇯🇵'
+    }
+
+    // Match code at the end of string, e.g. "Paris 2024 FR", "Paris 2024 (USA)" or "Paris 2024 Turkey"
+    return text.replace(/[\s(]+([A-Z]{2,}|TÜRKİYE|TURKEY|ITALY|FRANCE|GERMANY|SPAIN|PORTUGAL|NETHERLANDS|BRAZIL|JAPAN)[\s)]*(\s*)$/i, (match, code, space) => {
+      const flag = flags[code.toUpperCase()]
+      return flag ? ` ${flag}${space}` : match
+    })
+  }
   
   // Recursively collect all images for the gallery
   const getAllImages = (blocks: any[]): any[] => {
@@ -204,7 +239,13 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
   const renderRichText = (richText: any[]) => {
     if (!richText || richText.length === 0) return null
     return richText.map((t: any, i: number) => {
-      const { annotations, plain_text, href, type, mention } = t
+      let { annotations, plain_text, href, type, mention } = t
+      
+      // Automatic flag conversion for text segments
+      if (type === 'text' && plain_text) {
+        plain_text = convertCountryToFlag(plain_text)
+      }
+
       const style = {
         fontWeight: annotations?.bold ? 'bold' : 'normal',
         fontStyle: annotations?.italic ? 'italic' : 'normal',
@@ -883,7 +924,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
   const renderGallerySlider = (customStyles: React.CSSProperties = {}, hideTabs = false, square = false) => {
     if (!isGalleryLayout) return null
     return (
-      <div className="unified-gallery-wrapper tabbed-gallery" style={{ marginBottom: isSilentStepsPage ? '0.5rem' : '3rem', ...customStyles }}>
+      <div className="unified-gallery-wrapper tabbed-gallery" style={{ marginBottom: isSilentStepsPage ? '0rem' : '3rem', ...customStyles }}>
         {!hideTabs && (
           <div className="notion-tabs-container">
             <div className="notion-tabs-bar">
@@ -1043,7 +1084,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
 
         // Standard logic for other pages or if marker exists
         return (
-          <>
+          <div className={isSilentStepsPage ? 'tight-layout' : ''}>
             {shouldRenderGalleryAtTop && renderGallerySlider({}, isParisPage || isVoltaPage)}
             {groupedBlocks.map((item: any, i: number) => {
               if (item.type === 'paragraph' && !item.paragraph?.rich_text?.length && !item.children?.length) {
@@ -1064,7 +1105,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
               }
               return renderBlock(item)
             })}
-          </>
+          </div>
         )
       })()}
 

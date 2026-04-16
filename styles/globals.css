@@ -61,6 +61,22 @@ body {
   background: #3a3a3a;
 }
 
+/* Tight Layout for pages needing minimal vertical spacing */
+.tight-layout .notion-slider-container {
+  margin-top: 0 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.tight-layout .notion-content h1,
+.tight-layout .notion-content h2,
+.tight-layout .notion-content h3 {
+  margin-top: 0.5rem !important;
+}
+
+.tight-layout .unified-gallery-wrapper {
+  margin-bottom: 0 !important;
+}
+
 .hero-buttons {
   display: flex;
   gap: 1.5rem;
