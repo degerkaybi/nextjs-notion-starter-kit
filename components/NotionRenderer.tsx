@@ -41,6 +41,16 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     return url
   }
 
+  // Route all images through the server-side proxy to avoid referrer blocking and enable caching
+  const proxyImageUrl = (url: string) => {
+    if (!url) return url
+    // Don't proxy local/relative URLs, data URIs, or already-proxied URLs
+    if (url.startsWith('/') || url.startsWith('data:') || url.includes('/api/image-proxy')) return url
+    // Don't proxy Imgur embed URLs (they're iframes)
+    if (url.includes('imgur.com/embed') || url.includes('imgur.com/a/')) return url
+    return `/api/image-proxy?url=${encodeURIComponent(url)}`
+  }
+
   // Robust Google Maps detection
   const isGoogleMap = (url: string) => {
     if (!url) return false
@@ -425,7 +435,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
               style={{ cursor: 'pointer' }}
             >
               <img 
-                src={normalizeImgurUrl(src)} 
+                src={proxyImageUrl(normalizeImgurUrl(src))} 
                 loading="lazy"
                 decoding="async"
                 referrerPolicy="no-referrer"
@@ -545,7 +555,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
             <div key={id} className="notion-image-wrapper">
               <div className="notion-image-container">
                 <img 
-                  src={normalizedSrc} 
+                  src={proxyImageUrl(normalizedSrc)} 
                   loading="lazy"
                   referrerPolicy="no-referrer" 
                   className="notion-img"
@@ -619,7 +629,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
             <div key={id} className={`notion-video-container-wrapper ${isFullScreenPage ? 'video-full-screen-layout' : ''}`}>
               <div className="notion-video-container">
                 <video 
-                  src={src} 
+                  src={proxyImageUrl(src)} 
                   controls 
                   muted 
                   autoPlay
@@ -720,7 +730,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
             <div className="card-icon-wrapper">
               {bgImage ? (
                 <img 
-                  src={normalizeImgurUrl(bgImage)} 
+                  src={proxyImageUrl(normalizeImgurUrl(bgImage))} 
                   className="notion-img"
                   onLoad={(e) => e.currentTarget.classList.add('loaded')}
                   onError={(e) => {
@@ -873,7 +883,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
   const renderGallerySlider = (customStyles: React.CSSProperties = {}, hideTabs = false, square = false) => {
     if (!isGalleryLayout) return null
     return (
-      <div className="unified-gallery-wrapper tabbed-gallery" style={{ marginBottom: '3rem', ...customStyles }}>
+      <div className="unified-gallery-wrapper tabbed-gallery" style={{ marginBottom: isSilentStepsPage ? '0.5rem' : '3rem', ...customStyles }}>
         {!hideTabs && (
           <div className="notion-tabs-container">
             <div className="notion-tabs-bar">
@@ -882,7 +892,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                   className={`notion-tab-button ${activeTab === 'GIFs' ? 'active' : ''}`}
                   onClick={() => setActiveTab('GIFs')}
                 >
-                  Animations (GIFs)
+                  All Animations
                 </button>
               )}
               {staticImageBlocks.length > 0 && (
@@ -890,7 +900,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                   className={`notion-tab-button ${activeTab === 'Photography' ? 'active' : ''}`}
                   onClick={() => setActiveTab('Photography')}
                 >
-                  Photography
+                  Photo Gallery
                 </button>
               )}
               {videoBlocks.length > 0 && (
@@ -898,7 +908,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                   className={`notion-tab-button ${activeTab === 'Videos' ? 'active' : ''}`}
                   onClick={() => setActiveTab('Videos')}
                 >
-                  Videos
+                  Making Videos
                 </button>
               )}
             </div>
@@ -907,11 +917,11 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
 
         <div className="tab-content-wrapper fade-in-entrance">
           {activeTab === 'GIFs' && gifBlocks.length > 0 ? (
-            <NotionGallerySlider key="GIFs" items={gifBlocks} fullWidth={true} square={square} />
+            <NotionGallerySlider key="GIFs" items={gifBlocks} fullWidth={!isSilentStepsPage} square={square} isSilentSteps={isSilentStepsPage} />
           ) : activeTab === 'Videos' && videoBlocks.length > 0 ? (
-            <NotionGallerySlider key="Videos" items={videoBlocks} square={square} />
+            <NotionGallerySlider key="Videos" items={videoBlocks} square={square} isSilentSteps={isSilentStepsPage} />
           ) : (
-            staticImageBlocks.length > 0 && <NotionGallerySlider key="Photography" items={staticImageBlocks} square={square} />
+            staticImageBlocks.length > 0 && <NotionGallerySlider key="Photography" items={staticImageBlocks} square={square} isSilentSteps={isSilentStepsPage} />
           )}
         </div>
       </div>
@@ -1038,6 +1048,11 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
             {groupedBlocks.map((item: any, i: number) => {
               if (item.type === 'paragraph' && !item.paragraph?.rich_text?.length && !item.children?.length) {
                 return null
+              }
+              // Skip empty toggle blocks or headings without text on Silent Steps
+              if (isSilentStepsPage && (item.type.startsWith('heading_') || item.type === 'toggle')) {
+                const text = item[item.type]?.rich_text?.[0]?.plain_text?.trim()
+                if (!text && !item.children?.length) return null
               }
               
               if (item._type === '_child_page_group') {

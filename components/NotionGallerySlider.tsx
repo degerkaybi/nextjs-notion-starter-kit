@@ -7,9 +7,10 @@ interface NotionGallerySliderProps {
   items: any[]
   fullWidth?: boolean
   square?: boolean
+  isSilentSteps?: boolean
 }
 
-export default function NotionGallerySlider({ items, fullWidth, square }: NotionGallerySliderProps) {
+export default function NotionGallerySlider({ items, fullWidth, square, isSilentSteps }: NotionGallerySliderProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [isMounted, setIsMounted] = useState(false)
   const thumbnailsRef = useRef<HTMLDivElement>(null)
@@ -21,6 +22,18 @@ export default function NotionGallerySlider({ items, fullWidth, square }: Notion
       return url.replace('imgur.com', 'i.imgur.com')
     }
     return url
+  }
+
+  const proxyImageUrl = (url: string, isStatic = false) => {
+    if (!url) return url
+    if (url.startsWith('/') || url.startsWith('data:') || url.includes('/api/image-proxy')) return url
+    if (url.includes('imgur.com/embed') || url.includes('imgur.com/a/')) return url
+    // YouTube thumbnails don't need proxy
+    if (url.includes('img.youtube.com')) return url
+    
+    let proxyUrl = `/api/image-proxy?url=${encodeURIComponent(url)}`
+    if (isStatic) proxyUrl += '&static=true&width=400'
+    return proxyUrl
   }
 
   const getMediaInfo = (block: any) => {
@@ -152,13 +165,14 @@ export default function NotionGallerySlider({ items, fullWidth, square }: Notion
         ) : (
           <img 
             key={currentItem.url} 
-            src={currentItem.url} 
+            src={proxyImageUrl(currentItem.url)} 
             alt={currentItem.caption || `Image ${activeIndex + 1}`}
             loading="lazy"
             decoding="async"
             onLoad={(e) => e.currentTarget.classList.add('loaded')}
             referrerPolicy="no-referrer"
             className="slider-main-image notion-img fade-in-entrance"
+            style={isSilentSteps ? { objectFit: 'contain', maxHeight: '70vh', width: '100%', margin: '0 auto', borderRadius: '20px' } : {}}
           />
         )}
         
@@ -196,7 +210,7 @@ export default function NotionGallerySlider({ items, fullWidth, square }: Notion
               aria-label={`View item ${idx + 1}`}
             >
               <img 
-                src={item.thumbUrl} 
+                src={proxyImageUrl(item.thumbUrl, item.url.toLowerCase().includes('.gif'))} 
                 alt={`Thumbnail ${idx + 1}`} 
                 loading="lazy"
                 decoding="async" 
