@@ -156,7 +156,8 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
                 blocks={blocks} 
                 pageMetadata={pageMetadata} 
                 slugMap={idToSlug} 
-                galleryMode={page.properties?.title?.title?.[0]?.plain_text === 'Silent Steps Series'}
+                pageTitle={page.properties?.title?.title?.[0]?.plain_text || 'Untitled'}
+                galleryMode={(page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('silent steps') || (page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('paris')}
                 showLeadText={page.properties?.title?.title?.[0]?.plain_text === 'Silent Steps Series'}
               />
             </section>

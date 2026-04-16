@@ -73,17 +73,23 @@ export default function NotionGallerySlider({ items, fullWidth }: NotionGalleryS
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [mediaItems.length])
 
-  // Scroll active thumbnail into view
+  // Scroll active thumbnail into view (container only, doesn't affect page scroll)
   useEffect(() => {
     if (thumbnailsRef.current) {
       const activeThumb = thumbnailsRef.current.children[activeIndex] as HTMLElement
       if (activeThumb) {
-        const parentRect = thumbnailsRef.current.getBoundingClientRect()
-        const thumbRect = activeThumb.getBoundingClientRect()
+        const container = thumbnailsRef.current
+        const thumbLeft = activeThumb.offsetLeft
+        const thumbWidth = activeThumb.clientWidth
+        const containerWidth = container.clientWidth
         
-        if (thumbRect.left < parentRect.left || thumbRect.right > parentRect.right) {
-           activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
-        }
+        // Calculate the scroll position to center the thumbnail
+        const scrollTarget = thumbLeft - (containerWidth / 2) + (thumbWidth / 2)
+        
+        container.scrollTo({
+          left: scrollTarget,
+          behavior: 'smooth'
+        })
       }
     }
   }, [activeIndex])
@@ -118,6 +124,7 @@ export default function NotionGallerySlider({ items, fullWidth }: NotionGalleryS
             alt={currentItem.caption || `Image ${activeIndex + 1}`}
             loading="lazy"
             decoding="async"
+            referrerPolicy="no-referrer"
             className="slider-main-image fade-in-entrance"
           />
         )}
@@ -160,6 +167,7 @@ export default function NotionGallerySlider({ items, fullWidth }: NotionGalleryS
                 alt={`Thumbnail ${idx + 1}`} 
                 loading="lazy"
                 decoding="async" 
+                referrerPolicy="no-referrer"
               />
               {item.isVideo && <div className="play-overlay">▶</div>}
             </button>

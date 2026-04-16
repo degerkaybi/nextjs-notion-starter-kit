@@ -8,10 +8,11 @@ import "yet-another-react-lightbox/styles.css"
 import InstagramEmbed from './InstagramEmbed'
 import NotionGallerySlider from './NotionGallerySlider'
 
-export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}, showLeadText = false, galleryMode = false }: { blocks: any[], pageMetadata?: any[], slugMap?: Record<string, string>, showLeadText?: boolean, galleryMode?: boolean }) {
+export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}, showLeadText = false, galleryMode = false, pageTitle = '' }: { blocks: any[], pageMetadata?: any[], slugMap?: Record<string, string>, showLeadText?: boolean, galleryMode?: boolean, pageTitle?: string }) {
+  const isParisPage = pageTitle.toLowerCase().includes('paris') || pageTitle.toLowerCase().includes('olympics')
   const [index, setIndex] = useState(-1)
-  const [activeTab, setActiveTab] = useState('GIFs')
-  
+  const [activeTab, setActiveTab] = useState('')
+
   // Robust Google Maps detection
   const isGoogleMap = (url: string) => {
     if (!url) return false
@@ -49,21 +50,39 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
   // Extract all media blocks but EXCLUDE maps and specific items the user wants inline
   const getAllMediaBlocks = (blocksArray: any[]): any[] => {
     let mediaBlocks: any[] = []
-    blocksArray.forEach(block => {
-      const type = block.type
-      const value = block[type]
-      const url = value?.type === 'external' ? value.external.url : value?.file?.url || value?.url || ''
-      const isMap = isGoogleMap(url)
-      const caption = value?.caption?.[0]?.plain_text || ''
-      const isExcluded = caption.includes('Panda, 2018-2022')
+    let mediaCount = 0
+    const traverse = (arr: any[]) => {
+      arr.forEach(block => {
+        const type = block.type
+        const value = block[type]
+        const url = value?.type === 'external' ? value.external.url : value?.file?.url || value?.url || ''
+        const isMap = isGoogleMap(url)
+        const caption = value?.caption?.[0]?.plain_text || ''
+        const isExcluded = caption.includes('Panda, 2018-2022')
 
-      if (['image', 'video', 'embed', 'google_drive'].includes(type) && !isMap && !isExcluded) {
-        mediaBlocks.push(block)
-      }
-      if (block.children && block.children.length > 0) {
-        mediaBlocks = [...mediaBlocks, ...getAllMediaBlocks(block.children)]
-      }
-    })
+        const isMedia = ['image', 'video', 'embed', 'google_drive'].includes(type)
+        if (isMedia) {
+          mediaCount++
+          
+          // Paris page specific logic: 
+          // Skip ALL GIFs (they stay inline as requested)
+          if (isParisPage) {
+            const isGif = block.type === 'image' && url.toLowerCase().includes('.gif')
+            if (isGif) return
+          }
+          
+          if (!isMap && !isExcluded) {
+            mediaBlocks.push(block)
+          }
+        }
+        
+        if (block.children && block.children.length > 0) {
+          traverse(block.children)
+        }
+      })
+    }
+    
+    traverse(blocksArray)
     return mediaBlocks
   }
 
@@ -85,6 +104,20 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     if (block.type !== 'image') return false
     return !gifBlocks.includes(block)
   })
+
+  // Set initial active tab based on what's available
+  React.useEffect(() => {
+    if (!activeTab) {
+      if (isParisPage) {
+        if (staticImageBlocks.length > 0) setActiveTab('Photography')
+        else if (videoBlocks.length > 0) setActiveTab('Videos')
+      } else {
+        if (gifBlocks.length > 0) setActiveTab('GIFs')
+        else if (staticImageBlocks.length > 0) setActiveTab('Photography')
+        else if (videoBlocks.length > 0) setActiveTab('Videos')
+      }
+    }
+  }, [isParisPage, gifBlocks.length, staticImageBlocks.length, videoBlocks.length, activeTab])
 
   const renderRichText = (richText: any[]) => {
     if (!richText || richText.length === 0) return null
@@ -201,6 +234,30 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
 
     // If this block is part of the unified top gallery, suppress inline rendering
     const isGalleryItem = allMediaBlocks.some(b => b.id === id)
+    
+    // Check if this block is a "PHOTO GALLERY" marker (Heading or Toggle)
+    const blockText = value?.rich_text?.[0]?.plain_text?.toUpperCase() || ''
+    const isGalleryMarker = (type.startsWith('heading_') || type === 'toggle') && blockText.includes('PHOTO GALLERY')
+    
+    if (isGalleryMarker && isGalleryLayout) {
+      if (type === 'toggle' || value?.is_toggleable) {
+        // Render the toggle but with the gallery slider inside it
+        return (
+          <details key={id} className={`notion-toggle toggle-${type}`}>
+            <summary className="notion-summary">
+              {type === 'heading_1' && <h1>{renderRichText(value.rich_text)}</h1>}
+              {type === 'heading_2' && <h2>{renderRichText(value.rich_text)}</h2>}
+              {type === 'heading_3' && <h3>{renderRichText(value.rich_text)}</h3>}
+              {type === 'toggle' && <span className="toggle-text">{renderRichText(value.rich_text)}</span>}
+            </summary>
+            <div className="toggle-content">
+              {renderGallerySlider({}, isParisPage)}
+            </div>
+          </details>
+        )
+      }
+      return renderGallerySlider({}, isParisPage)
+    }
     
     switch (type) {
       case 'image': {
@@ -561,16 +618,11 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     return acc
   }, [])
 
-  return (
-    <div className="notion-blocks">
-      {showLeadText && (
-        <div className="notion-page-lead-text">
-          The project ongoing since 2018 and over 600+ individual unique collages created from 40+ different species were created and applied to the streets. ”I create each frame of the animation by ripping apart images I've previously made. Each frame is a collage.”
-        </div>
-      )}
-
-      {isGalleryLayout && (
-        <div className="unified-gallery-wrapper tabbed-gallery" style={{ marginBottom: '3rem' }}>
+  const renderGallerySlider = (customStyles: React.CSSProperties = {}, hideTabs = false) => {
+    if (!isGalleryLayout) return null
+    return (
+      <div className="unified-gallery-wrapper tabbed-gallery" style={{ marginBottom: '3rem', ...customStyles }}>
+        {!hideTabs && (
           <div className="notion-tabs-container">
             <div className="notion-tabs-bar">
               {gifBlocks.length > 0 && (
@@ -599,29 +651,118 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
               )}
             </div>
           </div>
+        )}
 
-          <div className="tab-content-wrapper fade-in-entrance">
-            {activeTab === 'GIFs' && gifBlocks.length > 0 ? (
-              <NotionGallerySlider key="GIFs" items={gifBlocks} fullWidth={true} />
-            ) : activeTab === 'Videos' && videoBlocks.length > 0 ? (
-              <NotionGallerySlider key="Videos" items={videoBlocks} />
-            ) : (
-              staticImageBlocks.length > 0 && <NotionGallerySlider key="Photography" items={staticImageBlocks} />
-            )}
-          </div>
+        <div className="tab-content-wrapper fade-in-entrance">
+          {activeTab === 'GIFs' && gifBlocks.length > 0 ? (
+            <NotionGallerySlider key="GIFs" items={gifBlocks} fullWidth={true} />
+          ) : activeTab === 'Videos' && videoBlocks.length > 0 ? (
+            <NotionGallerySlider key="Videos" items={videoBlocks} />
+          ) : (
+            staticImageBlocks.length > 0 && <NotionGallerySlider key="Photography" items={staticImageBlocks} />
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // Check if we should render gallery at the top (fallback for Silent Steps)
+  const hasGalleryMarker = blocks.some(b => {
+    const val = b[b.type]
+    const text = val?.rich_text?.[0]?.plain_text?.toUpperCase() || ''
+    return (b.type.startsWith('heading_') || b.type === 'toggle') && text.includes('PHOTO GALLERY')
+  })
+  const shouldRenderGalleryAtTop = isGalleryLayout && !hasGalleryMarker
+
+  return (
+    <div className="notion-blocks">
+      {showLeadText && pageTitle === 'Silent Steps Series' && (
+        <div className="notion-page-lead-text">
+          The project ongoing since 2018 and over 600+ individual unique collages created from 40+ different species were created and applied to the streets. ”I create each frame of the animation by ripping apart images I've previously made. Each frame is a collage.”
         </div>
       )}
 
-      {groupedBlocks.map((item: any, i: number) => {
-        if (item._type === '_child_page_group') {
+      {(() => {
+        if (isParisPage && !hasGalleryMarker) {
+          // Find the end of the description - we include text and GIFs
+          let descriptionEndIndex = 0
+          for (let i = 0; i < groupedBlocks.length; i++) {
+            const b = groupedBlocks[i]
+            const val = b[b.type]
+            const url = (val?.type === 'external' ? val?.external?.url : val?.file?.url || val?.url || '').toLowerCase()
+            
+            // Check if this specific block is pulled into the gallery
+            const blockIsGalleryItem = allMediaBlocks.some((mb: any) => mb.id === b.id)
+            const isSkippedMedia = (b.type === 'image' || b.type === 'video' || b.type === 'embed') && blockIsGalleryItem
+            const isGif = b.type === 'image' && url.includes('.gif')
+            
+            if (['paragraph', 'heading_1', 'heading_2', 'heading_3'].includes(b.type) || isGif) {
+              descriptionEndIndex = i + 1
+            } else if (isSkippedMedia || (b.type === 'paragraph' && !b.paragraph?.rich_text?.length)) {
+              continue
+            } else {
+              break
+            }
+          }
+
+          const before = groupedBlocks.slice(0, descriptionEndIndex)
+          const after = groupedBlocks.slice(descriptionEndIndex)
+
           return (
-            <div key={`group-${i}`} className="works-grid-inline">
-              {item.items.map((b: any) => renderBlock(b))}
-            </div>
+            <>
+              {before.map((item: any, i: number) => {
+                const blockContent = renderBlock(item)
+                if (!blockContent) return null
+                
+                return (
+                  <div key={item.id} style={{ marginBottom: i === before.length - 1 ? '0.5rem' : undefined }}>
+                    {blockContent}
+                  </div>
+                )
+              })}
+              {renderGallerySlider({ marginTop: '0', marginBottom: '2rem' }, true)}
+              {after.map((item: any, i: number) => {
+                const blockContent = renderBlock(item)
+                if (!blockContent) return null
+
+                if (item._type === '_child_page_group') {
+                  return (
+                    <div key={`group-${i}`} className="works-grid-inline">
+                      {item.items.map((b: any) => renderBlock(b))}
+                    </div>
+                  )
+                }
+                return (
+                  <div key={item.id}>
+                    {blockContent}
+                  </div>
+                )
+              })}
+            </>
           )
         }
-        return renderBlock(item)
-      })}
+
+        // Standard logic for other pages or if marker exists
+        return (
+          <>
+            {shouldRenderGalleryAtTop && renderGallerySlider({}, isParisPage)}
+            {groupedBlocks.map((item: any, i: number) => {
+              if (item.type === 'paragraph' && !item.paragraph?.rich_text?.length && !item.children?.length) {
+                return null
+              }
+              
+              if (item._type === '_child_page_group') {
+                return (
+                  <div key={`group-${i}`} className="works-grid-inline">
+                    {item.items.map((b: any) => renderBlock(b))}
+                  </div>
+                )
+              }
+              return renderBlock(item)
+            })}
+          </>
+        )
+      })()}
 
       <Lightbox
         index={index}
