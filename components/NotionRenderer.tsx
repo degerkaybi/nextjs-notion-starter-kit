@@ -6,9 +6,11 @@ import { ArrowUpRight } from 'lucide-react'
 import Lightbox from "yet-another-react-lightbox"
 import "yet-another-react-lightbox/styles.css"
 import InstagramEmbed from './InstagramEmbed'
+import NotionGallerySlider from './NotionGallerySlider'
 
-export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {} }: { blocks: any[], pageMetadata?: any[], slugMap?: Record<string, string> }) {
+export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}, showLeadText = false, galleryMode = false }: { blocks: any[], pageMetadata?: any[], slugMap?: Record<string, string>, showLeadText?: boolean, galleryMode?: boolean }) {
   const [index, setIndex] = useState(-1)
+  const [activeTab, setActiveTab] = useState('GIFs')
   
   // Recursively collect all images for the gallery
   const getAllImages = (blocks: any[]): any[] => {
@@ -34,24 +36,45 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     return galleryImages.findIndex(img => img.src === url)
   }
 
-  // Group consecutive child_page blocks together for the grid view
-  const groupedBlocks: any[] = []
-  let currentGroup: any[] = []
+  // Extract all media blocks but EXCLUDE maps and specific items the user wants inline
+  const getAllMediaBlocks = (blocksArray: any[]): any[] => {
+    let mediaBlocks: any[] = []
+    blocksArray.forEach(block => {
+      const type = block.type
+      const value = block[type]
+      const url = value?.type === 'external' ? value.external.url : value?.file?.url || value?.url || ''
+      const isMap = url.includes('google.') && url.includes('/maps')
+      const caption = value?.caption?.[0]?.plain_text || ''
+      const isExcluded = caption.includes('Panda, 2018-2022')
 
-  blocks.forEach((block) => {
-    if (block.type === 'child_page') {
-      currentGroup.push(block)
-    } else {
-      if (currentGroup.length > 0) {
-        groupedBlocks.push({ type: 'page_group', pages: currentGroup })
-        currentGroup = []
+      if (['image', 'video', 'embed'].includes(type) && !isMap && !isExcluded) {
+        mediaBlocks.push(block)
       }
-      groupedBlocks.push(block)
-    }
-  })
-  if (currentGroup.length > 0) {
-    groupedBlocks.push({ type: 'page_group', pages: currentGroup })
+      if (block.children && block.children.length > 0) {
+        mediaBlocks = [...mediaBlocks, ...getAllMediaBlocks(block.children)]
+      }
+    })
+    return mediaBlocks
   }
+
+  const allMediaBlocks = getAllMediaBlocks(blocks)
+  // Gallery mode is only activated on specific pages (e.g. Silent Steps Series)
+  const isGalleryLayout = galleryMode && allMediaBlocks.length > 0
+
+  // Categorize media into GIFs, Static (JPEG/PNG/etc), and Videos
+  const gifBlocks = allMediaBlocks.filter(block => {
+    if (block.type !== 'image') return false
+    const val = block.image
+    const src = (val.type === 'external' ? val.external.url : val.file.url).toLowerCase()
+    return src.includes('.gif')
+  })
+
+  const videoBlocks = allMediaBlocks.filter(block => ['video', 'embed'].includes(block.type))
+
+  const staticImageBlocks = allMediaBlocks.filter(block => {
+    if (block.type !== 'image') return false
+    return !gifBlocks.includes(block)
+  })
 
   const renderRichText = (richText: any[]) => {
     if (!richText || richText.length === 0) return null
@@ -166,7 +189,51 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
       )
     }
 
+    // If this block is part of the unified top gallery, suppress inline rendering
+    const isGalleryItem = allMediaBlocks.some(b => b.id === id)
+    
     switch (type) {
+      case 'image': {
+        if (isGalleryLayout && isGalleryItem) return null
+
+        const src = value.type === 'external' ? value.external.url : value.file.url
+        const caption = value.caption
+        return (
+          <div key={id} className="notion-image-wrapper">
+            <div 
+              className="notion-image-container loading-skeleton"
+              onClick={() => setIndex(getImageIndex(src))}
+              style={{ cursor: 'pointer' }}
+            >
+              <img 
+                src={normalizeImgurUrl(src)} 
+                loading="lazy"
+                decoding="async"
+                referrerPolicy="no-referrer"
+                className="notion-img"
+                onLoad={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.parentElement?.classList.remove('loading-skeleton');
+                  target.classList.add('loaded');
+                }}
+                onError={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.parentElement?.classList.remove('loading-skeleton');
+                  target.parentElement?.classList.add('image-error-container');
+                  target.classList.add('image-failed');
+                  console.error('Image failed to load:', src);
+                }}
+                alt={caption?.[0]?.plain_text || 'Notion Content'} 
+              />
+            </div>
+            {caption && caption.length > 0 && (
+              <figcaption className="notion-image-caption">
+                {renderRichText(caption)}
+              </figcaption>
+            )}
+          </div>
+        )
+      }
       case 'heading_1':
         return (
           <div key={id} className="notion-heading-block">
@@ -235,48 +302,16 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
             </div>
           </div>
         )
-      case 'image': {
-        const src = value.type === 'external' ? value.external.url : value.file.url
-        const caption = value.caption
-        return (
-          <div key={id} className="notion-image-wrapper">
-            <div 
-              className="notion-image-container loading-skeleton"
-              onClick={() => setIndex(getImageIndex(src))}
-              style={{ cursor: 'pointer' }}
-            >
-              <img 
-                src={normalizeImgurUrl(src)} 
-                loading="lazy"
-                decoding="async"
-                referrerPolicy="no-referrer"
-                className="notion-img"
-                onLoad={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.parentElement?.classList.remove('loading-skeleton');
-                  target.classList.add('loaded');
-                }}
-                onError={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.parentElement?.classList.remove('loading-skeleton');
-                  target.parentElement?.classList.add('image-error-container');
-                  target.classList.add('image-failed');
-                  console.error('Image failed to load:', src);
-                }}
-                alt={caption?.[0]?.plain_text || 'Notion Content'} 
-              />
-            </div>
-            {caption && caption.length > 0 && (
-              <figcaption className="notion-image-caption">
-                {renderRichText(caption)}
-              </figcaption>
-            )}
-          </div>
-        )
-      }
       case 'video':
       case 'embed': {
         let src = value.type === 'external' ? value.external.url : value.file?.url || value.url
+        const caption = value.caption
+        const isMap = src?.includes('google.') && src?.includes('/maps')
+
+        // If we are pooling this into the gallery, suppress inline rendering
+        if (isGalleryLayout && isGalleryItem) return null
+
+        if (!src) return null
         if (!src) return null
 
         const normalizedSrc = normalizeImgurUrl(src)
@@ -316,14 +351,21 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
           
           if (videoId) {
             return (
-              <div key={id} className="notion-video-container">
-                <iframe
-                  src={`https://www.youtube.com/embed/${videoId}`}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  title="YouTube Video"
-                ></iframe>
+              <div key={id} className="notion-video-container-wrapper">
+                <div className="notion-video-container">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${videoId}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    title="YouTube Video"
+                  ></iframe>
+                </div>
+                {caption && caption.length > 0 && (
+                  <figcaption className="notion-image-caption">
+                    {renderRichText(caption)}
+                  </figcaption>
+                )}
               </div>
             )
           }
@@ -332,30 +374,61 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         // Instagram embed support
         if (src.includes('instagram.com')) {
           return (
-            <div key={id} className="notion-embed-container">
-              <InstagramEmbed url={src} />
+            <div key={id} className="notion-embed-container-wrapper">
+              <div className="notion-embed-container">
+                <InstagramEmbed url={src} />
+              </div>
+              {caption && caption.length > 0 && (
+                <figcaption className="notion-image-caption">
+                  {renderRichText(caption)}
+                </figcaption>
+              )}
             </div>
           )
         }
 
         return (
-          <div key={id} className="notion-video-container">
-            <iframe
-              src={src}
-              frameBorder="0"
-              allowFullScreen
-              title="Embedded Content"
-              className="notion-embed-iframe"
-            ></iframe>
+          <div key={id} className="notion-video-container-wrapper">
+            <div className="notion-video-container">
+              <iframe
+                src={src}
+                frameBorder="0"
+                allowFullScreen
+                title="Embedded Content"
+                className="notion-embed-iframe"
+              ></iframe>
+            </div>
+            {caption && caption.length > 0 && (
+              <figcaption className="notion-image-caption">
+                {renderRichText(caption)}
+              </figcaption>
+            )}
           </div>
         )
       }
       case 'child_page': {
         const slug = slugMap[id] || id.replace(/-/g, '')
+        const meta = pageMetadata.find(m => m.id === id)
+        const icon = meta?.icon
+        const cover = meta?.cover
+        const bgImage = cover?.external?.url || cover?.file?.url || icon?.external?.url || icon?.file?.url
+
         return (
-          <Link key={id} href={`/${slug}`} className="notion-link-page">
-            <ArrowUpRight size={18} />
-            <span>{value.title}</span>
+          <Link key={id} href={`/${slug}`} className="work-card">
+            <ArrowUpRight className="card-arrow" size={24} />
+            <div className="card-icon-wrapper">
+              {bgImage ? (
+                <img 
+                  src={bgImage} 
+                  alt="" 
+                  className="card-icon-img" 
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                icon?.type === 'emoji' && <span className="card-emoji">{icon.emoji}</span>
+              )}
+            </div>
+            <h3>{value.title}</h3>
           </Link>
         )
       }
@@ -456,38 +529,77 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     }
   }
 
+  // Group consecutive child_page blocks for grid display
+  const groupedBlocks = blocks.reduce((acc: any[], block: any) => {
+    if (block.type === 'child_page') {
+      const last = acc[acc.length - 1]
+      if (last && last._type === '_child_page_group') {
+        last.items.push(block)
+      } else {
+        acc.push({ _type: '_child_page_group', items: [block] })
+      }
+    } else {
+      acc.push(block)
+    }
+    return acc
+  }, [])
+
   return (
     <div className="notion-blocks">
-      {groupedBlocks.map((item, idx) => {
-        if (item.type === 'page_group') {
-          return (
-            <div key={`group-${idx}`} className="works-grid">
-              {item.pages.map((page: any) => {
-                const slug = slugMap[page.id] || page.id.replace(/-/g, '')
-                const meta = pageMetadata.find(m => m.id === page.id)
-                const icon = meta?.icon
-                const cover = meta?.cover
-                const bgImage = cover?.external?.url || cover?.file?.url || icon?.external?.url || icon?.file?.url
+      {showLeadText && (
+        <div className="notion-page-lead-text">
+          The project ongoing since 2018 and over 600+ individual unique collages created from 40+ different species were created and applied to the streets. ”I create each frame of the animation by ripping apart images I've previously made. Each frame is a collage.”
+        </div>
+      )}
 
-                return (
-                  <Link key={page.id} href={`/${slug}`} className="work-card">
-                    <ArrowUpRight className="card-arrow" size={24} />
-                    <div className="card-icon-wrapper">
-                      {bgImage ? (
-                        <img 
-                          src={bgImage} 
-                          alt="" 
-                          className="card-icon-img" 
-                          referrerPolicy="no-referrer"
-                        />
-                      ) : (
-                        icon?.type === 'emoji' && <span className="card-emoji">{icon.emoji}</span>
-                      )}
-                    </div>
-                    <h3>{page.child_page.title}</h3>
-                  </Link>
-                )
-              })}
+      {isGalleryLayout && (
+        <div className="unified-gallery-wrapper tabbed-gallery" style={{ marginBottom: '3rem' }}>
+          <div className="notion-tabs-container">
+            <div className="notion-tabs-bar">
+              {gifBlocks.length > 0 && (
+                <button 
+                  className={`notion-tab-button ${activeTab === 'GIFs' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('GIFs')}
+                >
+                  Animations (GIFs)
+                </button>
+              )}
+              {staticImageBlocks.length > 0 && (
+                <button 
+                  className={`notion-tab-button ${activeTab === 'Photography' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('Photography')}
+                >
+                  Photography
+                </button>
+              )}
+              {videoBlocks.length > 0 && (
+                <button 
+                  className={`notion-tab-button ${activeTab === 'Videos' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('Videos')}
+                >
+                  Videos
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="tab-content-wrapper fade-in-entrance">
+            {activeTab === 'GIFs' && gifBlocks.length > 0 ? (
+              <NotionGallerySlider key="GIFs" items={gifBlocks} fullWidth={true} />
+            ) : activeTab === 'Videos' && videoBlocks.length > 0 ? (
+              <NotionGallerySlider key="Videos" items={videoBlocks} />
+            ) : (
+              staticImageBlocks.length > 0 && <NotionGallerySlider key="Photography" items={staticImageBlocks} />
+            )}
+          </div>
+        </div>
+      )}
+
+      {groupedBlocks.map((item: any, i: number) => {
+        if (item._type === '_child_page_group') {
+          return (
+            <div key={`group-${i}`} className="works-grid-inline">
+              {item.items.map((b: any) => renderBlock(b))}
             </div>
           )
         }

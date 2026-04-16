@@ -73,6 +73,64 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
       }
     }
 
+    // Filter out specific redundant text blocks the user wants removed
+    const textsToRemove = [
+      'ANIMATIONS',
+      'Thanks for patience while the gifs loaded.',
+      '2024 Olympics, Paris',
+      'Commencis, 2024',
+      'Penguin, 2024',
+      'Squirrel, 2024',
+      'Herkül, 2024',
+      'Bull, 2023',
+      'Bear 2023',
+      'Ostrich, 2023',
+      'Chameleon, 2023',
+      'Panda, 2018',
+      'Urbanist Gorila, 2021',
+      'Unicorn, 2021',
+      'Seal, 2021',
+      'Human Zer0, 2020',
+      'Cow, 2020',
+      'Koala, 2019',
+      'Lemur, 2019',
+      'Tortise, 2019',
+      'Kangaroo, 2019',
+      'Giraffe, 2019',
+      'Caretta Caretta, 2019',
+      'Dolphin, 2019',
+      'Sea Horse, 2019',
+      'Whale, 2019',
+      'Octopus, 2019',
+      'Shark, 2019',
+      'Raccon, 2018',
+      'Polar Bear, 2018',
+      'White Lion, 2018',
+      'Bision, 2018',
+      'Hippo, 2018',
+      'Bear —— 2023',
+      'Gorilla, 2018',
+      'Moose, 2018',
+      'Jaguar, 2018',
+      'Rhino, 2018',
+      'Lion, 2018',
+      'Elephant, 2018',
+      'I started by making my first pasteup with this series',
+      'The project ongoing since 2018',
+      'I create each frame of the animation'
+    ]
+
+    blocks = blocks.flatMap((b: any) => {
+      const text = b[b.type]?.rich_text?.[0]?.plain_text || ''
+      const shouldRemove = textsToRemove.some(toRemove => text.includes(toRemove))
+      
+      if (shouldRemove) {
+        // If the block has children (e.g., GIFs under a heading), preserve them
+        return b.children || []
+      }
+      return [b]
+    })
+
     // Fetch metadata for child pages to get icons
     const childPageIds = blocks
       .filter((b: any) => b.type === 'child_page')
@@ -94,7 +152,13 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
             <section className="notion-content">
               <Breadcrumbs currentTitle={page.properties?.title?.title?.[0]?.plain_text || 'Untitled'} ancestors={ancestors} />
               <h1>{page.properties?.title?.title?.[0]?.plain_text || 'Untitled'}</h1>
-              <NotionRenderer blocks={blocks} pageMetadata={pageMetadata} slugMap={idToSlug} />
+              <NotionRenderer 
+                blocks={blocks} 
+                pageMetadata={pageMetadata} 
+                slugMap={idToSlug} 
+                galleryMode={page.properties?.title?.title?.[0]?.plain_text === 'Silent Steps Series'}
+                showLeadText={page.properties?.title?.title?.[0]?.plain_text === 'Silent Steps Series'}
+              />
             </section>
           </div>
         )}
