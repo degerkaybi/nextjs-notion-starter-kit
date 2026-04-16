@@ -603,9 +603,9 @@ main {
 .notion-column-list {
   display: flex;
   width: 100%;
-  gap: 1.5rem;
-  margin: 1.5rem 0;
-  align-items: flex-start;
+  gap: 2rem;
+  margin: 1rem 0;
+  align-items: flex-start; /* Ensure top alignment */
 }
 
 .notion-column {
@@ -616,10 +616,17 @@ main {
   gap: 1rem;
 }
 
+/* Ensure media inside columns doesn't have extra top margin */
+.notion-column > .notion-video-container,
+.notion-column > .notion-image-container,
+.notion-column > .notion-image-wrapper {
+  margin-top: 0 !important;
+}
+
 @media (max-width: 768px) {
   .notion-column-list {
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
   }
 }
 

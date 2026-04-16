@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
         
         // Convert to webp for better performance if requested static or small
         image.webp({ quality: 80 })
-        processedBuffer = await image.toBuffer()
+        processedBuffer = (await image.toBuffer()) as any
         outputContentType = 'image/webp'
       }
     }
