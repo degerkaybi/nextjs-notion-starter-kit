@@ -7,6 +7,8 @@ import Hero from '@/components/Hero'
 import MapSection from '@/components/MapSection'
 import { notFound } from 'next/navigation'
 
+export const revalidate = 60 // Revalidate every 60 seconds to prevent Notion S3 image URLs from expiring
+
 export default async function DynamicPage({ params }: { params: Promise<{ slug?: string[] }> }) {
   const { slug } = await params
   

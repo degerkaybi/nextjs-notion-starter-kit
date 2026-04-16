@@ -108,6 +108,25 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     })
   }
 
+  const normalizeImgurUrl = (url: string) => {
+    if (!url || !url.includes('imgur.com')) return url
+    
+    // Convert gallery/album to embed
+    if (url.includes('/a/') || url.includes('/gallery/') || (!url.includes('i.imgur.com') && !/\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i.test(url))) {
+      const match = url.match(/imgur\.com\/(?:a\/|gallery\/|)?([a-zA-Z0-9]+)/)
+      if (match && match[1]) {
+        return `https://imgur.com/a/${match[1]}/embed?pub=true`
+      }
+    }
+    
+    // Ensure direct links use i.imgur.com
+    if (url.includes('imgur.com') && !url.includes('i.imgur.com') && /\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i.test(url)) {
+      return url.replace('imgur.com', 'i.imgur.com')
+    }
+    
+    return url
+  }
+
   const renderBlock = (block: any): React.ReactNode => {
     const { type, id, children } = block
     const value = block[type]
@@ -123,7 +142,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
 
     // Check if block should behave as a toggle
     const isToggleBlock = type === 'toggle'
-    const isToggleableHeading = type.startsWith('heading_') && (value?.is_toggleable === true || hasVisibleChildren)
+    const isToggleableHeading = type.startsWith('heading_') && (value?.is_toggleable === true)
 
     // DEBUG: log all block types to find toggle/image issues
     if (type === 'toggle' || (type.startsWith('heading_') && value?.is_toggleable)) {
@@ -149,13 +168,33 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
 
     switch (type) {
       case 'heading_1':
-        return <h1 key={id}>{renderRichText(value.rich_text)}{renderChildren()}</h1>
+        return (
+          <div key={id} className="notion-heading-block">
+            <h1>{renderRichText(value.rich_text)}</h1>
+            {renderChildren()}
+          </div>
+        )
       case 'heading_2':
-        return <h2 key={id}>{renderRichText(value.rich_text)}{renderChildren()}</h2>
+        return (
+          <div key={id} className="notion-heading-block">
+            <h2>{renderRichText(value.rich_text)}</h2>
+            {renderChildren()}
+          </div>
+        )
       case 'heading_3':
-        return <h3 key={id}>{renderRichText(value.rich_text)}{renderChildren()}</h3>
+        return (
+          <div key={id} className="notion-heading-block">
+            <h3>{renderRichText(value.rich_text)}</h3>
+            {renderChildren()}
+          </div>
+        )
       case 'paragraph':
-        return <p key={id} className="notion-p">{renderRichText(value.rich_text)}{renderChildren()}</p>
+        return (
+          <div key={id} className="notion-paragraph-block">
+            <p className="notion-p">{renderRichText(value.rich_text)}</p>
+            {renderChildren()}
+          </div>
+        )
       case 'bulleted_list_item':
         return (
           <li key={id} className="notion-li">
@@ -207,15 +246,11 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
               style={{ cursor: 'pointer' }}
             >
               <img 
-                src={src} 
+                src={normalizeImgurUrl(src)} 
+                loading="lazy"
                 decoding="async"
                 referrerPolicy="no-referrer"
-                ref={(el) => {
-                  if (el?.complete) {
-                    el.parentElement?.classList.remove('loading-skeleton')
-                    el.classList.add('loaded')
-                  }
-                }}
+                className="notion-img"
                 onLoad={(e) => {
                   const target = e.target as HTMLElement;
                   target.parentElement?.classList.remove('loading-skeleton');
@@ -224,9 +259,9 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                 onError={(e) => {
                   const target = e.target as HTMLElement;
                   target.parentElement?.classList.remove('loading-skeleton');
-                  target.parentElement?.classList.add('image-error');
-                  target.style.opacity = '0.3';
-                  target.style.filter = 'grayscale(100%)';
+                  target.parentElement?.classList.add('image-error-container');
+                  target.classList.add('image-failed');
+                  console.error('Image failed to load:', src);
                 }}
                 alt={caption?.[0]?.plain_text || 'Notion Content'} 
               />
@@ -243,6 +278,29 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
       case 'embed': {
         let src = value.type === 'external' ? value.external.url : value.file?.url || value.url
         if (!src) return null
+
+        const normalizedSrc = normalizeImgurUrl(src)
+        const isImgurEmbed = normalizedSrc.includes('imgur.com/a/') && normalizedSrc.includes('/embed')
+
+        // If it's a direct image link or normalized to one, treat it as an image
+        const isDirectImage = /\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i.test(normalizedSrc) || normalizedSrc.includes('i.imgur.com')
+        
+        if (isDirectImage && !isImgurEmbed) {
+          return (
+            <div key={id} className="notion-image-wrapper">
+              <div className="notion-image-container">
+                <img 
+                  src={normalizedSrc} 
+                  loading="lazy"
+                  referrerPolicy="no-referrer" 
+                  style={{ width: '100%', borderRadius: '20px', display: 'block' }} 
+                  alt="Embedded Content"
+                  onLoad={(e) => (e.target as HTMLElement).classList.add('loaded')}
+                />
+              </div>
+            </div>
+          )
+        }
 
         // Broad support for Google Maps & My Maps (viewer/edit -> embed transformation)
         const isGoogleMap = src.includes('google.') && src.includes('/maps')

@@ -1183,3 +1183,34 @@ a.hero-secondary-link:active,
   font-size: 0.85rem;
   color: var(--secondary-text);
 }
+
+/* Image Loading & Error States */
+.image-error-container {
+  min-height: 200px;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px dashed var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.image-error-container::after {
+  content: 'Image not accessible / Private link';
+  color: var(--secondary-text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.image-failed {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+/* Ensure Imgur Embeds look good */
+.notion-video-container iframe[src*="imgur.com"] {
+  background: transparent;
+  border-radius: 12px;
+}
+

@@ -66,8 +66,12 @@ async function fetchBlocksRecursive(blockId: string): Promise<any[]> {
     })
 
     return blocksWithChildren
-  } catch (error) {
-    console.error(`Error fetching blocks for ${blockId}:`, error)
+  } catch (error: any) {
+    if (error.code === 'object_not_found') {
+      console.error(`[NOTION PERMISSION ERROR] Could not find or access block ${blockId}. Please ensure this page is shared with your integration.`)
+    } else {
+      console.error(`Error fetching blocks for ${blockId}:`, error)
+    }
     return []
   }
 }

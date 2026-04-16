@@ -1,3 +1,4 @@
+import React, { Fragment } from 'react'
 import Link from 'next/link'
 import { ChevronRight, Home } from 'lucide-react'
 
@@ -19,16 +20,16 @@ export default function Breadcrumbs({ currentTitle, ancestors }: BreadcrumbsProp
 
         {/* Ancestor pages */}
         {ancestors.map((ancestor) => (
-          <>
-            <li key={`sep-${ancestor.href}`} className="breadcrumb-separator" aria-hidden="true">
+          <Fragment key={ancestor.href}>
+            <li className="breadcrumb-separator" aria-hidden="true">
               <ChevronRight size={14} />
             </li>
-            <li key={ancestor.href} className="breadcrumb-item">
+            <li className="breadcrumb-item">
               <Link href={ancestor.href} className="breadcrumb-link">
                 {ancestor.label}
               </Link>
             </li>
-          </>
+          </Fragment>
         ))}
 
         {/* Current page */}

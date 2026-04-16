@@ -7,8 +7,8 @@ import NavigationProgress from '@/components/NavigationProgress'
 import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
-  title: 'Kaybid | Artist Portfolio',
-  description: 'Artist portfolio and works of Kaybid.',
+  title: 'kaybid',
+  description: 'kaybid portfolio',
 }
 
 export default function RootLayout({

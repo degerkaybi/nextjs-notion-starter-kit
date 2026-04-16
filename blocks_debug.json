@@ -1,0 +1,1930 @@
+[
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8139-8405-ffd99db53210",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "divider",
+    "divider": {},
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8128-9b28-fe604e22fdee",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "heading_2",
+    "heading_2": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Sergide yer alan işlerin hiçbiri tamamlanmış bir ürün ya da kesinleşmiş bir sonuç değil; aksine, bir arayışın, bir sürecin, bir deneyin farklı katmanları. Her bir parça, devam eden bir düşüncenin izini sürüyor, bir sezgiye ya da keşfe işaret ediyor, kendi içinde bir soruya yanıt arıyor.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Sergide yer alan işlerin hiçbiri tamamlanmış bir ürün ya da kesinleşmiş bir sonuç değil; aksine, bir arayışın, bir sürecin, bir deneyin farklı katmanları. Her bir parça, devam eden bir düşüncenin izini sürüyor, bir sezgiye ya da keşfe işaret ediyor, kendi içinde bir soruya yanıt arıyor.",
+          "href": null
+        }
+      ],
+      "is_toggleable": false,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-813f-9ce5-dfd62d2afb2c",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "heading_3",
+    "heading_3": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Bu deneyimin son halkasını ise izleyici oluşturuyor — sürece karşılık veren ve ona katılan son unsur. Dolayısıyla bu sürecin nihai etkisini, ortaya çıkacak anlamları ve yankılarını hep birlikte görecek, belki de birlikte şekillendireceğiz.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Bu deneyimin son halkasını ise izleyici oluşturuyor — sürece karşılık veren ve ona katılan son unsur. Dolayısıyla bu sürecin nihai etkisini, ortaya çıkacak anlamları ve yankılarını hep birlikte görecek, belki de birlikte şekillendireceğiz.",
+          "href": null
+        }
+      ],
+      "is_toggleable": false,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81d5-a54a-daf471620a0f",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "divider",
+    "divider": {},
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81a9-8e7c-c11b86bf4a7f",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81a4-96d9-e243f0f575e8",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Sokaklarda başıboş dolaşıyorum. Kimsenin bakmadığı köşelere, kenarda göz gezdiriyor; olmadık yerlere gidiyorum. İşlerimi yapıştıracak yerler arıyorum. Öyle ki dolaştığım şehirlerdeki neredeyse tüm binaların zeminle, kaldırım ile birleştiği noktaları, hangi duvarların pürüzlü, hangilerinin düz olduğunu, hangilerinde graffiti ya da tag bulunduğunu biliyorum. ",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Sokaklarda başıboş dolaşıyorum. Kimsenin bakmadığı köşelere, kenarda göz gezdiriyor; olmadık yerlere gidiyorum. İşlerimi yapıştıracak yerler arıyorum. Öyle ki dolaştığım şehirlerdeki neredeyse tüm binaların zeminle, kaldırım ile birleştiği noktaları, hangi duvarların pürüzlü, hangilerinin düz olduğunu, hangilerinde graffiti ya da tag bulunduğunu biliyorum. ",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8190-9a66-dffdcc83b607",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Bir kenti keşfetmek için tesadüfe dayalı bir rota oluşturmak en büyük hedefim. Bir yere bir amaçla gitmek değil; yol nereye götürürse oraya varmak için yürümek.",
+            "link": null
+          },
+          "annotations": {
+            "bold": true,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Bir kenti keşfetmek için tesadüfe dayalı bir rota oluşturmak en büyük hedefim. Bir yere bir amaçla gitmek değil; yol nereye götürürse oraya varmak için yürümek.",
+          "href": null
+        },
+        {
+          "type": "text",
+          "text": {
+            "content": " Bu tesadüfü ve yön kararını tamamen dışarıya, sokağa bırakmak için bazı teknikler geliştirdim. Örneğin bir kavşakta hangi yöne gideceğime karar vermek yerine, elimdeki yapıştırıcıyı gösterip birine “Bunu nereden bulabilirim?” diye soruyorum. Gittiğim kent tamamen yeni olduğu için her yön benim için “doğru” yön oluyor. Sorduğum kişi bana bir yön gösteriyor, ben de oraya gidiyorum. Sonra başka birine soruyorum. Ve sonra bir başkasına... Böylece rastlantısallık seviyesini olabildiğince yüksek tutmaya çalışıyorum. Elbette bu rastlantısal rotada ilerlerken karşılaştığım güzel köşelere, duvarlara işlerimi yapıştırmayı da ihmal etmiyorum.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": " Bu tesadüfü ve yön kararını tamamen dışarıya, sokağa bırakmak için bazı teknikler geliştirdim. Örneğin bir kavşakta hangi yöne gideceğime karar vermek yerine, elimdeki yapıştırıcıyı gösterip birine “Bunu nereden bulabilirim?” diye soruyorum. Gittiğim kent tamamen yeni olduğu için her yön benim için “doğru” yön oluyor. Sorduğum kişi bana bir yön gösteriyor, ben de oraya gidiyorum. Sonra başka birine soruyorum. Ve sonra bir başkasına... Böylece rastlantısallık seviyesini olabildiğince yüksek tutmaya çalışıyorum. Elbette bu rastlantısal rotada ilerlerken karşılaştığım güzel köşelere, duvarlara işlerimi yapıştırmayı da ihmal etmiyorum.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81d5-ba7c-ef17c3256051",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8178-a4be-dbf8c3182de1",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "image",
+    "image": {
+      "caption": [],
+      "type": "file",
+      "file": {
+        "url": "https://prod-files-secure.s3.us-west-2.amazonaws.com/fab09b21-167a-4089-b72d-e97531f00ab2/1003a0b0-cded-4f7c-bf13-640b372c1515/Ekran_grnts_2025-03-31_214634.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466TFPGHFI6%2F20260415%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260415T183851Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIBOCDyEZL3EGqByfXshT1BwdWt0MuF4t9YG6mLVdrfFMAiEAl9Hz88GH7X3Gj3NbZJcEQI8QC5gzJ9eEo5VHUSz5mkkqiAQIqv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDGz3ITaSX9IDIAFInyrcA%2FW2cdD3S87CLoyU5Ntxm6MUko2RidJ828ra1UgV477hTve%2F9fPpO0WJ3YmGfYQC5YvC1pVt06DU1ku%2FkZsjpIXgU%2FzNpdr4S0szsuOrTobvhvZZgOLuT4Xw4RnBQBdQQes5uBNephFME5r2xlNzPqMatN4vZ4aji5xN5zb1ds2mp%2FxY5bpbpV7FbuxSrN%2BNMLssYcnWHC3uydTrhYkrgUAhBlJLrmaVZqpLW87UKa%2B%2B9rEyePzg9SsqeOrzbUPfCX8W53%2BVs7vog%2B8lMkasFSLmHlaJUfR%2FhRmYGHsdB87enXrNxEd%2BohBpJ7F9%2B3NpkuXrRIUdVNqfxIK5RKyIsirmf7SM%2BXjghrfz5ZoPBoqAaztD9xPcoKv%2Fm%2BQ3ru95TQzZADD8J%2FVMvnNRy5nZjQ7CtxFGwb5qB8iF0XoJIhL3yyRnWc4rBDlKYo5Ah%2BrZNNOpwIliXxerQnyxJ5g9UrNUrbIBeDGws%2BXVBIGvu0VDqmx1yhaX0q5VMCLtbwcXGtuVJcDUZnh8nVNeFFXrf3LbGJARZ%2F7%2Bw1v7PN9iHOyCl8HqowCVHD6aR%2BNL8OyA2EaD6W2p8Tmbjufe9okZBmqXtyQOzHAy2qXPK%2FJl547SOA5SoAsHgmItnHEUMJ%2BS%2F84GOqUBNX4n15WKNUI2TayObWlqyOIfUgN%2BogbmF3UdlmuiWyc82zpv9%2FnHWF7cN2Zt9sNt1MRINNiQUHks8Xwr%2BDm%2BE0pxPFdO7WBkdKMn%2FwJpGic7BYQEH5tlBZOM70EpIC4YXOsOtlvKkxkfRy0YBZrhFgUSf8SIhRoXvyCpOxYsTWy3bOVuKmRgXdLGP9Wq%2BIIFzCfbVJKTXloSR0d50H2a6lbB93SI&X-Amz-Signature=0a0006d896d8ca1c10f7b546539e7e0b1977b48fd186df9d0b663eda929fd19b&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "expiry_time": "2026-04-15T19:38:51.715Z"
+      }
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81fd-bed4-e586d20636e2",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "divider",
+    "divider": {},
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81f3-9443-c240e1604178",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "heading_3",
+    "heading_3": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Müzik",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Müzik",
+          "href": null
+        }
+      ],
+      "is_toggleable": false,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8125-9427-f745f9eed915",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Bu sokak voltalarımın en büyük eşlikçisi playlist’lerim; dinlediğim şarkılar. Tür ya da sanatçı takıntım yok ama dönem dönem bazı şarkılara tutuluyorum. Bazen yoğun şekilde hip hop dinlerken, bazen tekno melodileri çınlıyor kulağımda. Kimi zaman 50’lerin blues'larına dalarken, bazen hepsi birbirine karışıyor. Ama şu çok net: Ne dinlersem dinleyeyim, hepsi bana yollarda, sokaklarda ve yürürken eşlik ediyor. Dinlediğim her şarkının bir sokakla, bir mahalleyle, bir şehirle ya da ülkeyle bağı var.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Bu sokak voltalarımın en büyük eşlikçisi playlist’lerim; dinlediğim şarkılar. Tür ya da sanatçı takıntım yok ama dönem dönem bazı şarkılara tutuluyorum. Bazen yoğun şekilde hip hop dinlerken, bazen tekno melodileri çınlıyor kulağımda. Kimi zaman 50’lerin blues'larına dalarken, bazen hepsi birbirine karışıyor. Ama şu çok net: Ne dinlersem dinleyeyim, hepsi bana yollarda, sokaklarda ve yürürken eşlik ediyor. Dinlediğim her şarkının bir sokakla, bir mahalleyle, bir şehirle ya da ülkeyle bağı var.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81fd-93b6-de17fdce6eac",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "divider",
+    "divider": {},
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8148-856e-c8ccdef5648b",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "heading_3",
+    "heading_3": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "İMÇ",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "İMÇ",
+          "href": null
+        }
+      ],
+      "is_toggleable": false,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-812f-93a6-ec55e75ec03a",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Bu sergi fikri hiç aklımda yoktu. Görkem bu projeyi teklif ettiğinde, serginin İMÇ’de olacağını ve sergilemenin kalıcı değil; geçici, merkezi olmayan bir yapıyla devam edeceğini söyledi. Görkem tatlı dili ve nezaketiyle herkesi ikna edebilir :) Fazla düşünmeden, “tamam” dedim.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Bu sergi fikri hiç aklımda yoktu. Görkem bu projeyi teklif ettiğinde, serginin İMÇ’de olacağını ve sergilemenin kalıcı değil; geçici, merkezi olmayan bir yapıyla devam edeceğini söyledi. Görkem tatlı dili ve nezaketiyle herkesi ikna edebilir :) Fazla düşünmeden, “tamam” dedim.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8171-94fb-f8ce1e0f6370",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Başta hayvan figürlerinden ve animasyonlarımdan oluşan bir seçki planlıyorduk ama İMÇ’de biraz volta atıp turladıktan sonra aklıma bir fikir geldi: ",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Başta hayvan figürlerinden ve animasyonlarımdan oluşan bir seçki planlıyorduk ama İMÇ’de biraz volta atıp turladıktan sonra aklıma bir fikir geldi: ",
+          "href": null
+        },
+        {
+          "type": "text",
+          "text": {
+            "content": "Resimlerimi plak kapağı şeklinde üretip, işler bittikten sonra bu kapaklara en uygun müzikleri yapay zeka ile üretmek.",
+            "link": null
+          },
+          "annotations": {
+            "bold": true,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Resimlerimi plak kapağı şeklinde üretip, işler bittikten sonra bu kapaklara en uygun müzikleri yapay zeka ile üretmek.",
+          "href": null
+        },
+        {
+          "type": "text",
+          "text": {
+            "content": " Böylece İMÇ’de bir plak şirketi kurmuş, bir plakçı dükkânı açmış gibi olacaktık.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": " Böylece İMÇ’de bir plak şirketi kurmuş, bir plakçı dükkânı açmış gibi olacaktık.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8139-bd76-e3bb575f44f0",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Bu fikir beni gerçekten heyecanlandırdı. Zaten İMÇ’de başka ne yapılabilir ki? Bu mimari yapının en bilinen yüzü müzik merkezi olması değil miydi?",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Bu fikir beni gerçekten heyecanlandırdı. Zaten İMÇ’de başka ne yapılabilir ki? Bu mimari yapının en bilinen yüzü müzik merkezi olması değil miydi?",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81a2-aa5f-ea71fb6ca95d",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8172-b602-e57f2cc3a128",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "image",
+    "image": {
+      "caption": [],
+      "type": "file",
+      "file": {
+        "url": "https://prod-files-secure.s3.us-west-2.amazonaws.com/fab09b21-167a-4089-b72d-e97531f00ab2/7f06d67e-cafb-49ca-9cea-4ac9f972add0/Ekran_grnts_2025-03-31_163909.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466TFPGHFI6%2F20260415%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260415T183851Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIBOCDyEZL3EGqByfXshT1BwdWt0MuF4t9YG6mLVdrfFMAiEAl9Hz88GH7X3Gj3NbZJcEQI8QC5gzJ9eEo5VHUSz5mkkqiAQIqv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDGz3ITaSX9IDIAFInyrcA%2FW2cdD3S87CLoyU5Ntxm6MUko2RidJ828ra1UgV477hTve%2F9fPpO0WJ3YmGfYQC5YvC1pVt06DU1ku%2FkZsjpIXgU%2FzNpdr4S0szsuOrTobvhvZZgOLuT4Xw4RnBQBdQQes5uBNephFME5r2xlNzPqMatN4vZ4aji5xN5zb1ds2mp%2FxY5bpbpV7FbuxSrN%2BNMLssYcnWHC3uydTrhYkrgUAhBlJLrmaVZqpLW87UKa%2B%2B9rEyePzg9SsqeOrzbUPfCX8W53%2BVs7vog%2B8lMkasFSLmHlaJUfR%2FhRmYGHsdB87enXrNxEd%2BohBpJ7F9%2B3NpkuXrRIUdVNqfxIK5RKyIsirmf7SM%2BXjghrfz5ZoPBoqAaztD9xPcoKv%2Fm%2BQ3ru95TQzZADD8J%2FVMvnNRy5nZjQ7CtxFGwb5qB8iF0XoJIhL3yyRnWc4rBDlKYo5Ah%2BrZNNOpwIliXxerQnyxJ5g9UrNUrbIBeDGws%2BXVBIGvu0VDqmx1yhaX0q5VMCLtbwcXGtuVJcDUZnh8nVNeFFXrf3LbGJARZ%2F7%2Bw1v7PN9iHOyCl8HqowCVHD6aR%2BNL8OyA2EaD6W2p8Tmbjufe9okZBmqXtyQOzHAy2qXPK%2FJl547SOA5SoAsHgmItnHEUMJ%2BS%2F84GOqUBNX4n15WKNUI2TayObWlqyOIfUgN%2BogbmF3UdlmuiWyc82zpv9%2FnHWF7cN2Zt9sNt1MRINNiQUHks8Xwr%2BDm%2BE0pxPFdO7WBkdKMn%2FwJpGic7BYQEH5tlBZOM70EpIC4YXOsOtlvKkxkfRy0YBZrhFgUSf8SIhRoXvyCpOxYsTWy3bOVuKmRgXdLGP9Wq%2BIIFzCfbVJKTXloSR0d50H2a6lbB93SI&X-Amz-Signature=813c3fa9b1129429a6adff90bcab3641e17a14021129fd2ba95514c82202bbd9&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "expiry_time": "2026-04-15T19:38:51.713Z"
+      }
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81a7-bc70-cda4b78129a5",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "divider",
+    "divider": {},
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8165-80ea-db6eceab9a41",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8106-9959-f302068fceba",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "heading_2",
+    "heading_2": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Kaybid Plak Gururla Sunar! \n",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Kaybid Plak Gururla Sunar! \n",
+          "href": null
+        }
+      ],
+      "is_toggleable": false,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-815d-823d-ef3dc7346b53",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Proje ilerledikçe, resimler ortaya çıktıkça heyecanım da arttı. Resimler bitmeden müziğe hiç başlamadım; çünkü şarkıların resimleri etkilemesini istemedim.",
+            "link": null
+          },
+          "annotations": {
+            "bold": true,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Proje ilerledikçe, resimler ortaya çıktıkça heyecanım da arttı. Resimler bitmeden müziğe hiç başlamadım; çünkü şarkıların resimleri etkilemesini istemedim.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81a6-aad0-d6b586601f0b",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Kolajlarımı üretirken atık malzemeler kullanıyorum; ambalaj kâğıtları gibi... Bu kâğıtlara yaptığım resimleri ellerimle yırtarak kolaj haline getiriyorum. Neredeyse hiç teknolojik alet kullanmıyorum. Olabildiğince ilkel, primitif ve organik üretmeye çalışıyorum.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Kolajlarımı üretirken atık malzemeler kullanıyorum; ambalaj kâğıtları gibi... Bu kâğıtlara yaptığım resimleri ellerimle yırtarak kolaj haline getiriyorum. Neredeyse hiç teknolojik alet kullanmıyorum. Olabildiğince ilkel, primitif ve organik üretmeye çalışıyorum.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81cb-b5c3-f40111e0074e",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Bu sergiye özel olarak işlerimi yapıştırdığım beton plakaları da ellerimle kendim döktüm. Sokak sanatı yapan bir sanatçının kanvası sokak oluyorsa, bu kanvasın temel malzemesi de elbette beton oluyor.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Bu sergiye özel olarak işlerimi yapıştırdığım beton plakaları da ellerimle kendim döktüm. Sokak sanatı yapan bir sanatçının kanvası sokak oluyorsa, bu kanvasın temel malzemesi de elbette beton oluyor.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-810d-9262-c54b195ba722",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Bu sergide özel bir mesaj kaygısı taşımadım. Yani belirli bir tema altında üretmedim. Ama işler kendi kendine bir başlık oluşturdu: ",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Bu sergide özel bir mesaj kaygısı taşımadım. Yani belirli bir tema altında üretmedim. Ama işler kendi kendine bir başlık oluşturdu: ",
+          "href": null
+        },
+        {
+          "type": "text",
+          "text": {
+            "content": "Volta.",
+            "link": null
+          },
+          "annotations": {
+            "bold": true,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Volta.",
+          "href": null
+        },
+        {
+          "type": "text",
+          "text": {
+            "content": " Onlar da sokak sokak dolaşıyor, adım adım volta atıyor, başa dönüp tekrar turluyorlar. Kurgusal, soyut mekanlarda takılıyor ve tekrar volta ya çıkıyor… ",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": " Onlar da sokak sokak dolaşıyor, adım adım volta atıyor, başa dönüp tekrar turluyorlar. Kurgusal, soyut mekanlarda takılıyor ve tekrar volta ya çıkıyor… ",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-815f-aed9-ee8519e2818f",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "divider",
+    "divider": {},
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81f3-8a6d-e0abbe61ed40",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "heading_2",
+    "heading_2": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Volta :||",
+            "link": null
+          },
+          "annotations": {
+            "bold": true,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Volta :||",
+          "href": null
+        }
+      ],
+      "is_toggleable": false,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8101-8d0f-f7fb321d4bb6",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Volta",
+            "link": null
+          },
+          "annotations": {
+            "bold": true,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Volta",
+          "href": null
+        },
+        {
+          "type": "text",
+          "text": {
+            "content": ", aynı zamanda bir müzik terimi. Bir bölüm tekrarlanırken farklı kapanışları göstermek için kullanılır. Örneğin, ilk tekrarda “1. volta”, ikinci tekrarda “2. volta” çalınır. Bu sayede aynı bölüm, her tekrarında farklı bir sonla biter.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": ", aynı zamanda bir müzik terimi. Bir bölüm tekrarlanırken farklı kapanışları göstermek için kullanılır. Örneğin, ilk tekrarda “1. volta”, ikinci tekrarda “2. volta” çalınır. Bu sayede aynı bölüm, her tekrarında farklı bir sonla biter.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81ec-8188-f184fa78b990",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Tıpkı sokaklarda dolaşırken kafamda binbir düşünceyle attığım voltalar gibi... Her seferinde farklı bir hikâyeyle biten ama hep aynı noktadan başlayan yürüyüşler.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Tıpkı sokaklarda dolaşırken kafamda binbir düşünceyle attığım voltalar gibi... Her seferinde farklı bir hikâyeyle biten ama hep aynı noktadan başlayan yürüyüşler.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8191-bbaa-f0d4998fcb34",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8142-b407-fc06f842dc38",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "image",
+    "image": {
+      "caption": [],
+      "type": "file",
+      "file": {
+        "url": "https://prod-files-secure.s3.us-west-2.amazonaws.com/fab09b21-167a-4089-b72d-e97531f00ab2/2afbf64e-df6e-48b6-ad49-bf9632ce7b49/Ekran_grnts_2025-03-31_163509.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466TFPGHFI6%2F20260415%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260415T183851Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIBOCDyEZL3EGqByfXshT1BwdWt0MuF4t9YG6mLVdrfFMAiEAl9Hz88GH7X3Gj3NbZJcEQI8QC5gzJ9eEo5VHUSz5mkkqiAQIqv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDGz3ITaSX9IDIAFInyrcA%2FW2cdD3S87CLoyU5Ntxm6MUko2RidJ828ra1UgV477hTve%2F9fPpO0WJ3YmGfYQC5YvC1pVt06DU1ku%2FkZsjpIXgU%2FzNpdr4S0szsuOrTobvhvZZgOLuT4Xw4RnBQBdQQes5uBNephFME5r2xlNzPqMatN4vZ4aji5xN5zb1ds2mp%2FxY5bpbpV7FbuxSrN%2BNMLssYcnWHC3uydTrhYkrgUAhBlJLrmaVZqpLW87UKa%2B%2B9rEyePzg9SsqeOrzbUPfCX8W53%2BVs7vog%2B8lMkasFSLmHlaJUfR%2FhRmYGHsdB87enXrNxEd%2BohBpJ7F9%2B3NpkuXrRIUdVNqfxIK5RKyIsirmf7SM%2BXjghrfz5ZoPBoqAaztD9xPcoKv%2Fm%2BQ3ru95TQzZADD8J%2FVMvnNRy5nZjQ7CtxFGwb5qB8iF0XoJIhL3yyRnWc4rBDlKYo5Ah%2BrZNNOpwIliXxerQnyxJ5g9UrNUrbIBeDGws%2BXVBIGvu0VDqmx1yhaX0q5VMCLtbwcXGtuVJcDUZnh8nVNeFFXrf3LbGJARZ%2F7%2Bw1v7PN9iHOyCl8HqowCVHD6aR%2BNL8OyA2EaD6W2p8Tmbjufe9okZBmqXtyQOzHAy2qXPK%2FJl547SOA5SoAsHgmItnHEUMJ%2BS%2F84GOqUBNX4n15WKNUI2TayObWlqyOIfUgN%2BogbmF3UdlmuiWyc82zpv9%2FnHWF7cN2Zt9sNt1MRINNiQUHks8Xwr%2BDm%2BE0pxPFdO7WBkdKMn%2FwJpGic7BYQEH5tlBZOM70EpIC4YXOsOtlvKkxkfRy0YBZrhFgUSf8SIhRoXvyCpOxYsTWy3bOVuKmRgXdLGP9Wq%2BIIFzCfbVJKTXloSR0d50H2a6lbB93SI&X-Amz-Signature=3f337cbe8518453d52d3e20b3490d48de4e1a507c85418bf75ffedaf8b44abc9&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "expiry_time": "2026-04-15T19:38:51.796Z"
+      }
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-811b-aace-fbef95dba196",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "divider",
+    "divider": {},
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-819c-8c68-ccbfd83be88f",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8136-ad15-fe635edb969f",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "heading_3",
+    "heading_3": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "İşlerimde hep bir bağ kurmayı amaçladım:",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "İşlerimde hep bir bağ kurmayı amaçladım:",
+          "href": null
+        }
+      ],
+      "is_toggleable": false,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81ca-b656-e166178f2ff9",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Kentle doğa arasında, insanla hayvan arasında, sanatla sokak, kendimle kent arasında. - Hatta ilk yaptığım kolajın artan parçalarını daha sonra yaptığım kolajlarda da kullanarak işlerim arasında genetik bir bağ kuruyorum. İlk dönem işlerimden bir parçayı en son işlerimde de görebilirsiniz.- ",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Kentle doğa arasında, insanla hayvan arasında, sanatla sokak, kendimle kent arasında. - Hatta ilk yaptığım kolajın artan parçalarını daha sonra yaptığım kolajlarda da kullanarak işlerim arasında genetik bir bağ kuruyorum. İlk dönem işlerimden bir parçayı en son işlerimde de görebilirsiniz.- ",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d639248-8fe5-8062-b155-e14eff1dbf63",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-15T18:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Bu sergide de aynı hedefi sürdürüyorum. Sokak sanatı ile müzik, göz ile kulak, yapay zekâ ile ham kolajlar ve izleyici ile kendim arasında yeni bağlar kurmak.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Bu sergide de aynı hedefi sürdürüyorum. Sokak sanatı ile müzik, göz ile kulak, yapay zekâ ile ham kolajlar ve izleyici ile kendim arasında yeni bağlar kurmak.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-812c-8b5d-f59151213fc8",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Sergiye gelen bir izleyici, işlere bakarken kendi deneyimleri ve algılarıyla bir okuma yapar. Ancak bu kez, izleyicinin karşısına oldukça absürt bir hileyle çıkıyorum: Onun işi yalnızca görsel değil, işitsel olarak da deneyimlemesini sağlayacak bir hile. Üstelik bu sesler bir müzisyenin ya da grubun iradesiyle değil; sahiplikten yoksun, yalın bir algoritmanın eliyle üretilmiş.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Sergiye gelen bir izleyici, işlere bakarken kendi deneyimleri ve algılarıyla bir okuma yapar. Ancak bu kez, izleyicinin karşısına oldukça absürt bir hileyle çıkıyorum: Onun işi yalnızca görsel değil, işitsel olarak da deneyimlemesini sağlayacak bir hile. Üstelik bu sesler bir müzisyenin ya da grubun iradesiyle değil; sahiplikten yoksun, yalın bir algoritmanın eliyle üretilmiş.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-819e-9267-d1696e3d3e43",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Bu yüzden her işin arkasında, izleyicinin duyularını genişleten, yapay zekânın önerdiği bir müzik deneyimi yatıyor. Ve bu deneyim, izleyici ile eser arasındaki ilişkiyi dönüştürüyor, hatta ters yüz ediyor.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Bu yüzden her işin arkasında, izleyicinin duyularını genişleten, yapay zekânın önerdiği bir müzik deneyimi yatıyor. Ve bu deneyim, izleyici ile eser arasındaki ilişkiyi dönüştürüyor, hatta ters yüz ediyor.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-819d-a502-c20c0529f606",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "divider",
+    "divider": {},
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8104-8055-ca304e6df6c5",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Ortaya çıkan şarkılar beni oldukça şaşırttı. Açıkçası çok farklı beklentilerim vardı ama sonuçlar beklenmedik derecede etkileyici oldu. GPT’nin analizleri bazen beni sarstı. Benim isyan gördüğüm bir işte melankoli, üzüntü gördüğüm bir işte aşk, mücadele gördüğüm bir yerde dinginlik buluyordu. Ve bunu çok ikna edici bir dille açıklıyordu. Sonuçta çıkan müzik de çok ikna edici oluyordu. Bazı resimlerde kendi istediğim müziği denedim ama birkaç kez dinleyince GPT’nin oluşturduğu müziğin çok daha uygun olduğunu fark ettim. ",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Ortaya çıkan şarkılar beni oldukça şaşırttı. Açıkçası çok farklı beklentilerim vardı ama sonuçlar beklenmedik derecede etkileyici oldu. GPT’nin analizleri bazen beni sarstı. Benim isyan gördüğüm bir işte melankoli, üzüntü gördüğüm bir işte aşk, mücadele gördüğüm bir yerde dinginlik buluyordu. Ve bunu çok ikna edici bir dille açıklıyordu. Sonuçta çıkan müzik de çok ikna edici oluyordu. Bazı resimlerde kendi istediğim müziği denedim ama birkaç kez dinleyince GPT’nin oluşturduğu müziğin çok daha uygun olduğunu fark ettim. ",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-810d-ad23-cfb68c2d70f5",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Başta çıkan şarkılarla ilgili tereddütlerim vardı ama gerçekten beğendim. Şarkılarda bazen dil sürçmeleri, kekelemeler oluyordu. Onları da olabildiğince korumaya çalıştım. Çünkü bana çok daha samimi geldiler.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Başta çıkan şarkılarla ilgili tereddütlerim vardı ama gerçekten beğendim. Şarkılarda bazen dil sürçmeleri, kekelemeler oluyordu. Onları da olabildiğince korumaya çalıştım. Çünkü bana çok daha samimi geldiler.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-815f-8502-f01119ebad87",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "divider",
+    "divider": {},
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-8196-8018-e2d4c6b228d0",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d139248-8fe5-81bf-a07e-ce647b7bc625",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-10T13:23:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "quote",
+    "quote": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Sergide yer alan işlerin hiçbiri tamamlanmış bir ürün ya da kesinleşmiş bir sonuç değil; aksine, bir arayışın, bir sürecin, bir deneyin farklı katmanları. Her bir parça, devam, eden bir düşüncenin izini sürüyor, kendi içinde bir soruya, bir sezgiye ya da bir keşfe işaret ediyor.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Sergide yer alan işlerin hiçbiri tamamlanmış bir ürün ya da kesinleşmiş bir sonuç değil; aksine, bir arayışın, bir sürecin, bir deneyin farklı katmanları. Her bir parça, devam, eden bir düşüncenin izini sürüyor, kendi içinde bir soruya, bir sezgiye ya da bir keşfe işaret ediyor.",
+          "href": null
+        }
+      ],
+      "color": "green_background"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d639248-8fe5-80ca-b28d-c1e29ad4fe24",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-15T18:28:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d639248-8fe5-80ce-b9cf-ef3be10c8051",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-15T18:28:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Bu deneyimin son halkasını ise izleyici oluşturuyor — sürece reaksiyon veren ve ona katılan son unsur. Dolayısıyla bu sürecin nihai etkisini, ortaya çıkacak anlamları ve yankılarını hep birlikte görecek, belki de birlikte şekillendireceğiz.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Bu deneyimin son halkasını ise izleyici oluşturuyor — sürece reaksiyon veren ve ona katılan son unsur. Dolayısıyla bu sürecin nihai etkisini, ortaya çıkacak anlamları ve yankılarını hep birlikte görecek, belki de birlikte şekillendireceğiz.",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d639248-8fe5-8019-a21a-f8e16610aa12",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-15T18:28:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d639248-8fe5-8028-8f4f-c6f94d4d1f02",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-15T18:28:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": false,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  },
+  {
+    "object": "block",
+    "id": "1d639248-8fe5-8030-b2bb-c14eb37ee27e",
+    "parent": {
+      "type": "page_id",
+      "page_id": "1d139248-8fe5-80ea-834a-e3c6a21590a7"
+    },
+    "created_time": "2025-04-15T18:27:00.000Z",
+    "last_edited_time": "2025-08-30T10:43:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "1a99a5df-4712-499e-9dd4-42fa408622c2"
+    },
+    "has_children": true,
+    "in_trash": false,
+    "type": "paragraph",
+    "paragraph": {
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "\n",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "\n",
+          "href": null
+        }
+      ],
+      "icon": null,
+      "color": "default"
+    },
+    "archived": false
+  }
+]
