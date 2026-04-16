@@ -11,15 +11,31 @@ import NotionGallerySlider from './NotionGallerySlider'
 export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}, showLeadText = false, galleryMode = false, pageTitle = '' }: { blocks: any[], pageMetadata?: any[], slugMap?: Record<string, string>, showLeadText?: boolean, galleryMode?: boolean, pageTitle?: string }) {
   const [index, setIndex] = useState(-1)
   const [activeTab, setActiveTab] = useState('')
-  const [retryStats, setRetryStats] = useState<Record<string, number>>({})
+  const [failedMediaIds, setFailedMediaIds] = useState<Set<string>>(new Set())
+  const [retryCounts, setRetryCounts] = useState<Record<string, number>>({})
 
-  const handleRetry = (e: React.MouseEvent, blockId: string) => {
+  const handleMediaError = (id: string) => {
+    setFailedMediaIds(prev => {
+      const next = new Set(prev)
+      next.add(id)
+      return next
+    })
+  }
+
+  const handleMediaRetry = (e: React.MouseEvent, id: string) => {
     e.stopPropagation()
     e.preventDefault()
-    setRetryStats(prev => ({
+    
+    setRetryCounts(prev => ({
       ...prev,
-      [blockId]: (prev[blockId] || 0) + 1
+      [id]: (prev[id] || 0) + 1
     }))
+    
+    setFailedMediaIds(prev => {
+      const next = new Set(prev)
+      next.delete(id)
+      return next
+    })
   }
 
   const isParisPage = pageTitle.toLowerCase().includes('paris') || pageTitle.toLowerCase().includes('olympics')
@@ -604,8 +620,9 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         const isDirectImage = /\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i.test(normalizedSrc) || normalizedSrc.includes('i.imgur.com')
         
         if (isDirectImage && !isImgurEmbed) {
-          const retryCount = retryStats[id] || 0
+          const retryCount = retryCounts[id] || 0
           const finalSrc = retryCount > 0 ? `${proxyImageUrl(normalizedSrc)}&t=${retryCount}` : proxyImageUrl(normalizedSrc)
+          const isFailed = failedMediaIds.has(id)
           
           return (
             <div key={id} className="notion-image-wrapper image-retry-container">
@@ -614,31 +631,43 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                   src={finalSrc} 
                   loading="lazy"
                   referrerPolicy="no-referrer" 
-                  className="notion-img"
+                  className={`notion-img ${isFailed ? 'image-failed' : ''}`}
                   style={{ width: '100%', borderRadius: '20px', display: 'block' }} 
                   alt="Embedded Content"
-                  onLoad={(e) => e.currentTarget.classList.add('loaded')}
-                  onError={(e) => e.currentTarget.classList.add('image-failed')}
-                />
-                <img 
-                  src={finalSrc} 
-                  style={{ display: 'none' }} 
-                  onError={() => {
-                    const el = document.getElementById(`retry-${id}`)
-                    if (el) el.style.display = 'flex'
+                  onLoad={(e) => {
+                    e.currentTarget.classList.add('loaded')
+                    // Automatically clear failed state if it loads successfully on retry
+                    if (isFailed) {
+                      setFailedMediaIds(prev => {
+                        const next = new Set(prev)
+                        next.delete(id)
+                        return next
+                      })
+                    }
                   }}
-                  onLoad={() => {
-                    const el = document.getElementById(`retry-${id}`)
-                    if (el) el.style.display = 'none'
-                  }}
+                  onError={() => handleMediaError(id)}
                 />
+                
+                {/* Internal timeout logic to detect "stuck" images */}
+                <span className="hidden-timeout-trigger" style={{ display: 'none' }}>
+                  {(() => {
+                    if (!isFailed) {
+                      const timer = setTimeout(() => handleMediaError(id), 12000)
+                      return null
+                    }
+                    return null
+                  })()}
+                </span>
               </div>
-              <div id={`retry-${id}`} className="image-retry-overlay" style={{ display: 'none' }}>
-                <p className="retry-error-text">Image could not be loaded</p>
-                <button className="retry-button" onClick={(e) => handleRetry(e, id)}>
-                  <RefreshCw /> Retry
-                </button>
-              </div>
+              
+              {isFailed && (
+                <div className="image-retry-overlay">
+                  <p className="retry-error-text">Image could not be loaded</p>
+                  <button className="retry-button" onClick={(e) => handleMediaRetry(e, id)}>
+                    <RefreshCw /> Retry
+                  </button>
+                </div>
+              )}
             </div>
           )
         }
@@ -724,11 +753,11 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
           )
         }
 
-        // Handle direct video files (MP4, WEBM, MOV, etc.)
         const isDirectVideo = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(src)
         if (isDirectVideo) {
-          const retryCount = retryStats[id] || 0
+          const retryCount = retryCounts[id] || 0
           const finalSrc = retryCount > 0 ? `${proxyImageUrl(src)}&t=${retryCount}` : proxyImageUrl(src)
+          const isFailed = failedMediaIds.has(id)
           
           return (
             <div key={id} className={`notion-video-container-wrapper image-retry-container ${isFullScreenPage ? 'video-full-screen-layout' : ''}`}>
@@ -741,24 +770,40 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                   autoPlay
                   loop
                   playsInline 
-                  className="notion-video-direct"
+                  className={`notion-video-direct ${isFailed ? 'video-failed' : ''}`}
                   style={{ width: '100%', borderRadius: isFullScreenPage ? '0' : '20px', background: '#000' }}
-                  onError={() => {
-                    const el = document.getElementById(`retry-${id}`)
-                    if (el) el.style.display = 'flex'
-                  }}
+                  onError={() => handleMediaError(id)}
                   onLoadedData={() => {
-                    const el = document.getElementById(`retry-${id}`)
-                    if (el) el.style.display = 'none'
+                    if (isFailed) {
+                      setFailedMediaIds(prev => {
+                        const next = new Set(prev)
+                        next.delete(id)
+                        return next
+                      })
+                    }
                   }}
                 />
+                {/* Internal timeout logic for videos */}
+                {!isFailed && (
+                   <span style={{ display: 'none' }}>
+                     {(() => {
+                       setTimeout(() => {
+                         const videoEl = document.querySelector(`video[src="${finalSrc}"]`) as HTMLVideoElement
+                         if (videoEl && videoEl.readyState < 2) handleMediaError(id)
+                       }, 12000)
+                       return null
+                     })()}
+                   </span>
+                )}
               </div>
-              <div id={`retry-${id}`} className="image-retry-overlay" style={{ display: 'none' }}>
-                <p className="retry-error-text">Video could not be loaded</p>
-                <button className="retry-button" onClick={(e) => handleRetry(e, id)}>
-                  <RefreshCw /> Retry
-                </button>
-              </div>
+              {isFailed && (
+                <div className="image-retry-overlay">
+                  <p className="retry-error-text">Video could not be loaded</p>
+                  <button className="retry-button" onClick={(e) => handleMediaRetry(e, id)}>
+                    <RefreshCw /> Retry
+                  </button>
+                </div>
+              )}
               {caption && caption.length > 0 && (
                 <figcaption className="notion-image-caption">
                   {renderRichText(caption)}
