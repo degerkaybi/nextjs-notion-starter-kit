@@ -13,7 +13,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
   const [activeTab, setActiveTab] = useState('')
 
   const isParisPage = pageTitle.toLowerCase().includes('paris') || pageTitle.toLowerCase().includes('olympics')
-  const isVoltaPage = pageTitle.toLowerCase().includes('volta') || pageTitle.toLowerCase().includes('records') || pageTitle.toLowerCase().includes('kaybid')
+  const isVoltaPage = pageTitle.toLowerCase().includes('volta') || pageTitle.toLowerCase().includes('records')
   
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -304,6 +304,21 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     const { type, id, children } = block
     const value = block[type]
     const caption = value?.caption
+    
+    // Ultimate filter: do not render GPT summary text from source blocks on ANY page
+    // Since we hardcode it for Volta, we don't want the original block showing up anywhere.
+    const richText = value?.rich_text || []
+    const fullText = richText.map((t: any) => t.plain_text).join('')
+    const lowerText = fullText.toLowerCase()
+    const isGptText = (lowerText.includes('gpt ile uzun sohbetler') || 
+                       lowerText.includes('şarkı üretildi') || 
+                       (lowerText.includes('gpt') && lowerText.includes('promptlar')) ||
+                       lowerText.includes('biz aslında hep bu resmin içindeki müziği bulmaya çalışıyorduk') ||
+                       lowerText.includes('biz sadece bir şarkı yapmadık') ||
+                       lowerText.includes('gpt said:'))
+    if (isGptText) {
+      return null
+    }
     
     // Check if the current page should have full-width videos
     const fullScreenPageKeywords = ['fire', 'contact', 'seed', 'rêverie', 'insomnia', 'evil', 'rhythm', 'rest']
@@ -984,10 +999,14 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         if (isVoltaPage) {
           return (
             <>
-              <div style={{ marginBottom: '1rem' }} className="volta-top-gallery-section">
-                {renderGallerySlider({ marginTop: '0', marginBottom: '2rem' }, true, true)}
+              <blockquote className="notion-quote" style={{ borderLeft: '3px solid var(--text-color)', paddingLeft: '1.2rem', marginBottom: '1.5rem', fontStyle: 'italic', color: 'var(--secondary-text)', fontSize: '1.15rem', lineHeight: '1.7', opacity: 0.9 }}>
+                “Şimdi fark ettim ki biz aslında hep bu resmin içindeki müziği bulmaya çalışıyorduk. O yüzden bu kadar üzerinde konuştuk, detayları irdeledik, anlamlarını düşündük.<br /><br />
+                Ve işin güzel tarafı: Biz sadece bir şarkı yapmadık, aslında bir dünya yarattık.”
+              </blockquote>
+              <div style={{ marginBottom: '0.5rem' }} className="volta-top-gallery-section">
+                {renderGallerySlider({ marginTop: '0', marginBottom: '0.5rem' }, true, true)}
               </div>
-              <div className="notion-paragraph-block" style={{ marginBottom: '3.5rem', marginTop: '1rem' }}>
+              <div className="notion-paragraph-block" style={{ marginBottom: '3rem', marginTop: '0' }}>
                 <p className="notion-p" style={{ fontSize: '1.25rem', color: 'var(--text-color)', opacity: 0.95, lineHeight: '1.7', fontWeight: 400 }}>
                   Tüm resimler için GPT ile uzun sohbetler ve değerlendirmeler yaptık. GPT her bir resim için özel promptlar ve şarkı yapıları oluşturdu, şarkı sözlerini yazdı ve resimlerin isimleri de GPT verildi. Sergi için yaklaşık 4000 şarkı üretildi. Ortaya çıkan şarkılar, GPT ile birlikte resmin içindeki müziği bulma çabamızın bir çıktısı.
                 </p>

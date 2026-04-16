@@ -123,11 +123,19 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
     const isAboutPage = path === 'about' || (page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('about')
 
     blocks = blocks.flatMap((b: any) => {
-      const text = b[b.type]?.rich_text?.[0]?.plain_text || ''
-      const shouldRemove = !isAboutPage && textsToRemove.some(toRemove => text.includes(toRemove))
+      const richText = b[b.type]?.rich_text || []
+      const fullText = richText.map((t: any) => t.plain_text).join('')
+      const lowerText = fullText.toLowerCase()
+      const isGptText = (lowerText.includes('gpt ile uzun sohbetler') || 
+                         lowerText.includes('şarkı üretildi') || 
+                         (lowerText.includes('gpt') && lowerText.includes('promptlar')) ||
+                         lowerText.includes('biz aslında hep bu resmin içindeki müziği bulmaya çalışıyorduk') ||
+                         lowerText.includes('biz sadece bir şarkı yapmadık') ||
+                         lowerText.includes('gpt said:'))
+      
+      const shouldRemove = (!isAboutPage && textsToRemove.some(toRemove => fullText.includes(toRemove))) || isGptText
       
       if (shouldRemove) {
-        // If the block has children (e.g., GIFs under a heading), preserve them
         return b.children || []
       }
       return [b]

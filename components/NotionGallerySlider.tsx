@@ -11,6 +11,7 @@ interface NotionGallerySliderProps {
 
 export default function NotionGallerySlider({ items, fullWidth, square }: NotionGallerySliderProps) {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [isMounted, setIsMounted] = useState(false)
   const thumbnailsRef = useRef<HTMLDivElement>(null)
 
   // Normalize URLs similar to NotionRenderer logic
@@ -49,7 +50,12 @@ export default function NotionGallerySlider({ items, fullWidth, square }: Notion
 
   const mediaItems = items.map(block => getMediaInfo(block)).filter(item => item.url)
 
-  if (mediaItems.length === 0) return null
+  useEffect(() => {
+    if (mediaItems.length > 0) {
+      setActiveIndex(Math.floor(Math.random() * mediaItems.length))
+    }
+    setIsMounted(true)
+  }, [items.length])
 
   // Ensure active index is within bounds
   const currentItem = mediaItems[activeIndex] || mediaItems[0]
@@ -94,6 +100,13 @@ export default function NotionGallerySlider({ items, fullWidth, square }: Notion
       }
     }
   }, [activeIndex])
+
+  if (mediaItems.length === 0) return null
+
+  // Prevent hydration mismatch by avoiding rendering random content on initial server pass
+  if (!isMounted) {
+    return <div className={`notion-slider-container ${fullWidth ? 'slider-full-width' : ''} ${square ? 'slider-square' : ''}`} style={{ minHeight: '400px' }} />
+  }
 
   return (
     <div className={`notion-slider-container ${fullWidth ? 'slider-full-width' : ''} ${square ? 'slider-square' : ''}`}>
