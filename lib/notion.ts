@@ -80,8 +80,8 @@ export const getBlocks = unstable_cache(
   async (blockId: string) => {
     return await fetchBlocksRecursive(blockId)
   },
-  ['notion-blocks-v2'], // Cache buster
-  { revalidate: REVALIDATE_TIME, tags: ['notion-v2'] }
+  ['notion-blocks-v4'], // Cache buster v4
+  { revalidate: 60, tags: ['notion-v4'] }
 )
 
 export const getPageMetadata = unstable_cache(
@@ -104,6 +104,6 @@ export const getPageMetadata = unstable_cache(
     )
     return metadata.filter(m => m !== null) as any[]
   },
-  ['notion-metadata-v2'], // Cache buster
-  { revalidate: REVALIDATE_TIME, tags: ['notion-v2'] }
+  ['notion-metadata-v4'], // Cache buster v4
+  { revalidate: 60, tags: ['notion-v4'] }
 )

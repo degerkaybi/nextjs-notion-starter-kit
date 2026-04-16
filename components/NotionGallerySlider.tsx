@@ -6,9 +6,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 interface NotionGallerySliderProps {
   items: any[]
   fullWidth?: boolean
+  square?: boolean
 }
 
-export default function NotionGallerySlider({ items, fullWidth }: NotionGallerySliderProps) {
+export default function NotionGallerySlider({ items, fullWidth, square }: NotionGallerySliderProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const thumbnailsRef = useRef<HTMLDivElement>(null)
 
@@ -95,27 +96,45 @@ export default function NotionGallerySlider({ items, fullWidth }: NotionGalleryS
   }, [activeIndex])
 
   return (
-    <div className={`notion-slider-container ${fullWidth ? 'slider-full-width' : ''}`}>
+    <div className={`notion-slider-container ${fullWidth ? 'slider-full-width' : ''} ${square ? 'slider-square' : ''}`}>
       {/* Main View */}
       <div className="slider-main-view">
         {currentItem.isVideo ? (
           <div className="slider-video-wrapper">
-            {currentItem.isYouTube ? (
-              <iframe
-                src={`https://www.youtube.com/embed/${currentItem.videoId}`}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                className="slider-video-iframe"
-              ></iframe>
-            ) : (
-              <iframe
-                src={currentItem.url}
-                frameBorder="0"
-                allowFullScreen
-                className="slider-video-iframe"
-              ></iframe>
-            )}
+            {(() => {
+              const isDirectVideo = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(currentItem.url)
+              if (currentItem.isYouTube) {
+                return (
+                  <iframe
+                    src={`https://www.youtube.com/embed/${currentItem.videoId}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    className="slider-video-iframe"
+                  ></iframe>
+                )
+              } else if (isDirectVideo) {
+                return (
+                  <video 
+                    src={currentItem.url} 
+                    controls 
+                    muted 
+                    playsInline 
+                    className="slider-video-direct"
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#000' }}
+                  />
+                )
+              } else {
+                return (
+                  <iframe
+                    src={currentItem.url}
+                    frameBorder="0"
+                    allowFullScreen
+                    className="slider-video-iframe"
+                  ></iframe>
+                )
+              }
+            })()}
           </div>
         ) : (
           <img 
@@ -124,8 +143,9 @@ export default function NotionGallerySlider({ items, fullWidth }: NotionGalleryS
             alt={currentItem.caption || `Image ${activeIndex + 1}`}
             loading="lazy"
             decoding="async"
+            onLoad={(e) => e.currentTarget.classList.add('loaded')}
             referrerPolicy="no-referrer"
-            className="slider-main-image fade-in-entrance"
+            className="slider-main-image notion-img fade-in-entrance"
           />
         )}
         
@@ -167,7 +187,9 @@ export default function NotionGallerySlider({ items, fullWidth }: NotionGalleryS
                 alt={`Thumbnail ${idx + 1}`} 
                 loading="lazy"
                 decoding="async" 
+                onLoad={(e) => e.currentTarget.classList.add('loaded')}
                 referrerPolicy="no-referrer"
+                className="notion-img"
               />
               {item.isVideo && <div className="play-overlay">▶</div>}
             </button>

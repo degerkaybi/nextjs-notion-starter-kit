@@ -9,9 +9,36 @@ import InstagramEmbed from './InstagramEmbed'
 import NotionGallerySlider from './NotionGallerySlider'
 
 export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}, showLeadText = false, galleryMode = false, pageTitle = '' }: { blocks: any[], pageMetadata?: any[], slugMap?: Record<string, string>, showLeadText?: boolean, galleryMode?: boolean, pageTitle?: string }) {
-  const isParisPage = pageTitle.toLowerCase().includes('paris') || pageTitle.toLowerCase().includes('olympics')
   const [index, setIndex] = useState(-1)
   const [activeTab, setActiveTab] = useState('')
+
+  const isParisPage = pageTitle.toLowerCase().includes('paris') || pageTitle.toLowerCase().includes('olympics')
+  const isVoltaPage = pageTitle.toLowerCase().includes('volta') || pageTitle.toLowerCase().includes('records') || pageTitle.toLowerCase().includes('kaybid')
+  
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      console.log('[DEBUG] NotionRenderer Title:', pageTitle, 'isVoltaPage:', isVoltaPage)
+    }
+  }, [pageTitle, isVoltaPage])
+
+  const normalizeImgurUrl = (url: string) => {
+    if (!url || !url.includes('imgur.com')) return url
+    
+    // Convert gallery/album to embed
+    if (url.includes('/a/') || url.includes('/gallery/') || (!url.includes('i.imgur.com') && !/\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i.test(url))) {
+      const match = url.match(/imgur\.com\/(?:a\/|gallery\/|)?([a-zA-Z0-9]+)/)
+      if (match && match[1]) {
+        return `https://imgur.com/a/${match[1]}/embed?pub=true`
+      }
+    }
+    
+    // Ensure direct links use i.imgur.com
+    if (url.includes('imgur.com') && !url.includes('i.imgur.com') && /\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i.test(url)) {
+      return url.replace('imgur.com', 'i.imgur.com')
+    }
+    
+    return url
+  }
 
   // Robust Google Maps detection
   const isGoogleMap = (url: string) => {
@@ -30,8 +57,8 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
       const type = block.type
       if (type === 'image') {
         const val = block.image
-        const src = val.type === 'external' ? val.external.url : val.file.url
-        images.push({ src })
+        const rawSrc = val.type === 'external' ? val.external.url : val.file.url
+        images.push({ src: normalizeImgurUrl(rawSrc) })
       }
       if (block.children && block.children.length > 0) {
         images = [...images, ...getAllImages(block.children)]
@@ -55,7 +82,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
       arr.forEach(block => {
         const type = block.type
         const value = block[type]
-        const url = value?.type === 'external' ? value.external.url : value?.file?.url || value?.url || ''
+        const url = value?.type === 'external' ? value.external.url : (value?.file?.url || value?.url || block.video?.external?.url || block.video?.file?.url || '')
         const isMap = isGoogleMap(url)
         const caption = value?.caption?.[0]?.plain_text || ''
         const isExcluded = caption.includes('Panda, 2018-2022')
@@ -63,13 +90,6 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         const isMedia = ['image', 'video', 'embed', 'google_drive'].includes(type)
         if (isMedia) {
           mediaCount++
-          
-          // Paris page specific logic: 
-          // Skip ALL GIFs (they stay inline as requested)
-          if (isParisPage) {
-            const isGif = block.type === 'image' && url.toLowerCase().includes('.gif')
-            if (isGif) return
-          }
           
           if (!isMap && !isExcluded) {
             mediaBlocks.push(block)
@@ -86,9 +106,60 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     return mediaBlocks
   }
 
-  const allMediaBlocks = getAllMediaBlocks(blocks)
+  let allMediaBlocks = getAllMediaBlocks(blocks)
+  if (isVoltaPage) {
+    let foundMarker = false
+    let mediaAfterMarker: any[] = []
+    
+    const traverseAndCollect = (arr: any[]) => {
+      arr.forEach(b => {
+        const type = b.type
+        const value = b[type]
+        const blockText = value?.rich_text?.[0]?.plain_text?.trim().toUpperCase() || ''
+        const isMarker = (type.startsWith('heading_') || type === 'paragraph' || type === 'toggle') && 
+                         (blockText.includes('PHOTO GALLERY') || 
+                          blockText.includes('GALLERY') || 
+                          blockText.includes('GALERİ') || 
+                          blockText.includes('FOTOĞRAF'))
+        
+        if (isMarker) {
+          foundMarker = true
+        } else if (foundMarker) {
+          const isMedia = ['image', 'video', 'embed', 'google_drive'].includes(type)
+          if (isMedia) {
+            let src = ''
+            if (type === 'image') src = (value.type === 'external' ? value.external.url : value.file.url).toLowerCase()
+            const isGif = src.includes('.gif')
+            const isMap = isGoogleMap(src)
+            // Exclude GIFs and maps from the slider
+            if (!isMap && !isGif) {
+              mediaAfterMarker.push(b)
+            }
+          }
+        }
+        
+        if (b.children && b.children.length > 0) {
+          traverseAndCollect(b.children)
+        }
+      })
+    }
+    
+    traverseAndCollect(blocks)
+    allMediaBlocks = mediaAfterMarker
+  }
+
   // Gallery mode is only activated on specific pages (e.g. Silent Steps Series)
-  const isGalleryLayout = galleryMode && allMediaBlocks.length > 0
+  const isGalleryLayout = (galleryMode || isVoltaPage) && allMediaBlocks.length > 0
+
+  if (typeof window !== 'undefined' && (isVoltaPage || pageTitle.toLowerCase().includes('records'))) {
+    console.log('[VOLTA DEBUG]', { 
+      pageTitle, 
+      isVoltaPage, 
+      galleryMode, 
+      mediaCount: allMediaBlocks.length,
+      isGalleryLayout
+    })
+  }
 
   // Categorize media into GIFs, Static (JPEG/PNG/etc), and Videos
   const gifBlocks = allMediaBlocks.filter(block => {
@@ -133,6 +204,17 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
       if (type === 'mention' && mention?.type === 'page') {
         const mentionId = mention.page.id
         const mentionSlug = slugMap[mentionId] || mentionId.replace(/-/g, '')
+        const cleanText = plain_text.trim()
+        const isExcludedText = isVoltaPage && (cleanText.includes('Resimlerimin Mırıldandığı Şarkılar') || cleanText.includes('Kavramsal Metin'))
+        
+        if (isExcludedText) {
+          return (
+            <Link key={i} href={`/${mentionSlug}`} style={style} className="notion-link">
+              {plain_text}
+            </Link>
+          )
+        }
+
         return (
           <Link key={i} href={`/${mentionSlug}`} style={style} className="notion-link-mention">
             <svg viewBox="0 0 14 14" className="notion-mention-icon">
@@ -163,6 +245,49 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
       }
 
       if (href) {
+        const cleanText = plain_text.trim()
+        const isInternalNotion = href.includes('notion.so') && !href.includes('google.com')
+        const isExcludedText = isVoltaPage && (cleanText.includes('Resimlerimin Mırıldandığı Şarkılar') || cleanText.includes('Kavramsal Metin'))
+        
+        const isMusicService = href.includes('music.youtube.com') || 
+                               href.includes('spotify.com') || 
+                               href.includes('music.apple.com') || 
+                               href.includes('deezer.com')
+
+        if ((isInternalNotion || isMusicService) && !isExcludedText) {
+          let icon = (
+            <svg viewBox="0 0 14 14" className="notion-mention-icon">
+              <path d="M2.5 1.5v11h9v-7.38L8.12 1.5H2.5zM1.5 1.5A1 1 0 012.5.5h5.83l.11.04 3.42 3.42.04.11v8.43a1 1 0 01-1 1h-9a1 1 0 01-1-1v-11z" />
+            </svg>
+          )
+
+          if (href.includes('spotify.com')) {
+            icon = (
+              <svg viewBox="0 0 24 24" className="notion-mention-icon" fill="currentColor">
+                <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm5.508 17.302c-.223.367-.704.485-1.07.262-2.734-1.67-6.175-2.048-10.228-1.123-.42.096-.834-.172-.93-.591-.096-.42.172-.834.591-.93 4.437-.1.012 8.27-.448 11.41 1.473.367.223.485.704.262 1.07-.223.367-.704.485-1.07.262zM18.91 14.025c-.282.458-.883.61-1.341.328-3.125-1.92-7.886-2.47-11.58-1.347-.512.156-1.054-.132-1.21-.645-.156-.512.132-1.054.645-1.21 4.226-1.284 9.475-.66 13.158 1.6 1.6.458.282 1.059.13.328.61.328 1.341.328zM19.043 10.61c-3.747-2.225-9.924-2.43-13.483-1.352-.575.175-1.18-.153-1.355-.728-.175-.575.153-1.18.728-1.355 4.102-1.246 10.916-1.008 15.222 1.55.518.308.687.978.379 1.496-.308.518-.978.687-1.496.379z"/>
+              </svg>
+            )
+          } else if (href.includes('music.youtube.com')) {
+            icon = (
+              <svg viewBox="0 0 24 24" className="notion-mention-icon" fill="currentColor">
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 18.369c-3.518 0-6.369-2.851-6.369-6.369S8.482 5.631 12 5.631s6.369 2.851 6.369 6.369-2.851 6.369-6.369 6.369zM12 7.031c-2.744 0-4.969 2.225-4.969 4.969S9.256 16.969 12 16.969s4.969-2.225 4.969-4.969-2.225-4.969-4.969-4.969zM9.654 15.111l6.113-3.111-6.113-3.111v6.222z"/>
+              </svg>
+            )
+          } else if (href.includes('apple.com')) {
+            icon = (
+              <svg viewBox="0 0 24 24" className="notion-mention-icon" fill="currentColor">
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm4.5 9v3.5c0 1.93-1.57 3.5-3.5 3.5s-3.5-1.57-3.5-3.5 1.57-3.5 3.5-3.5c.35 0 .68.05 1 .14V7h2.5v2h-2.5z"/>
+              </svg>
+            )
+          }
+
+          return (
+            <a key={i} href={href} style={style} className="notion-link-mention">
+              {icon}
+              {plain_text}
+            </a>
+          )
+        }
         return (
           <a key={i} href={href} target="_blank" rel="noopener noreferrer" style={style} className="notion-link">
             {plain_text}
@@ -174,28 +299,15 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     })
   }
 
-  const normalizeImgurUrl = (url: string) => {
-    if (!url || !url.includes('imgur.com')) return url
-    
-    // Convert gallery/album to embed
-    if (url.includes('/a/') || url.includes('/gallery/') || (!url.includes('i.imgur.com') && !/\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i.test(url))) {
-      const match = url.match(/imgur\.com\/(?:a\/|gallery\/|)?([a-zA-Z0-9]+)/)
-      if (match && match[1]) {
-        return `https://imgur.com/a/${match[1]}/embed?pub=true`
-      }
-    }
-    
-    // Ensure direct links use i.imgur.com
-    if (url.includes('imgur.com') && !url.includes('i.imgur.com') && /\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i.test(url)) {
-      return url.replace('imgur.com', 'i.imgur.com')
-    }
-    
-    return url
-  }
 
   const renderBlock = (block: any): React.ReactNode => {
     const { type, id, children } = block
     const value = block[type]
+    const caption = value?.caption
+    
+    // Check if the current page should have full-width videos
+    const fullScreenPageKeywords = ['fire', 'contact', 'seed', 'rêverie', 'insomnia', 'evil', 'rhythm', 'rest']
+    const isFullScreenPage = fullScreenPageKeywords.some(kw => pageTitle.toLowerCase().includes(kw))
     
     // Check if this block should behave like a toggle (if it has children)
     const canHaveChildren = ['paragraph', 'heading_1', 'heading_2', 'heading_3', 'bulleted_list_item', 'numbered_list_item', 'quote', 'callout', 'toggle', 'synced_block']
@@ -235,11 +347,21 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     // If this block is part of the unified top gallery, suppress inline rendering
     const isGalleryItem = allMediaBlocks.some(b => b.id === id)
     
-    // Check if this block is a "PHOTO GALLERY" marker (Heading or Toggle)
-    const blockText = value?.rich_text?.[0]?.plain_text?.toUpperCase() || ''
-    const isGalleryMarker = (type.startsWith('heading_') || type === 'toggle') && blockText.includes('PHOTO GALLERY')
+    // Check for gallery markers
+    const blockText = value?.rich_text?.[0]?.plain_text?.trim().toUpperCase() || ''
+    const isGalleryMarker = (type.startsWith('heading_') || type === 'paragraph' || type === 'toggle') && 
+                            (blockText.includes('PHOTO GALLERY') || 
+                             blockText.includes('GALLERY') || 
+                             blockText.includes('GALERİ') || 
+                             blockText.includes('FOTOĞRAF'))
     
-    if (isGalleryMarker && isGalleryLayout) {
+    if (isVoltaPage && isGalleryMarker) {
+      console.log('[VOLTA DEBUG] Found Gallery Marker:', type, blockText)
+    }
+
+    if (isGalleryMarker) {
+      if (isVoltaPage) return null // Suppress marker on Volta page as it's at the top now
+
       if (type === 'toggle' || value?.is_toggleable) {
         // Render the toggle but with the gallery slider inside it
         return (
@@ -251,19 +373,33 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
               {type === 'toggle' && <span className="toggle-text">{renderRichText(value.rich_text)}</span>}
             </summary>
             <div className="toggle-content">
-              {renderGallerySlider({}, isParisPage)}
+              {renderGallerySlider({}, isParisPage || isVoltaPage)}
             </div>
           </details>
         )
       }
-      return renderGallerySlider({}, isParisPage)
+      return (
+        <div key={id} className="volta-gallery-wrapper">
+          {type === 'heading_1' && <h1>{renderRichText(value.rich_text)}</h1>}
+          {type === 'heading_2' && <h2>{renderRichText(value.rich_text)}</h2>}
+          {type === 'heading_3' && <h3>{renderRichText(value.rich_text)}</h3>}
+          {type === 'paragraph' && <p className="notion-p">{renderRichText(value.rich_text)}</p>}
+          {renderGallerySlider({}, isParisPage || isVoltaPage)}
+        </div>
+      )
     }
     
     switch (type) {
       case 'image': {
-        if (isGalleryLayout && isGalleryItem) return null
-
         const src = value.type === 'external' ? value.external.url : value.file.url
+        if (isGalleryLayout && isGalleryItem) {
+          const isGif = src.toLowerCase().includes('.gif')
+          if ((isParisPage || isVoltaPage) && isGif) {
+            // continue
+          } else {
+            return null
+          }
+        }
         const caption = value.caption
         return (
           <div key={id} className="notion-image-wrapper">
@@ -395,9 +531,10 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                   src={normalizedSrc} 
                   loading="lazy"
                   referrerPolicy="no-referrer" 
+                  className="notion-img"
                   style={{ width: '100%', borderRadius: '20px', display: 'block' }} 
                   alt="Embedded Content"
-                  onLoad={(e) => (e.target as HTMLElement).classList.add('loaded')}
+                  onLoad={(e) => e.currentTarget.classList.add('loaded')}
                 />
               </div>
             </div>
@@ -458,8 +595,69 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
           )
         }
 
+        // Handle direct video files (MP4, WEBM, MOV, etc.)
+        const isDirectVideo = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(src)
+        if (isDirectVideo) {
+          return (
+            <div key={id} className={`notion-video-container-wrapper ${isFullScreenPage ? 'video-full-screen-layout' : ''}`}>
+              <div className="notion-video-container">
+                <video 
+                  src={src} 
+                  controls 
+                  muted 
+                  autoPlay
+                  loop
+                  playsInline 
+                  className="notion-video-direct"
+                  style={{ width: '100%', borderRadius: isFullScreenPage ? '0' : '20px', background: '#000' }}
+                />
+              </div>
+              {caption && caption.length > 0 && (
+                <figcaption className="notion-image-caption">
+                  {renderRichText(caption)}
+                </figcaption>
+              )}
+            </div>
+          )
+        }
+
+        // Vimeo support
+        if (src.includes('vimeo.com')) {
+          const vimeoMatch = src.match(/vimeo\.com\/(?:video\/)?([0-9]+)/)
+          const vimeoId = vimeoMatch ? vimeoMatch[1] : ''
+          if (vimeoId) {
+            return (
+              <div key={id} className="notion-video-container-wrapper">
+                <div className="notion-video-container">
+                  <iframe
+                    src={`https://player.vimeo.com/video/${vimeoId}`}
+                    frameBorder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    title="Vimeo Video"
+                  ></iframe>
+                </div>
+                {caption && caption.length > 0 && (
+                  <figcaption className="notion-image-caption">
+                    {renderRichText(caption)}
+                  </figcaption>
+                )}
+              </div>
+            )
+          }
+        }
+
+        // Specific handling for standard embeds to avoid "Error 153" or configuration errors
+        // YouTube, Vimeo, Instagram, Spotify often NEED the referrer/origin
+        const isKnownEmbed = src.includes('youtube') || src.includes('youtu.be') || src.includes('vimeo.com') || src.includes('instagram.com') || src.includes('spotify.com')
+
+        // Spotify specific conversion to embed format
+        if (src.includes('spotify.com') && !src.includes('/embed')) {
+          src = src.replace('open.spotify.com/', 'open.spotify.com/embed/')
+        }
+
         return (
-          <div key={id} className="notion-video-container-wrapper">
+          <div key={id} className={`notion-video-container-wrapper ${isFullScreenPage ? 'video-full-screen-layout' : ''}`}>
             <div className="notion-video-container">
               <iframe
                 src={src}
@@ -467,6 +665,9 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                 allowFullScreen
                 title="Embedded Content"
                 className="notion-embed-iframe"
+                referrerPolicy={isKnownEmbed ? undefined : "no-referrer"}
+                style={{ borderRadius: isFullScreenPage ? '0' : '20px' }}
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               ></iframe>
             </div>
             {caption && caption.length > 0 && (
@@ -483,6 +684,18 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         const icon = meta?.icon
         const cover = meta?.cover
         const bgImage = cover?.external?.url || cover?.file?.url || icon?.external?.url || icon?.file?.url
+        
+        // Use simple text links instead of cards on the Art & Ideas page or for specific Volta items
+        const isArtPage = pageTitle.toLowerCase().includes('art') && pageTitle.toLowerCase().includes('ideas')
+        const isExcludedCard = isVoltaPage && (value.title.includes('Resimlerimin Mırıldandığı Şarkılar') || value.title.includes('Kavramsal Metin'))
+        
+        if (isArtPage || isExcludedCard) {
+          return (
+            <div key={id} style={{ margin: '0.5rem 0' }}>
+              <Link href={`/${slug}`} className="notion-link">• {value.title}</Link>
+            </div>
+          )
+        }
 
         return (
           <Link key={id} href={`/${slug}`} className="work-card">
@@ -490,9 +703,18 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
             <div className="card-icon-wrapper">
               {bgImage ? (
                 <img 
-                  src={bgImage} 
-                  alt="" 
-                  className="card-icon-img" 
+                  src={normalizeImgurUrl(bgImage)} 
+                  className="notion-img"
+                  onLoad={(e) => e.currentTarget.classList.add('loaded')}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.parentElement?.classList.add('image-failed')
+                    target.classList.add('image-failed-img')
+                    console.error('Image failed to load:', bgImage)
+                  }}
+                  alt={value.title || 'Portfolio Item'}
+                  loading="lazy"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                 />
               ) : (
@@ -542,13 +764,26 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         )
       }
       case 'link_to_page': {
-        const linkedId = value.page_id.replace(/-/g, '') // Notion API returns ID with/without dashes sometimes
-        // Try to match with original ID or normalized ID
+        const linkedId = value.page_id.replace(/-/g, '')
         const slug = slugMap[value.page_id] || slugMap[linkedId] || linkedId
+        const meta = pageMetadata.find(m => m.id === value.page_id || m.id === linkedId)
+        const title = meta?.title || 'Linked Page'
+
+        const isArtPage = pageTitle.toLowerCase().includes('art') && pageTitle.toLowerCase().includes('ideas')
+        const isExcludedCard = isVoltaPage && (title.includes('Resimlerimin Mırıldandığı Şarkılar') || title.includes('Kavramsal Metin'))
+        
+        if (isArtPage || isExcludedCard) {
+          return (
+            <div key={id} style={{ margin: '0.5rem 0' }}>
+              <Link href={`/${slug}`} className="notion-link">• {title}</Link>
+            </div>
+          )
+        }
+
         return (
           <Link key={id} href={`/${slug}`} className="notion-link-page">
             <ArrowUpRight size={18} />
-            <span>Link to Page</span>
+            <span>{title}</span>
           </Link>
         )
       }
@@ -618,7 +853,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     return acc
   }, [])
 
-  const renderGallerySlider = (customStyles: React.CSSProperties = {}, hideTabs = false) => {
+  const renderGallerySlider = (customStyles: React.CSSProperties = {}, hideTabs = false, square = false) => {
     if (!isGalleryLayout) return null
     return (
       <div className="unified-gallery-wrapper tabbed-gallery" style={{ marginBottom: '3rem', ...customStyles }}>
@@ -655,11 +890,11 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
 
         <div className="tab-content-wrapper fade-in-entrance">
           {activeTab === 'GIFs' && gifBlocks.length > 0 ? (
-            <NotionGallerySlider key="GIFs" items={gifBlocks} fullWidth={true} />
+            <NotionGallerySlider key="GIFs" items={gifBlocks} fullWidth={true} square={square} />
           ) : activeTab === 'Videos' && videoBlocks.length > 0 ? (
-            <NotionGallerySlider key="Videos" items={videoBlocks} />
+            <NotionGallerySlider key="Videos" items={videoBlocks} square={square} />
           ) : (
-            staticImageBlocks.length > 0 && <NotionGallerySlider key="Photography" items={staticImageBlocks} />
+            staticImageBlocks.length > 0 && <NotionGallerySlider key="Photography" items={staticImageBlocks} square={square} />
           )}
         </div>
       </div>
@@ -669,10 +904,14 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
   // Check if we should render gallery at the top (fallback for Silent Steps)
   const hasGalleryMarker = blocks.some(b => {
     const val = b[b.type]
-    const text = val?.rich_text?.[0]?.plain_text?.toUpperCase() || ''
-    return (b.type.startsWith('heading_') || b.type === 'toggle') && text.includes('PHOTO GALLERY')
+    const text = val?.rich_text?.[0]?.plain_text?.trim().toUpperCase() || ''
+    return (b.type.startsWith('heading_') || b.type === 'toggle') && 
+           (text.includes('PHOTO GALLERY') || 
+            text.includes('GALLERY') || 
+            text.includes('GALERİ') || 
+            text.includes('FOTOĞRAF'))
   })
-  const shouldRenderGalleryAtTop = isGalleryLayout && !hasGalleryMarker
+  const shouldRenderGalleryAtTop = isGalleryLayout && !hasGalleryMarker && !isParisPage && !isVoltaPage
 
   return (
     <div className="notion-blocks">
@@ -742,10 +981,39 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
           )
         }
 
+        if (isVoltaPage) {
+          return (
+            <>
+              <div style={{ marginBottom: '1rem' }} className="volta-top-gallery-section">
+                {renderGallerySlider({ marginTop: '0', marginBottom: '2rem' }, true, true)}
+              </div>
+              <div className="notion-paragraph-block" style={{ marginBottom: '3.5rem', marginTop: '1rem' }}>
+                <p className="notion-p" style={{ fontSize: '1.25rem', color: 'var(--text-color)', opacity: 0.95, lineHeight: '1.7', fontWeight: 400 }}>
+                  Tüm resimler için GPT ile uzun sohbetler ve değerlendirmeler yaptık. GPT her bir resim için özel promptlar ve şarkı yapıları oluşturdu, şarkı sözlerini yazdı ve resimlerin isimleri de GPT verildi. Sergi için yaklaşık 4000 şarkı üretildi. Ortaya çıkan şarkılar, GPT ile birlikte resmin içindeki müziği bulma çabamızın bir çıktısı.
+                </p>
+              </div>
+              {groupedBlocks.map((item: any, i: number) => {
+                if (item.type === 'paragraph' && !item.paragraph?.rich_text?.length && !item.children?.length) {
+                  return null
+                }
+                
+                if (item._type === '_child_page_group') {
+                  return (
+                    <div key={`group-${i}`} className="works-grid-inline">
+                      {item.items.map((b: any) => renderBlock(b))}
+                    </div>
+                  )
+                }
+                return renderBlock(item)
+              })}
+            </>
+          )
+        }
+
         // Standard logic for other pages or if marker exists
         return (
           <>
-            {shouldRenderGalleryAtTop && renderGallerySlider({}, isParisPage)}
+            {shouldRenderGalleryAtTop && renderGallerySlider({}, isParisPage || isVoltaPage)}
             {groupedBlocks.map((item: any, i: number) => {
               if (item.type === 'paragraph' && !item.paragraph?.rich_text?.length && !item.children?.length) {
                 return null

@@ -120,9 +120,11 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
       'I create each frame of the animation'
     ]
 
+    const isAboutPage = path === 'about' || (page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('about')
+
     blocks = blocks.flatMap((b: any) => {
       const text = b[b.type]?.rich_text?.[0]?.plain_text || ''
-      const shouldRemove = textsToRemove.some(toRemove => text.includes(toRemove))
+      const shouldRemove = !isAboutPage && textsToRemove.some(toRemove => text.includes(toRemove))
       
       if (shouldRemove) {
         // If the block has children (e.g., GIFs under a heading), preserve them
@@ -131,13 +133,13 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
       return [b]
     })
 
-    // Fetch metadata for child pages to get icons
-    const childPageIds = blocks
-      .filter((b: any) => b.type === 'child_page')
-      .map((b: any) => b.id)
+    // Fetch metadata for child pages and linked pages to get titles/icons
+    const relevantPageIds = blocks
+      .filter((b: any) => b.type === 'child_page' || b.type === 'link_to_page')
+      .map((b: any) => b.type === 'child_page' ? b.id : b.link_to_page.page_id)
     
-    const pageMetadata = childPageIds.length > 0 
-      ? await getPageMetadata(childPageIds)
+    const pageMetadata = relevantPageIds.length > 0 
+      ? await getPageMetadata(relevantPageIds)
       : []
 
     return (
@@ -157,7 +159,7 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
                 pageMetadata={pageMetadata} 
                 slugMap={idToSlug} 
                 pageTitle={page.properties?.title?.title?.[0]?.plain_text || 'Untitled'}
-                galleryMode={(page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('silent steps') || (page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('paris')}
+                galleryMode={!(page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('about') && ((page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('silent steps') || (page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('paris') || (page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('volta'))}
                 showLeadText={page.properties?.title?.title?.[0]?.plain_text === 'Silent Steps Series'}
               />
             </section>

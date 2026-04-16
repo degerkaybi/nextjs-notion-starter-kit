@@ -731,10 +731,56 @@ body.light-mode .work-card .card-arrow {
 }
 
 .notion-image-wrapper {
+  position: relative;
   margin: 1.5rem 0;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  overflow: hidden;
+  min-height: 150px;
+}
+
+/* Spinner indicator */
+.notion-image-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  margin-top: -12px;
+  margin-left: -12px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  animation: notion-spinner 0.8s linear infinite;
+  z-index: 1;
+}
+
+@keyframes notion-spinner {
+  to { transform: rotate(360deg); }
+}
+
+.notion-img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  display: block;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+  position: relative;
+}
+
+.notion-img.loaded {
+  opacity: 1;
+}
+
+/* Hide spinner once loaded */
+.notion-image-wrapper:has(.notion-img.loaded)::after {
+  display: none;
 }
 
 .notion-image-container {
@@ -1799,3 +1845,38 @@ body.light-mode .notion-tab-button.active {
   }
 }
 
+
+/* Full-screen video layout breakout */
+.video-full-screen-layout {
+  width: 100vw !important;
+  max-width: none !important;
+  margin-left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  background: #000;
+}
+
+.video-full-screen-layout .notion-video-container {
+  border-radius: 0 !important;
+  max-width: 100%;
+}
+
+.video-full-screen-layout iframe,
+.video-full-screen-layout video {
+  border-radius: 0 !important;
+  border: none !important;
+}
+
+/* Square Slider Support */
+.notion-slider-container.slider-square .slider-main-view {
+  aspect-ratio: 1/1 !important;
+}
+.notion-slider-container.slider-square .slider-main-image {
+  object-fit: cover !important;
+}
+@media (max-width: 768px) {
+  .notion-slider-container.slider-square .slider-main-view {
+    aspect-ratio: 1/1 !important;
+  }
+}
