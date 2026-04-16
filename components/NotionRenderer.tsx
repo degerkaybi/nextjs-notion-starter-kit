@@ -12,6 +12,16 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
   const [index, setIndex] = useState(-1)
   const [activeTab, setActiveTab] = useState('GIFs')
   
+  // Robust Google Maps detection
+  const isGoogleMap = (url: string) => {
+    if (!url) return false
+    return (
+      (url.includes('google.') && url.includes('/maps')) ||
+      url.includes('goo.gl/maps') ||
+      url.includes('maps.app.goo.gl')
+    )
+  }
+  
   // Recursively collect all images for the gallery
   const getAllImages = (blocks: any[]): any[] => {
     let images: any[] = []
@@ -43,11 +53,11 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
       const type = block.type
       const value = block[type]
       const url = value?.type === 'external' ? value.external.url : value?.file?.url || value?.url || ''
-      const isMap = url.includes('google.') && url.includes('/maps')
+      const isMap = isGoogleMap(url)
       const caption = value?.caption?.[0]?.plain_text || ''
       const isExcluded = caption.includes('Panda, 2018-2022')
 
-      if (['image', 'video', 'embed'].includes(type) && !isMap && !isExcluded) {
+      if (['image', 'video', 'embed', 'google_drive'].includes(type) && !isMap && !isExcluded) {
         mediaBlocks.push(block)
       }
       if (block.children && block.children.length > 0) {
@@ -303,15 +313,15 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
           </div>
         )
       case 'video':
+      case 'google_drive':
       case 'embed': {
         let src = value.type === 'external' ? value.external.url : value.file?.url || value.url
         const caption = value.caption
-        const isMap = src?.includes('google.') && src?.includes('/maps')
+        const isMap = isGoogleMap(src)
 
         // If we are pooling this into the gallery, suppress inline rendering
         if (isGalleryLayout && isGalleryItem) return null
 
-        if (!src) return null
         if (!src) return null
 
         const normalizedSrc = normalizeImgurUrl(src)
@@ -338,10 +348,14 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         }
 
         // Broad support for Google Maps & My Maps (viewer/edit -> embed transformation)
-        const isGoogleMap = src.includes('google.') && src.includes('/maps')
-        if (isGoogleMap) {
-          if (src.includes('viewer?mid=') || src.includes('edit?mid=')) {
-            src = src.replace('viewer?mid=', 'embed?mid=').replace('edit?mid=', 'embed?mid=')
+        if (isMap) {
+          src = src
+            .replace('viewer?mid=', 'embed?mid=')
+            .replace('edit?mid=', 'embed?mid=')
+            .replace('http://', 'https://')
+          
+          if (!src.includes('/embed') && !src.includes('/d/embed') && src.includes('google.com/maps/d/')) {
+            src = src.replace('/viewer', '/embed').replace('/edit', '/embed')
           }
         }
 
@@ -436,12 +450,15 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         const bookmarkUrl = value.url || ''
         
         // Auto-embed Google Maps bookmarks
-        if (bookmarkUrl.includes('google.') && bookmarkUrl.includes('/maps')) {
+        if (isGoogleMap(bookmarkUrl)) {
           let mapSrc = bookmarkUrl
             .replace('http://', 'https://')
             .replace('viewer?', 'embed?')
             .replace('edit?', 'embed?')
-          if (!mapSrc.includes('google.com')) {
+            .replace('/viewer', '/embed')
+            .replace('/edit', '/embed')
+          
+          if (!mapSrc.includes('google.com') && mapSrc.includes('google.')) {
             mapSrc = mapSrc.replace('google.', 'www.google.')
           }
           return (
