@@ -14,6 +14,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
 
   const isParisPage = pageTitle.toLowerCase().includes('paris') || pageTitle.toLowerCase().includes('olympics')
   const isVoltaPage = pageTitle.toLowerCase().includes('volta') || pageTitle.toLowerCase().includes('records')
+  const isSilentStepsPage = pageTitle.toLowerCase().includes('silent steps')
   
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -429,6 +430,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                 decoding="async"
                 referrerPolicy="no-referrer"
                 className="notion-img"
+                style={{ width: '100%', height: 'auto' }}
                 onLoad={(e) => {
                   const target = e.target as HTMLElement;
                   target.parentElement?.classList.remove('loading-skeleton');
