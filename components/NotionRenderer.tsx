@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, RefreshCw } from 'lucide-react'
 import Lightbox from "yet-another-react-lightbox"
 import "yet-another-react-lightbox/styles.css"
 import InstagramEmbed from './InstagramEmbed'
@@ -11,6 +11,16 @@ import NotionGallerySlider from './NotionGallerySlider'
 export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}, showLeadText = false, galleryMode = false, pageTitle = '' }: { blocks: any[], pageMetadata?: any[], slugMap?: Record<string, string>, showLeadText?: boolean, galleryMode?: boolean, pageTitle?: string }) {
   const [index, setIndex] = useState(-1)
   const [activeTab, setActiveTab] = useState('')
+  const [retryStats, setRetryStats] = useState<Record<string, number>>({})
+
+  const handleRetry = (e: React.MouseEvent, blockId: string) => {
+    e.stopPropagation()
+    e.preventDefault()
+    setRetryStats(prev => ({
+      ...prev,
+      [blockId]: (prev[blockId] || 0) + 1
+    }))
+  }
 
   const isParisPage = pageTitle.toLowerCase().includes('paris') || pageTitle.toLowerCase().includes('olympics')
   const isVoltaPage = pageTitle.toLowerCase().includes('volta') || pageTitle.toLowerCase().includes('records')
@@ -104,7 +114,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
       if (type === 'image') {
         const val = block.image
         const rawSrc = val.type === 'external' ? val.external.url : val.file.url
-        images.push({ src: normalizeImgurUrl(rawSrc) })
+        images.push({ src: proxyImageUrl(normalizeImgurUrl(rawSrc)) })
       }
       if (block.children && block.children.length > 0) {
         images = [...images, ...getAllImages(block.children)]
@@ -594,18 +604,40 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         const isDirectImage = /\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i.test(normalizedSrc) || normalizedSrc.includes('i.imgur.com')
         
         if (isDirectImage && !isImgurEmbed) {
+          const retryCount = retryStats[id] || 0
+          const finalSrc = retryCount > 0 ? `${proxyImageUrl(normalizedSrc)}&t=${retryCount}` : proxyImageUrl(normalizedSrc)
+          
           return (
-            <div key={id} className="notion-image-wrapper">
+            <div key={id} className="notion-image-wrapper image-retry-container">
               <div className="notion-image-container">
                 <img 
-                  src={proxyImageUrl(normalizedSrc)} 
+                  src={finalSrc} 
                   loading="lazy"
                   referrerPolicy="no-referrer" 
                   className="notion-img"
                   style={{ width: '100%', borderRadius: '20px', display: 'block' }} 
                   alt="Embedded Content"
                   onLoad={(e) => e.currentTarget.classList.add('loaded')}
+                  onError={(e) => e.currentTarget.classList.add('image-failed')}
                 />
+                <img 
+                  src={finalSrc} 
+                  style={{ display: 'none' }} 
+                  onError={() => {
+                    const el = document.getElementById(`retry-${id}`)
+                    if (el) el.style.display = 'flex'
+                  }}
+                  onLoad={() => {
+                    const el = document.getElementById(`retry-${id}`)
+                    if (el) el.style.display = 'none'
+                  }}
+                />
+              </div>
+              <div id={`retry-${id}`} className="image-retry-overlay" style={{ display: 'none' }}>
+                <p className="retry-error-text">Image could not be loaded</p>
+                <button className="retry-button" onClick={(e) => handleRetry(e, id)}>
+                  <RefreshCw /> Retry
+                </button>
               </div>
             </div>
           )
@@ -654,11 +686,10 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
           const ytMatch = src.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|live\/|watch\?v=|watch\?.+&v=))((\w|-){11})/);
           const videoId = (ytMatch && ytMatch[1]) ? ytMatch[1] : '';
           
-            if (videoId) {
-              const pandaClass = isPandaVideo && isSilentStepsPage ? 'panda-video-full-width' : ''
-              return (
-                <div key={id} className={`notion-video-container-wrapper ${pandaClass}`}>
-                  <div className="notion-video-container">
+          if (videoId) {
+            return (
+              <div key={id} className="notion-video-container-wrapper">
+                <div className="notion-video-container">
                   <iframe
                     src={`https://www.youtube.com/embed/${videoId}`}
                     frameBorder="0"
@@ -667,24 +698,11 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                     title="YouTube Video"
                   ></iframe>
                 </div>
-                {(() => {
-                  const isPandaVideo = caption?.[0]?.plain_text?.includes('Panda, 2018-2022')
-                  if (isPandaVideo && isSilentStepsPage) {
-                    return (
-                      <figcaption className="notion-image-caption panda-video-caption-full-width">
-                        <div className="panda-story-text">
-                          It took me nearly four years to capture the frames in this film. From beginning to end, in less than a minute, an entire lifetime passes before our eyes. In fact, if you watch each loop only once in sequence, it doesn’t even add up to five seconds. I extended it in the edit through repetition. Everything happens between two blinks of an eye.
-                        </div>
-                        <div className="panda-metadata-text">Panda, 2018-2022 - Istanbul, Ankara</div>
-                      </figcaption>
-                    )
-                  }
-                  return caption && caption.length > 0 && (
-                    <figcaption className="notion-image-caption">
-                      {renderRichText(caption)}
-                    </figcaption>
-                  )
-                })()}
+                {caption && caption.length > 0 && (
+                  <figcaption className="notion-image-caption">
+                    {renderRichText(caption)}
+                  </figcaption>
+                )}
               </div>
             )
           }
@@ -709,11 +727,15 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         // Handle direct video files (MP4, WEBM, MOV, etc.)
         const isDirectVideo = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(src)
         if (isDirectVideo) {
+          const retryCount = retryStats[id] || 0
+          const finalSrc = retryCount > 0 ? `${proxyImageUrl(src)}&t=${retryCount}` : proxyImageUrl(src)
+          
           return (
-            <div key={id} className={`notion-video-container-wrapper ${isFullScreenPage ? 'video-full-screen-layout' : ''}`}>
+            <div key={id} className={`notion-video-container-wrapper image-retry-container ${isFullScreenPage ? 'video-full-screen-layout' : ''}`}>
               <div className="notion-video-container">
                 <video 
-                  src={proxyImageUrl(src)} 
+                  key={finalSrc}
+                  src={finalSrc} 
                   controls 
                   muted 
                   autoPlay
@@ -721,7 +743,21 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                   playsInline 
                   className="notion-video-direct"
                   style={{ width: '100%', borderRadius: isFullScreenPage ? '0' : '20px', background: '#000' }}
+                  onError={() => {
+                    const el = document.getElementById(`retry-${id}`)
+                    if (el) el.style.display = 'flex'
+                  }}
+                  onLoadedData={() => {
+                    const el = document.getElementById(`retry-${id}`)
+                    if (el) el.style.display = 'none'
+                  }}
                 />
+              </div>
+              <div id={`retry-${id}`} className="image-retry-overlay" style={{ display: 'none' }}>
+                <p className="retry-error-text">Video could not be loaded</p>
+                <button className="retry-button" onClick={(e) => handleRetry(e, id)}>
+                  <RefreshCw /> Retry
+                </button>
               </div>
               {caption && caption.length > 0 && (
                 <figcaption className="notion-image-caption">

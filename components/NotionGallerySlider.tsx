@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react'
 
 interface NotionGallerySliderProps {
   items: any[]
@@ -13,7 +13,17 @@ interface NotionGallerySliderProps {
 export default function NotionGallerySlider({ items, fullWidth, square, isSilentSteps }: NotionGallerySliderProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [isMounted, setIsMounted] = useState(false)
+  const [retryStats, setRetryStats] = useState<Record<string, number>>({})
   const thumbnailsRef = useRef<HTMLDivElement>(null)
+
+  const handleRetry = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation()
+    e.preventDefault()
+    setRetryStats(prev => ({
+      ...prev,
+      [id]: (prev[id] || 0) + 1
+    }))
+  }
 
   // Normalize URLs similar to NotionRenderer logic
   const normalizeImgurUrl = (url: string) => {
@@ -163,17 +173,36 @@ export default function NotionGallerySlider({ items, fullWidth, square, isSilent
             })()}
           </div>
         ) : (
-          <img 
-            key={currentItem.url} 
-            src={proxyImageUrl(currentItem.url)} 
-            alt={currentItem.caption || `Image ${activeIndex + 1}`}
-            loading="lazy"
-            decoding="async"
-            onLoad={(e) => e.currentTarget.classList.add('loaded')}
-            referrerPolicy="no-referrer"
-            className="slider-main-image notion-img fade-in-entrance"
-            style={isSilentSteps ? { objectFit: 'contain', maxHeight: '70vh', width: '100%', margin: '0 auto', borderRadius: '20px' } : {}}
-          />
+          <div className="slider-main-image-container image-retry-container" style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {(() => {
+              const retryCount = retryStats[currentItem.url] || 0
+              const finalSrc = retryCount > 0 ? `${proxyImageUrl(currentItem.url)}&t=${retryCount}` : proxyImageUrl(currentItem.url)
+              return (
+                <img 
+                  key={finalSrc} 
+                  src={finalSrc} 
+                  alt={currentItem.caption || `Image ${activeIndex + 1}`}
+                  loading="lazy"
+                  decoding="async"
+                  onLoad={(e) => e.currentTarget.classList.add('loaded')}
+                  onError={(e) => {
+                    e.currentTarget.classList.add('image-failed')
+                    const el = document.getElementById(`retry-main-${activeIndex}`)
+                    if (el) el.style.display = 'flex'
+                  }}
+                  referrerPolicy="no-referrer"
+                  className="slider-main-image notion-img fade-in-entrance"
+                  style={isSilentSteps ? { objectFit: 'contain', maxHeight: '70vh', width: '100%', margin: '0 auto', borderRadius: '20px' } : {}}
+                />
+              )
+            })()}
+            <div id={`retry-main-${activeIndex}`} className="image-retry-overlay" style={{ display: 'none' }}>
+              <p className="retry-error-text">Failed to load main image</p>
+              <button className="retry-button" onClick={(e) => handleRetry(e, currentItem.url)}>
+                <RefreshCw /> Retry
+              </button>
+            </div>
+          </div>
         )}
         
         {/* Main View Arrows */}
@@ -209,15 +238,34 @@ export default function NotionGallerySlider({ items, fullWidth, square, isSilent
               onClick={() => setActiveIndex(idx)}
               aria-label={`View item ${idx + 1}`}
             >
-              <img 
-                src={proxyImageUrl(item.thumbUrl, item.url.toLowerCase().includes('.gif'))} 
-                alt={`Thumbnail ${idx + 1}`} 
-                loading="lazy"
-                decoding="async" 
-                onLoad={(e) => e.currentTarget.classList.add('loaded')}
-                referrerPolicy="no-referrer"
-                className="notion-img"
-              />
+              <div className="thumb-image-container image-retry-container">
+                {(() => {
+                  const retryCount = retryStats[item.thumbUrl] || 0
+                  const finalSrc = retryCount > 0 ? `${proxyImageUrl(item.thumbUrl, item.url.toLowerCase().includes('.gif'))}&t=${retryCount}` : proxyImageUrl(item.thumbUrl, item.url.toLowerCase().includes('.gif'))
+                  return (
+                    <img 
+                      key={finalSrc}
+                      src={finalSrc} 
+                      alt={`Thumbnail ${idx + 1}`} 
+                      loading="lazy"
+                      decoding="async" 
+                      onLoad={(e) => e.currentTarget.classList.add('loaded')}
+                      onError={(e) => {
+                        e.currentTarget.classList.add('image-failed')
+                        const el = document.getElementById(`retry-thumb-${idx}`)
+                        if (el) el.style.display = 'flex'
+                      }}
+                      referrerPolicy="no-referrer"
+                      className="notion-img"
+                    />
+                  )
+                })()}
+                <div id={`retry-thumb-${idx}`} className="image-retry-overlay" style={{ display: 'none', scale: '0.8' }}>
+                  <button className="retry-button" style={{ padding: '0.4rem', borderRadius: '50%' }} onClick={(e) => handleRetry(e, item.thumbUrl)} aria-label="Retry thumbnail">
+                    <RefreshCw size={14} />
+                  </button>
+                </div>
+              </div>
               {item.isVideo && <div className="play-overlay">▶</div>}
             </button>
           ))}
