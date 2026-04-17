@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
     })
 
     // Auto-Healing: If Notion S3 image link has expired (403 Forbidden), fetch a fresh one using blockId!
-    if (!response.ok && response.status === 403 && blockId && targetUrl.includes('secure.notion-static.com')) {
+    if (!response.ok && response.status === 403 && blockId && (targetUrl.includes('secure.notion-static.com') || targetUrl.includes('amazonaws.com') || targetUrl.includes('prod-files-secure'))) {
       console.log(`[Image Proxy] URL expired (403). Fetching fresh block ${blockId}...`);
       try {
         const block: any = await notion.blocks.retrieve({ block_id: blockId })
