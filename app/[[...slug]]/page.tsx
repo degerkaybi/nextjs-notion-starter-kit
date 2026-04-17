@@ -1,4 +1,4 @@
-import { getPage, getBlocks, getPageMetadata } from '@/lib/notion'
+import { getPage, getBlocks, getPageMetadata, getTitle } from '@/lib/notion'
 import { config } from '@/lib/config'
 import { resolveSlug, getSlugMap } from '@/lib/slugs'
 import NotionRenderer from '@/components/NotionRenderer'
@@ -41,22 +41,30 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
       try {
         const pg: any = await getPage(currentId)
         const parent = pg.parent
+        console.log(`[BREADCRUMB] Tracking parent for ${currentId}:`, parent?.type)
         if (!parent || parent.type === 'workspace') break
-        if (parent.type !== 'page_id') break
-        const parentRaw = parent.page_id
-        const parentNorm = parentRaw.replace(/-/g, '')
+        
+        let parentId: string | null = null
+        if (parent.type === 'page_id') parentId = parent.page_id
+        if (parent.type === 'database_id') parentId = parent.database_id
+        
+        if (!parentId) break
+        const parentNorm = parentId.replace(/-/g, '')
         if (parentNorm === rootId) break // reached site root
-        const parentPage: any = await getPage(parentRaw)
-        const title = parentPage.properties?.title?.title?.[0]?.plain_text || 'Untitled'
-        const slug = idToSlug[parentRaw] || idToSlug[parentNorm] || parentNorm
+        
+        const parentPage: any = await getPage(parentId)
+        const title = getTitle(parentPage)
+        const slug = idToSlug[parentId] || idToSlug[parentNorm] || parentNorm
         ancestors.unshift({ href: `/${slug}`, label: title })
-        currentId = parentRaw
-      } catch {
+        currentId = parentId
+      } catch (e) {
+        console.error('[BREADCRUMB ERROR]', e)
         break
       }
     }
   }
 
+  console.log(`[PERF] Loading content for page: ${pageId}`)
   try {
     const page: any = await getPage(pageId)
     let blocks = await getBlocks(pageId)
@@ -120,7 +128,8 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
       'I create each frame of the animation'
     ]
 
-    const isAboutPage = path === 'about' || (page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('about')
+    const pageTitle = getTitle(page)
+    const isAboutPage = path === 'about' || pageTitle.toLowerCase().includes('about')
 
     blocks = blocks.flatMap((b: any) => {
       const richText = b[b.type]?.rich_text || []
@@ -160,15 +169,15 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
         ) : (
           <div className="content-wrapper">
             <section className="notion-content">
-              <Breadcrumbs currentTitle={page.properties?.title?.title?.[0]?.plain_text || 'Untitled'} ancestors={ancestors} />
-              <h1>{page.properties?.title?.title?.[0]?.plain_text || 'Untitled'}</h1>
+              <Breadcrumbs currentTitle={pageTitle} ancestors={ancestors} />
+              <h1>{pageTitle}</h1>
               <NotionRenderer 
                 blocks={blocks} 
                 pageMetadata={pageMetadata} 
                 slugMap={idToSlug} 
-                pageTitle={page.properties?.title?.title?.[0]?.plain_text || 'Untitled'}
-                galleryMode={!(page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('about') && ((page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('silent steps') || (page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('paris') || (page.properties?.title?.title?.[0]?.plain_text || '').toLowerCase().includes('volta'))}
-                showLeadText={page.properties?.title?.title?.[0]?.plain_text === 'Silent Steps Series'}
+                pageTitle={pageTitle}
+                galleryMode={!isAboutPage && (pageTitle.toLowerCase().includes('silent steps') || pageTitle.toLowerCase().includes('paris') || pageTitle.toLowerCase().includes('volta'))}
+                showLeadText={pageTitle === 'Silent Steps Series'}
               />
             </section>
           </div>

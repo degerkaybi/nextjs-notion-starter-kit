@@ -9,7 +9,18 @@ export const notion = new Client({
   auth: process.env.NOTION_TOKEN,
 })
 
-const REVALIDATE_TIME = 1 // Force fresh fetch for debugging
+const REVALIDATE_TIME = 60 // Revalidate every 60 seconds
+
+export function getTitle(page: any): string {
+  if (!page?.properties) return 'Untitled'
+  const props = page.properties
+  for (const key in props) {
+    if (props[key].type === 'title') {
+      return props[key].title?.[0]?.plain_text || 'Untitled'
+    }
+  }
+  return 'Untitled'
+}
 
 function ensureDashedId(id: string): string {
   if (id.includes('-')) return id
@@ -46,6 +57,28 @@ async function fetchBlocksRecursive(blockId: string): Promise<any[]> {
           const children = await fetchBlocksRecursive(block.id)
           return { ...block, children }
         }
+        
+        if (block.type === 'child_database') {
+          console.log('[DEBUG] FOUND DATABASE:', block.id, block.child_database?.title)
+          try {
+            const res = await fetch(`https://api.notion.com/v1/databases/${ensureDashedId(block.id)}/query`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${process.env.NOTION_TOKEN}`,
+                'Content-Type': 'application/json',
+                'Notion-Version': '2022-06-28'
+              }
+            })
+            const dbResponse = await res.json()
+            if (dbResponse.results && dbResponse.results.length > 0) {
+               console.log('[DEBUG] DB FIRST ITEM SUCCESS')
+               return { ...block, children: dbResponse.results }
+            }
+          } catch(e) {
+            console.error('[DEBUG] Error fetching database:', e)
+          }
+        }
+        
         return block
       })
     )
@@ -78,14 +111,16 @@ async function fetchBlocksRecursive(blockId: string): Promise<any[]> {
 
 export const getBlocks = unstable_cache(
   async (blockId: string) => {
+    console.log(`[PERF] Fetching blocks for ${blockId}`)
     return await fetchBlocksRecursive(blockId)
   },
-  ['notion-blocks-v4'], // Cache buster v4
-  { revalidate: 60, tags: ['notion-v4'] }
+  ['notion-blocks-v9'], // Cache buster v9
+  { revalidate: 60, tags: ['notion-v9'] }
 )
 
 export const getPageMetadata = unstable_cache(
   async (pageIds: string[]) => {
+    console.log(`[PERF] Fetching metadata for ${pageIds.length} pages`)
     const metadata = await Promise.all(
       pageIds.map(async (id) => {
         try {
@@ -94,7 +129,7 @@ export const getPageMetadata = unstable_cache(
             id: page.id,
             icon: page.icon,
             cover: page.cover,
-            title: page.properties?.title?.title?.[0]?.plain_text || 'Untitled'
+            title: getTitle(page)
           }
         } catch (e) {
           console.error(`Error fetching metadata for page ${id}:`, e)
@@ -104,6 +139,6 @@ export const getPageMetadata = unstable_cache(
     )
     return metadata.filter(m => m !== null) as any[]
   },
-  ['notion-metadata-v4'], // Cache buster v4
-  { revalidate: 60, tags: ['notion-v4'] }
+  ['notion-metadata-v9'], // Cache buster v9
+  { revalidate: 60, tags: ['notion-v9'] }
 )

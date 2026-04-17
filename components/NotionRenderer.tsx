@@ -189,6 +189,11 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     const traverseAndCollect = (arr: any[]) => {
       arr.forEach(b => {
         const type = b.type
+        if (!type) {
+          if (b.children && Array.isArray(b.children)) traverseAndCollect(b.children)
+          return
+        }
+        
         const value = b[type]
         const blockText = value?.rich_text?.[0]?.plain_text?.trim().toUpperCase() || ''
         const isMarker = (type.startsWith('heading_') || type === 'paragraph' || type === 'toggle') && 
@@ -380,9 +385,78 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
     })
   }
 
+  const groupAndRenderBlocks = (blocksToGroup: any[]): React.ReactNode[] => {
+    if (!blocksToGroup) return [];
+    const result: React.ReactNode[] = [];
+    let currentList: any[] = [];
+    let currentListType: string = '';
+
+    const flushList = () => {
+      if (currentList.length > 0) {
+        if (currentListType === 'bulleted_list_item') {
+          result.push(
+            <ul key={`ul-${currentList[0].id}`} className="notion-list-wrapper" style={{ paddingLeft: '1.5rem', margin: '0.5rem 0' }}>
+              {currentList.map(renderBlock)}
+            </ul>
+          )
+        } else if (currentListType === 'numbered_list_item') {
+          result.push(
+            <ol key={`ol-${currentList[0].id}`} className="notion-list-wrapper" style={{ paddingLeft: '1.5rem', margin: '0.5rem 0' }}>
+              {currentList.map(renderBlock)}
+            </ol>
+          )
+        }
+        currentList = []
+      }
+    }
+
+    blocksToGroup.forEach((block: any) => {
+      if (!block.type) {
+        flushList();
+        result.push(renderBlock(block));
+        return;
+      }
+      if (block.type === 'bulleted_list_item' || block.type === 'numbered_list_item') {
+        if (currentListType === block.type) {
+          currentList.push(block)
+        } else {
+          flushList()
+          currentListType = block.type
+          currentList.push(block)
+        }
+      } else {
+        flushList()
+        currentListType = ''
+        result.push(renderBlock(block))
+      }
+    })
+    flushList()
+    
+    return result
+  }
 
   const renderBlock = (block: any): React.ReactNode => {
+    if (!block) return null
+    
+    // Support internally grouped child_pages for gallery grid rendering
+    if (block._type === '_child_page_group') {
+      return (
+        <div key={`group-${block.items?.[0]?.id}`} className="works-grid-inline">
+          {groupAndRenderBlocks(block.items)}
+        </div>
+      )
+    }
+
     const { type, id, children } = block
+    
+    // For database pages which don't have block type
+    if (!type) {
+      if (block.children && Array.isArray(block.children)) {
+        return <div key={id} className="notion-virtual-block">{groupAndRenderBlocks(block.children)}</div>
+      }
+      return null;
+    }
+
     const value = block[type]
     const caption = value?.caption
     
@@ -411,7 +485,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
 
     const renderChildren = () => {
       if (!hasVisibleChildren) return null
-      return <div className="notion-children">{children.map(renderBlock)}</div>
+      return <div className="notion-children" style={{ paddingLeft: '1.2rem', marginTop: '0.2rem' }}>{groupAndRenderBlocks(children)}</div>
     }
 
     // Check if block should behave as a toggle
@@ -583,15 +657,67 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
       case 'column_list':
         return (
           <div key={id} className="notion-column-list">
-            {children?.map(renderBlock)}
+            {groupAndRenderBlocks(children)}
           </div>
         )
       case 'column':
         return (
           <div key={id} className="notion-column">
-            {children?.map(renderBlock)}
+            {groupAndRenderBlocks(children)}
           </div>
         )
+      case 'child_database': {
+        const pages = children || [];
+        if (pages.length === 0) return null;
+        
+        return (
+          <div key={id} className="notion-database-gallery" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
+            {value?.title && <h2 style={{ marginBottom: '1.5rem' }}>{value.title}</h2>}
+            <div className="works-grid">
+              {pages.map((page: any) => {
+                const props = page.properties || {};
+                
+                // Find a title property
+                let title = 'Untitled';
+                for (const key in props) {
+                  if (props[key].type === 'title') {
+                    title = props[key].title?.[0]?.plain_text || 'Untitled';
+                    break;
+                  }
+                }
+                
+                // Find image (cover first, then files)
+                let imgSrc = page.cover?.external?.url || page.cover?.file?.url;
+                if (!imgSrc) {
+                   for (const key in props) {
+                     if (props[key].type === 'files') {
+                       const f = props[key].files?.[0];
+                       imgSrc = f?.external?.url || f?.file?.url;
+                       if (imgSrc) break;
+                     }
+                   }
+                }
+                
+                const pageSlug = slugMap[page.id] || page.id.replace(/-/g, '');
+                
+                return (
+                  <Link href={`/${pageSlug}`} key={page.id} className="work-card" style={{ minHeight: '250px' }}>
+                    <div className="card-icon-wrapper">
+                      {imgSrc ? (
+                         <img src={proxyImageUrl(imgSrc, page.id)} alt={title} className="card-icon-img" loading="lazy" />
+                      ) : (
+                         <span className="card-emoji">📄</span>
+                      )}
+                    </div>
+                    <h3>{title}</h3>
+                    <ArrowUpRight className="card-arrow" size={24} />
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        )
+      }
       case 'callout':
         return (
           <div key={id} className="notion-callout">
@@ -1189,7 +1315,17 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
           return (
             <>
               {before.map((item: any, i: number) => {
-                const blockContent = renderBlock(item)
+                let blockContent: React.ReactNode = null
+                if (item.type === 'bulleted_list_item' || item.type === 'numbered_list_item') {
+                   // We MUST map it through group rendering logic if we want to extract single items manually,
+                   // However, before/after lists have already chopped the children array!
+                   // For safety with hydration, wrap manually if extracted alone
+                   const ListTag = item.type === 'bulleted_list_item' ? 'ul' : 'ol'
+                   blockContent = <ListTag className="notion-list-wrapper" style={{ paddingLeft: '1.5rem', margin: '0.5rem 0' }}>{renderBlock(item)}</ListTag>
+                } else {
+                   blockContent = renderBlock(item)
+                }
+
                 if (!blockContent) return null
                 
                 return (
@@ -1199,23 +1335,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                 )
               })}
               {renderGallerySlider({ marginTop: '0', marginBottom: '2rem' }, true)}
-              {after.map((item: any, i: number) => {
-                const blockContent = renderBlock(item)
-                if (!blockContent) return null
-
-                if (item._type === '_child_page_group') {
-                  return (
-                    <div key={`group-${i}`} className="works-grid-inline">
-                      {item.items.map((b: any) => renderBlock(b))}
-                    </div>
-                  )
-                }
-                return (
-                  <div key={item.id}>
-                    {blockContent}
-                  </div>
-                )
-              })}
+              {groupAndRenderBlocks(after)}
             </>
           )
         }
@@ -1235,20 +1355,12 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
                   Tüm resimler için GPT ile uzun sohbetler ve değerlendirmeler yaptık. GPT her bir resim için özel promptlar ve şarkı yapıları oluşturdu, şarkı sözlerini yazdı ve resimlerin isimleri de GPT verildi. Sergi için yaklaşık 4000 şarkı üretildi. Ortaya çıkan şarkılar, GPT ile birlikte resmin içindeki müziği bulma çabamızın bir çıktısı.
                 </p>
               </div>
-              {groupedBlocks.map((item: any, i: number) => {
+              {groupAndRenderBlocks(groupedBlocks.filter((item: any) => {
                 if (item.type === 'paragraph' && !item.paragraph?.rich_text?.length && !item.children?.length) {
-                  return null
+                  return false
                 }
-                
-                if (item._type === '_child_page_group') {
-                  return (
-                    <div key={`group-${i}`} className="works-grid-inline">
-                      {item.items.map((b: any) => renderBlock(b))}
-                    </div>
-                  )
-                }
-                return renderBlock(item)
-              })}
+                return true
+              }))}
             </>
           )
         }
@@ -1257,24 +1369,17 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         return (
           <div className={isSilentStepsPage ? 'tight-layout' : ''}>
             {shouldRenderGalleryAtTop && renderGallerySlider({}, isParisPage || isVoltaPage)}
-            {groupedBlocks.map((item: any, i: number) => {
+            {groupAndRenderBlocks(groupedBlocks.filter((item: any) => {
               if (item.type === 'paragraph' && !item.paragraph?.rich_text?.length && !item.children?.length) {
-                return null
+                return false
               }
               // Skip empty toggle blocks or headings without text on Silent Steps
-              if (isSilentStepsPage && (item.type.startsWith('heading_') || item.type === 'toggle')) {
+              if (isSilentStepsPage && (item?.type?.startsWith?.('heading_') || item.type === 'toggle')) {
                 const text = item[item.type]?.rich_text?.[0]?.plain_text?.trim()
-                if (!text && !item.children?.length) return null
+                if (!text && !item.children?.length) return false
               }
-              
-              const content = (item._type === '_child_page_group') ? (
-                <div key={`group-${i}`} className="works-grid-inline">
-                  {item.items.map((b: any) => renderBlock(b))}
-                </div>
-              ) : renderBlock(item)
-              
-              return content
-            })}
+              return true
+            }))}
           </div>
         )
       })()}
