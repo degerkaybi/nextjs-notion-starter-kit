@@ -272,10 +272,13 @@ export default function NotionGallerySlider({ items, fullWidth, square, isSilent
         
         <div className="slider-thumbnails" ref={thumbnailsRef}>
           {mediaItems.map((item, idx) => (
-            <button 
+            <div 
               key={idx}
               className={`thumbnail-item ${idx === activeIndex ? 'active' : ''} ${item.isVideo ? 'video-thumb' : ''}`}
               onClick={() => setActiveIndex(idx)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActiveIndex(idx) }}
+              tabIndex={0}
+              role="button"
               aria-label={`View item ${idx + 1}`}
             >
               <div className="thumb-image-container image-retry-container">
@@ -319,7 +322,7 @@ export default function NotionGallerySlider({ items, fullWidth, square, isSilent
                 })()}
               </div>
               {item.isVideo && <div className="play-overlay">▶</div>}
-            </button>
+            </div>
           ))}
         </div>
 
