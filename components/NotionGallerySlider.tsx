@@ -50,7 +50,7 @@ export default function NotionGallerySlider({ items, fullWidth, square, isSilent
     return url
   }
 
-  const proxyImageUrl = (url: string, isStatic = false) => {
+  const proxyImageUrl = (url: string, isStatic = false, blockId?: string) => {
     if (!url) return url
     if (url.startsWith('/') || url.startsWith('data:') || url.includes('/api/image-proxy')) return url
     if (url.includes('imgur.com/embed') || url.includes('imgur.com/a/')) return url
@@ -59,10 +59,12 @@ export default function NotionGallerySlider({ items, fullWidth, square, isSilent
     
     let proxyUrl = `/api/image-proxy?url=${encodeURIComponent(url)}`
     if (isStatic) proxyUrl += '&static=true&width=400'
+    if (blockId) proxyUrl += `&blockId=${blockId}`
     return proxyUrl
   }
 
   const getMediaInfo = (block: any) => {
+    const id = block.id
     const type = block.type
     const val = block[type]
     const rawUrl = val?.type === 'external' ? val.external.url : val?.file?.url || val?.url
@@ -84,7 +86,7 @@ export default function NotionGallerySlider({ items, fullWidth, square, isSilent
       }
     }
 
-    return { url, caption, isVideo, isYouTube, videoId, thumbUrl }
+    return { id, url, caption, isVideo, isYouTube, videoId, thumbUrl }
   }
 
   const mediaItems = items.map(block => getMediaInfo(block)).filter(item => item.url)
@@ -192,7 +194,7 @@ export default function NotionGallerySlider({ items, fullWidth, square, isSilent
           <div className="slider-main-image-container image-retry-container" style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             {(() => {
               const retryCount = retryCounts[currentItem.url] || 0
-              const finalSrc = retryCount > 0 ? `${proxyImageUrl(currentItem.url)}&t=${retryCount}` : proxyImageUrl(currentItem.url)
+              const finalSrc = retryCount > 0 ? `${proxyImageUrl(currentItem.url, false, currentItem.id)}&t=${retryCount}` : proxyImageUrl(currentItem.url, false, currentItem.id)
               const isFailed = failedMediaIds.has(currentItem.url)
               
               return (
@@ -279,7 +281,7 @@ export default function NotionGallerySlider({ items, fullWidth, square, isSilent
               <div className="thumb-image-container image-retry-container">
                 {(() => {
                   const retryCount = retryCounts[item.thumbUrl] || 0
-                  const finalSrc = retryCount > 0 ? `${proxyImageUrl(item.thumbUrl, item.url.toLowerCase().includes('.gif'))}&t=${retryCount}` : proxyImageUrl(item.thumbUrl, item.url.toLowerCase().includes('.gif'))
+                  const finalSrc = retryCount > 0 ? `${proxyImageUrl(item.thumbUrl, item.url.toLowerCase().includes('.gif'), item.id)}&t=${retryCount}` : proxyImageUrl(item.thumbUrl, item.url.toLowerCase().includes('.gif'), item.id)
                   const isThumbFailed = failedMediaIds.has(item.thumbUrl)
                   
                   return (

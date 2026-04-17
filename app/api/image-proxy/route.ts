@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import sharp from 'sharp'
+import { notion } from '@/lib/notion'
 
 export const runtime = 'nodejs'
 
@@ -10,6 +11,7 @@ const CACHE_MAX_AGE = 60 * 60 * 6
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const url = searchParams.get('url')
+  const blockId = searchParams.get('blockId')
   const isStatic = searchParams.get('static') === 'true'
   const width = parseInt(searchParams.get('width') || '0', 10)
 
@@ -42,13 +44,39 @@ export async function GET(request: NextRequest) {
   // We'll allow anyway but keep the check for logging/security
   
   try {
-    const response = await fetch(url, {
+    let targetUrl = url;
+    let response = await fetch(targetUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'image/webp,image/apng,image/*,*/*;q=0.8',
       },
       referrerPolicy: 'no-referrer',
     })
+
+    // Auto-Healing: If Notion S3 image link has expired (403 Forbidden), fetch a fresh one using blockId!
+    if (!response.ok && response.status === 403 && blockId && targetUrl.includes('secure.notion-static.com')) {
+      console.log(`[Image Proxy] URL expired (403). Fetching fresh block ${blockId}...`);
+      try {
+        const block: any = await notion.blocks.retrieve({ block_id: blockId })
+        const type = block.type
+        // Extract new valid URL
+        const freshUrl = block[type]?.file?.url || block[type]?.external?.url || block.video?.file?.url || block.image?.file?.url
+        
+        if (freshUrl) {
+          targetUrl = freshUrl;
+          response = await fetch(targetUrl, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+              'Accept': 'image/webp,image/apng,image/*,*/*;q=0.8',
+            },
+            referrerPolicy: 'no-referrer',
+          })
+          console.log(`[Image Proxy] Successfully fetched fresh URL for block ${blockId}`);
+        }
+      } catch (retryError: any) {
+        console.error('[Image Proxy] Block retry failed for', blockId, retryError?.message)
+      }
+    }
 
     if (!response.ok) {
       return new NextResponse(`Failed to fetch image: ${response.status}`, { status: response.status })

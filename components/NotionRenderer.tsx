@@ -68,13 +68,15 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
   }
 
   // Route all images through the server-side proxy to avoid referrer blocking and enable caching
-  const proxyImageUrl = (url: string) => {
+  const proxyImageUrl = (url: string, blockId?: string) => {
     if (!url) return url
     // Don't proxy local/relative URLs, data URIs, or already-proxied URLs
     if (url.startsWith('/') || url.startsWith('data:') || url.includes('/api/image-proxy')) return url
     // Don't proxy Imgur embed URLs (they're iframes)
     if (url.includes('imgur.com/embed') || url.includes('imgur.com/a/')) return url
-    return `/api/image-proxy?url=${encodeURIComponent(url)}`
+    let returnUrl = `/api/image-proxy?url=${encodeURIComponent(url)}`
+    if (blockId) returnUrl += `&blockId=${blockId}`
+    return returnUrl
   }
 
   // Robust Google Maps detection
@@ -130,7 +132,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
       if (type === 'image') {
         const val = block.image
         const rawSrc = val.type === 'external' ? val.external.url : val.file.url
-        images.push({ src: proxyImageUrl(normalizeImgurUrl(rawSrc)) })
+        images.push({ src: proxyImageUrl(normalizeImgurUrl(rawSrc), block.id) })
       }
       if (block.children && block.children.length > 0) {
         images = [...images, ...getAllImages(block.children)]
@@ -503,7 +505,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
               style={{ cursor: 'pointer' }}
             >
               <img 
-                src={proxyImageUrl(normalizeImgurUrl(src))} 
+                src={proxyImageUrl(normalizeImgurUrl(src), id)} 
                 loading="lazy"
                 decoding="async"
                 referrerPolicy="no-referrer"
@@ -621,7 +623,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         
         if (isDirectImage && !isImgurEmbed) {
           const retryCount = retryCounts[id] || 0
-          const finalSrc = retryCount > 0 ? `${proxyImageUrl(normalizedSrc)}&t=${retryCount}` : proxyImageUrl(normalizedSrc)
+          const finalSrc = retryCount > 0 ? `${proxyImageUrl(normalizedSrc, id)}&t=${retryCount}` : proxyImageUrl(normalizedSrc, id)
           const isFailed = failedMediaIds.has(id)
           
           return (
@@ -756,7 +758,7 @@ export default function NotionRenderer({ blocks, pageMetadata = [], slugMap = {}
         const isDirectVideo = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(src)
         if (isDirectVideo) {
           const retryCount = retryCounts[id] || 0
-          const finalSrc = retryCount > 0 ? `${proxyImageUrl(src)}&t=${retryCount}` : proxyImageUrl(src)
+          const finalSrc = retryCount > 0 ? `${proxyImageUrl(src, id)}&t=${retryCount}` : proxyImageUrl(src, id)
           const isFailed = failedMediaIds.has(id)
           
           return (
