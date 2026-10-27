@@ -10,6 +10,62 @@ export const notion = new Client({
 })
 
 const REVALIDATE_TIME = 60 // Revalidate every 60 seconds
+const REQUEST_TIMEOUT_MS = 15_000
+const MAX_ATTEMPTS = 3
+const MAX_CONCURRENT_REQUESTS = 4
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+function getErrorStatus(error: any): number | undefined {
+  return error?.status ?? error?.statusCode ?? error?.response?.status
+}
+
+function isRetryableError(error: any): boolean {
+  const status = getErrorStatus(error)
+  return status === 429 || (typeof status === 'number' && status >= 500) ||
+    ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED', 'UND_ERR_CONNECT_TIMEOUT'].includes(error?.code)
+}
+
+async function withRetry<T>(operation: () => Promise<T>, label: string): Promise<T> {
+  let lastError: unknown
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      return await Promise.race([
+        operation(),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(Object.assign(new Error(`${label} timed out after ${REQUEST_TIMEOUT_MS}ms`), { code: 'ETIMEDOUT' })), REQUEST_TIMEOUT_MS)
+        ),
+      ])
+    } catch (error: any) {
+      lastError = error
+      if (attempt === MAX_ATTEMPTS || !isRetryableError(error)) throw error
+
+      const retryAfter = Number(error?.headers?.get?.('retry-after') ?? error?.headers?.['retry-after'])
+      const delay = Number.isFinite(retryAfter) ? retryAfter * 1000 : 500 * 2 ** (attempt - 1)
+      console.warn(`[NOTION] Retrying ${label} in ${delay}ms (attempt ${attempt + 1}/${MAX_ATTEMPTS})`)
+      await sleep(delay)
+    }
+  }
+
+  throw lastError
+}
+
+async function mapWithConcurrency<T, R>(items: T[], worker: (item: T) => Promise<R>): Promise<R[]> {
+  const results = new Array<R>(items.length)
+  let nextIndex = 0
+
+  async function consume() {
+    while (true) {
+      const index = nextIndex++
+      if (index >= items.length) return
+      results[index] = await worker(items[index])
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.min(MAX_CONCURRENT_REQUESTS, items.length) }, consume))
+  return results
+}
 
 export function getTitle(page: any): string {
   if (!page?.properties) return 'Untitled'
@@ -29,7 +85,10 @@ function ensureDashedId(id: string): string {
 
 export const getPage = unstable_cache(
   async (pageId: string) => {
-    return await notion.pages.retrieve({ page_id: ensureDashedId(pageId) })
+    return await withRetry(
+      () => notion.pages.retrieve({ page_id: ensureDashedId(pageId) }),
+      `page ${pageId}`
+    )
   },
   ['notion-page'],
   { revalidate: REVALIDATE_TIME, tags: ['notion'] }
@@ -41,34 +100,53 @@ async function fetchBlocksRecursive(blockId: string): Promise<any[]> {
   
   try {
     while (true) {
-      const response: any = await notion.blocks.children.list({
-        block_id: ensureDashedId(blockId),
-        start_cursor: cursor,
-      })
+      const response: any = await withRetry(
+        () => notion.blocks.children.list({
+          block_id: ensureDashedId(blockId),
+          start_cursor: cursor,
+        }),
+        `blocks ${blockId}`
+      )
       blocks.push(...response.results)
       if (!response.next_cursor) break
       cursor = response.next_cursor
     }
 
     // Parallel fetch for children to speed up
-    const blocksWithChildren = await Promise.all(
-      blocks.map(async (block: any) => {
+    const blocksWithChildren = await mapWithConcurrency(blocks, async (block: any) => {
         if (block.has_children && !['child_page', 'child_database'].includes(block.type)) {
-          const children = await fetchBlocksRecursive(block.id)
-          return { ...block, children }
+          try {
+            const children = await fetchBlocksRecursive(block.id)
+            return { ...block, children }
+          } catch (error: any) {
+            console.error(`[NOTION] Failed to fetch children for block ${block.id}:`, error?.message || error)
+            return block
+          }
         }
         
         if (block.type === 'child_database') {
           console.log('[DEBUG] FOUND DATABASE:', block.id, block.child_database?.title)
           try {
-            const res = await fetch(`https://api.notion.com/v1/databases/${ensureDashedId(block.id)}/query`, {
-              method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${process.env.NOTION_TOKEN}`,
-                'Content-Type': 'application/json',
-                'Notion-Version': '2022-06-28'
-              }
-            })
+            const res = await withRetry(
+              async () => {
+                const response = await fetch(`https://api.notion.com/v1/databases/${ensureDashedId(block.id)}/query`, {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${process.env.NOTION_TOKEN}`,
+                    'Content-Type': 'application/json',
+                    'Notion-Version': '2022-06-28'
+                  }
+                })
+                if (!response.ok) {
+                  throw Object.assign(new Error(`Database request failed with status ${response.status}`), {
+                    status: response.status,
+                    headers: response.headers,
+                  })
+                }
+                return response
+              },
+              `database ${block.id}`
+            )
             const dbResponse = await res.json()
             if (dbResponse.results && dbResponse.results.length > 0) {
                console.log('[DEBUG] DB FIRST ITEM SUCCESS')
@@ -81,7 +159,6 @@ async function fetchBlocksRecursive(blockId: string): Promise<any[]> {
         
         return block
       })
-    )
 
     // DEBUG: log block types and rich text mention types
     blocksWithChildren.forEach((b: any) => {
@@ -105,7 +182,7 @@ async function fetchBlocksRecursive(blockId: string): Promise<any[]> {
     } else {
       console.error(`Error fetching blocks for ${blockId}:`, error)
     }
-    return []
+    throw error
   }
 }
 
@@ -114,17 +191,19 @@ export const getBlocks = unstable_cache(
     console.log(`[PERF] Fetching blocks for ${blockId}`)
     return await fetchBlocksRecursive(blockId)
   },
-  ['notion-blocks-v9'], // Cache buster v9
-  { revalidate: 60, tags: ['notion-v9'] }
+  ['notion-blocks-v10'], // Cache buster after adding retry/concurrency safeguards
+  { revalidate: 60, tags: ['notion-v10'] }
 )
 
 export const getPageMetadata = unstable_cache(
   async (pageIds: string[]) => {
     console.log(`[PERF] Fetching metadata for ${pageIds.length} pages`)
-    const metadata = await Promise.all(
-      pageIds.map(async (id) => {
+    const metadata = await mapWithConcurrency(pageIds, async (id) => {
         try {
-          const page: any = await notion.pages.retrieve({ page_id: ensureDashedId(id) })
+          const page: any = await withRetry(
+            () => notion.pages.retrieve({ page_id: ensureDashedId(id) }),
+            `metadata ${id}`
+          )
           return {
             id: page.id,
             icon: page.icon,
@@ -136,9 +215,8 @@ export const getPageMetadata = unstable_cache(
           return null
         }
       })
-    )
     return metadata.filter(m => m !== null) as any[]
   },
-  ['notion-metadata-v9'], // Cache buster v9
-  { revalidate: 60, tags: ['notion-v9'] }
+  ['notion-metadata-v10'], // Cache buster after adding retry/concurrency safeguards
+  { revalidate: 60, tags: ['notion-v10'] }
 )

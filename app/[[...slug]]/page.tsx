@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { getPage, getBlocks, getPageMetadata, getTitle } from '@/lib/notion'
 import { config } from '@/lib/config'
 import { resolveSlug, getSlugMap } from '@/lib/slugs'
@@ -159,6 +160,8 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
       ? await getPageMetadata(relevantPageIds)
       : []
 
+    const isArtIdeasPage = path === 'art-ideas' || (pageTitle.toLowerCase().includes('art') && pageTitle.toLowerCase().includes('idea'))
+
     return (
       <div className="fade-in">
         {isRoot ? (
@@ -171,6 +174,15 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
             <section className="notion-content">
               <Breadcrumbs currentTitle={pageTitle} ancestors={ancestors} />
               <h1>{pageTitle}</h1>
+              
+              {isArtIdeasPage && (
+                <div style={{ margin: '0.5rem 0' }}>
+                  <Link href="/cekilis" className="notion-link">
+                    • Yıkım Ekibi Çekiliş Aracı
+                  </Link>
+                </div>
+              )}
+
               <NotionRenderer 
                 blocks={blocks} 
                 pageMetadata={pageMetadata} 
