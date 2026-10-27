@@ -64,7 +64,7 @@ function Embed({ url, title }: { url: string; title: string }) {
   return <a className="pf-external-link" href={url} target="_blank" rel="noopener noreferrer">{title} ↗</a>
 }
 
-function Block({ block }: { block: NotionBlock }) {
+function Block({ block, inColumn = false }: { block: NotionBlock; inColumn?: boolean }) {
   const value = (block[block.type] || {}) as {
     rich_text?: RichPart[]
     caption?: RichPart[]
@@ -76,7 +76,7 @@ function Block({ block }: { block: NotionBlock }) {
     page_id?: string
   }
   const content = richText(value.rich_text)
-  const children = block.children?.length ? <RichContent blocks={block.children} /> : null
+  const children = block.children?.length ? <RichContent blocks={block.children} inColumn={inColumn || block.type === 'column'} /> : null
 
   switch (block.type) {
     case 'paragraph':
@@ -114,7 +114,7 @@ function Block({ block }: { block: NotionBlock }) {
     case 'divider':
       return <hr className="pf-divider" />
     case 'column_list':
-      return <div className="pf-columns">{children}</div>
+      return <div className="pf-columns" style={{ '--pf-cols': Math.min(block.children?.length || 2, 3) } as React.CSSProperties}>{block.children?.map(child => <Block key={child.id} block={child} inColumn={inColumn} />)}</div>
     case 'column':
       return <div className="pf-column">{children}</div>
     case 'synced_block':
@@ -139,6 +139,21 @@ function Block({ block }: { block: NotionBlock }) {
   }
 }
 
-export default function RichContent({ blocks }: { blocks: NotionBlock[] }) {
-  return <div className="pf-rich-content">{blocks.map(block => <Block key={block.id} block={block} />)}</div>
+export default function RichContent({ blocks, inColumn = false }: { blocks: NotionBlock[]; inColumn?: boolean }) {
+  const content: React.ReactNode[] = []
+  for (let index = 0; index < blocks.length;) {
+    const block = blocks[index]
+    if (!inColumn && block.type === 'image') {
+      let end = index + 1
+      while (end < blocks.length && blocks[end].type === 'image') end++
+      if (end - index > 1) {
+        content.push(<div className="pf-image-gallery" key={block.id}>{blocks.slice(index, end).map(image => <Block key={image.id} block={image} />)}</div>)
+        index = end
+        continue
+      }
+    }
+    content.push(<Block key={block.id} block={block} inColumn={inColumn} />)
+    index++
+  }
+  return <div className="pf-rich-content">{content}</div>
 }
