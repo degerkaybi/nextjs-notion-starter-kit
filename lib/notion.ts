@@ -26,7 +26,7 @@ function isRetryableError(error: any): boolean {
     ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED', 'UND_ERR_CONNECT_TIMEOUT'].includes(error?.code)
 }
 
-async function withRetry<T>(operation: () => Promise<T>, label: string): Promise<T> {
+export async function withRetry<T>(operation: () => Promise<T>, label: string): Promise<T> {
   let lastError: unknown
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
@@ -51,7 +51,7 @@ async function withRetry<T>(operation: () => Promise<T>, label: string): Promise
   throw lastError
 }
 
-async function mapWithConcurrency<T, R>(items: T[], worker: (item: T) => Promise<R>): Promise<R[]> {
+export async function mapWithConcurrency<T, R>(items: T[], worker: (item: T) => Promise<R>): Promise<R[]> {
   const results = new Array<R>(items.length)
   let nextIndex = 0
 

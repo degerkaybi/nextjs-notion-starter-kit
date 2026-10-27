@@ -1,4 +1,4 @@
-import { notion } from './notion'
+import { mapWithConcurrency, notion, withRetry } from './notion'
 import { config } from './config'
 import { unstable_cache } from 'next/cache'
 
@@ -41,10 +41,13 @@ export const getSlugMap = unstable_cache(
       let cursor: string | undefined
       
       while (true) {
-        const response: any = await notion.blocks.children.list({
-          block_id: rootId,
-          start_cursor: cursor,
-        })
+        const response: any = await withRetry(
+          () => notion.blocks.children.list({
+            block_id: rootId,
+            start_cursor: cursor,
+          }),
+          `slug root ${rootId}`
+        )
         
         for (const block of response.results) {
           if (block.type === 'child_page') {
@@ -67,15 +70,18 @@ export const getSlugMap = unstable_cache(
 
       // Also fetch children of children (2 levels deep for sub-pages like Works/Art&Ideas children)
       const topLevelPages = Object.entries(slugToId).map(([slug, id]) => ({ slug, id }))
-      for (const { slug: parentSlug, id } of topLevelPages) {
+      await mapWithConcurrency(topLevelPages, async ({ slug: parentSlug, id }) => {
         try {
           const dashedId = id.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5')
           let subCursor: string | undefined
           while (true) {
-            const subResponse: any = await notion.blocks.children.list({
-              block_id: dashedId,
-              start_cursor: subCursor,
-            })
+            const subResponse: any = await withRetry(
+              () => notion.blocks.children.list({
+                block_id: dashedId,
+                start_cursor: subCursor,
+              }),
+              `slug children ${dashedId}`
+            )
             for (const block of subResponse.results) {
               if (block.type === 'child_page') {
                 const title = block.child_page?.title || ''
@@ -99,14 +105,14 @@ export const getSlugMap = unstable_cache(
         } catch (e) {
           // Skip pages that can't be read
         }
-      }
+      })
     } catch (error) {
       console.error('Error building slug map:', error)
     }
 
     return { slugToId, idToSlug, idToParentSlug }
   },
-  ['slug-map-v2'],
+  ['slug-map-v3'],
   { revalidate: 60, tags: ['slugs'] }
 )
 

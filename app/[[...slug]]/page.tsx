@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { getPage, getBlocks, getPageMetadata, getTitle } from '@/lib/notion'
 import { config } from '@/lib/config'
-import { resolveSlug, getSlugMap } from '@/lib/slugs'
+import { getSlugMap } from '@/lib/slugs'
 import NotionRenderer from '@/components/NotionRenderer'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Hero from '@/components/Hero'
@@ -19,16 +19,16 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug?:
   // Resolve the page ID: first check config overrides, then dynamic slugs, then raw ID
   let pageId: string | null = config.pageUrlOverrides[path] || null
   
+  // Get the slug map for generating proper links in the renderer
+  const { idToSlug, slugToId } = await getSlugMap()
+
   if (!pageId && path) {
-    pageId = await resolveSlug(path)
+    pageId = slugToId[path] || null
   }
-  
+
   if (!pageId) {
     pageId = slug ? slug[slug.length - 1] : config.rootNotionPageId
   }
-
-  // Get the slug map for generating proper links in the renderer
-  const { idToSlug, slugToId } = await getSlugMap()
 
   // Build breadcrumb ancestors by traversing Notion's parent chain
   const ancestors: { href: string; label: string }[] = []
