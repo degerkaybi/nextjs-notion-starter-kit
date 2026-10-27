@@ -17,7 +17,7 @@ function extractCommentsFromHtml(html: string): any[] {
   const comments: any[] = []
 
   // Try extracting from window._sharedData
-  const sharedDataMatch = html.match(/window\._sharedData\s*=\s*(\{.+?\});<\/script>/s)
+  const sharedDataMatch = html.match(/window\._sharedData\s*=\s*(\{[\s\S]+?\});<\/script>/)
   if (sharedDataMatch) {
     try {
       const sharedData = JSON.parse(sharedDataMatch[1])
@@ -39,7 +39,7 @@ function extractCommentsFromHtml(html: string): any[] {
 
   // Try extracting from __additionalDataLoaded
   if (comments.length === 0) {
-    const additionalMatch = html.match(/__additionalDataLoaded\s*\(\s*['"][^'"]+['"]\s*,\s*(\{.+?\})\s*\)/s)
+    const additionalMatch = html.match(/__additionalDataLoaded\s*\(\s*['"][^'"]+['"]\s*,\s*(\{[\s\S]+?\})\s*\)/)
     if (additionalMatch) {
       try {
         const additionalData = JSON.parse(additionalMatch[1])
