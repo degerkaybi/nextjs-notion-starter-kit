@@ -20,10 +20,13 @@ console.log(`${files.length} files, ${(totalBytes / 1048576).toFixed(1)} MiB; ${
 if (process.argv.includes('--dry-run')) process.exit(0)
 
 if (!process.env.CLOUDINARY_URL) {
-  try { process.loadEnvFile(path.join(root, '.env.local')) } catch {}
+  for (const name of ['.env.local', '.env']) {
+    try { process.loadEnvFile(path.join(root, name)) } catch {}
+    if (process.env.CLOUDINARY_URL) break
+  }
 }
 if (!process.env.CLOUDINARY_URL) {
-  throw new Error('CLOUDINARY_URL is missing. Put it in the ignored .env.local file, then run this script again.')
+  throw new Error('CLOUDINARY_URL is missing. Put it in the ignored .env file, then run this script again.')
 }
 cloudinary.config({ secure: true })
 const cloudName = cloudinary.config().cloud_name
