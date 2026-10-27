@@ -43,3 +43,4 @@ yarn-error.log*
 /data/notion-export.json
 /.media-source/
 /public/media/
+/data/media-urls.json.tmp

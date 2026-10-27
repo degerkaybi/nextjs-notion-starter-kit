@@ -1,5 +1,5 @@
 import archive from '@/data/portfolio-content.json'
-import mediaOrigin from '@/data/media-origin.json'
+import mediaUrls from '@/data/media-urls.json'
 
 export type NotionBlock = {
   id: string
@@ -121,8 +121,7 @@ export function getMediaUrl(mediaId?: string | null): string | null {
   if (!item) return null
   if (item.error) return null
   if (item.localPath) {
-    const base = (process.env.NEXT_PUBLIC_MEDIA_BASE_URL || mediaOrigin.baseUrl).replace(/\/$/, '')
-    return base ? `${base}${item.localPath}` : item.localPath
+    return (mediaUrls as Record<string, string>)[item.localPath] || item.localPath
   }
   return item.url?.startsWith('https://') && item.url.includes('amazonaws.com') ? null : item.url || null
 }
