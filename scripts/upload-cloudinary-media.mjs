@@ -1,4 +1,4 @@
-import { readFile, writeFile, rename, stat } from 'node:fs/promises'
+import { readFile, writeFile, copyFile, stat } from 'node:fs/promises'
 import path from 'node:path'
 import { v2 as cloudinary } from 'cloudinary'
 
@@ -14,7 +14,7 @@ const files = await Promise.all(localPaths.map(async localPath => {
   return { localPath, filePath, resourceType, bytes: (await stat(filePath)).size }
 }))
 
-const missing = files.filter(file => !urls[file.localPath])
+let missing = files.filter(file => !urls[file.localPath])
 const totalBytes = files.reduce((sum, file) => sum + file.bytes, 0)
 console.log(`${files.length} files, ${(totalBytes / 1048576).toFixed(1)} MiB; ${missing.length} to upload`)
 if (process.argv.includes('--dry-run')) process.exit(0)
@@ -28,16 +28,60 @@ if (!process.env.CLOUDINARY_URL) {
 if (!process.env.CLOUDINARY_URL) {
   throw new Error('CLOUDINARY_URL is missing. Put it in the ignored .env file, then run this script again.')
 }
-cloudinary.config({ secure: true })
+const cloudinaryUrl = new URL(process.env.CLOUDINARY_URL)
+cloudinary.config({
+  cloud_name: cloudinaryUrl.hostname,
+  api_key: decodeURIComponent(cloudinaryUrl.username),
+  api_secret: decodeURIComponent(cloudinaryUrl.password),
+  secure: true,
+})
 const cloudName = cloudinary.config().cloud_name
 if (!cloudName) throw new Error('Cloudinary cloud name could not be read from CLOUDINARY_URL')
+if (process.argv.includes('--validate')) {
+  await cloudinary.api.ping()
+  console.log('Cloudinary connection verified')
+  process.exit(0)
+}
+
+const filesByPublicId = new Map(files.map(file => [
+  `kaybid-portfolio/media/${path.basename(file.localPath, path.extname(file.localPath))}`,
+  file,
+]))
+let recovered = 0
+for (const resourceType of ['image', 'video']) {
+  let nextCursor
+  do {
+    const page = await cloudinary.api.resources({
+      resource_type: resourceType,
+      type: 'upload',
+      prefix: 'kaybid-portfolio/media/',
+      max_results: 500,
+      ...(nextCursor ? { next_cursor: nextCursor } : {}),
+    })
+    for (const resource of page.resources) {
+      const file = filesByPublicId.get(resource.public_id)
+      if (file?.resourceType === resourceType && !urls[file.localPath] && resource.secure_url?.startsWith('https://')) {
+        urls[file.localPath] = resource.secure_url
+        recovered++
+      }
+    }
+    nextCursor = page.next_cursor
+  } while (nextCursor)
+}
+if (recovered) {
+  await writeFile(mapPath, `${JSON.stringify(urls, null, 2)}\n`)
+  console.log(`Recovered ${recovered} existing Cloudinary uploads`)
+}
+missing = files.filter(file => !urls[file.localPath])
+console.log(`${missing.length} files remain`)
+if (process.argv.includes('--recover')) process.exit(0)
 
 let writeQueue = Promise.resolve()
 function saveProgress() {
   writeQueue = writeQueue.then(async () => {
     const temporary = `${mapPath}.tmp`
     await writeFile(temporary, `${JSON.stringify(urls, null, 2)}\n`)
-    await rename(temporary, mapPath)
+    await copyFile(temporary, mapPath)
   })
   return writeQueue
 }
